@@ -30,14 +30,13 @@ The sample configuration below illustrates the current possibilites.
         "body": "Test post body",
         "userId": 1
       }
-    }
+    },
     {
       "key": "add.get@somedomain.com",
       "customApiToken": "eyJ0eXAiOiJKV1QLKiFhbGciOiJIUzI1NiJ9.eyJpc3MieJoLYjY0ZTZkMThh...<cutoff>",
       "customEndpoint": "https://somerestapi.com/",
       "service": "posts",
       "queryString": "title=Test+post&body=Test+post+body&userId=1"
-      }
     }
   ]
 }
