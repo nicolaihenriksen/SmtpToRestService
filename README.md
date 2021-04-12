@@ -67,7 +67,7 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 <br />
 
 ## Credits
-In order to minimize my workload, I used the following packages to host and SMTP server and read MIME messages:
+In order to minimize my workload, I used the following [Nuget](https://www.nuget.org/) packages:
 
 | Package | Author | Usage |
 | --- | --- | --- |
