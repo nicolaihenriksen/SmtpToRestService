@@ -71,5 +71,5 @@ In order to minimize my workload, I used the following packages to host and SMTP
 
 | Package | Author | Usage |
 | --- | --- | --- |
-|[SmtpServer](https://www.nuget.org/packages/SmtpServer/) | [Cain O'Sullivan](https://github.com/cosullivan) | I use this package to self-host and SMTP server. |
+|[SmtpServer](https://www.nuget.org/packages/SmtpServer/) | [Cain O'Sullivan](https://github.com/cosullivan) | I use this package to self-host an SMTP server. |
 |[MimeKitLite](https://www.nuget.org/packages/MimeKitLite/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object.|
