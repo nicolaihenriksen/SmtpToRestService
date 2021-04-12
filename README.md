@@ -5,12 +5,8 @@ I created this service because I needed to trigger some REST API services in my 
 
 My workaround for this problem was to configure the cameras to "send an e-mail" when the desired motion events occurred, but instead of using my normal SMTP server to send the email, I configured the cameras to use the SMTP service hosted by the code in this repository instead.
 
-<br />
-
-###### Disclaimer
+##### Disclaimer
 Currently, the code attempts to convert all e-mail requests to REST API calls, but it would be a relatively simple task to simply forward certain e-mails to an "actual" SMTP server if needed. Furthermore, the current code cannot use any of the information from the e-mail in the actual REST API call, but this could also be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
-
-<br />
 
 ## Configuration
 The sample configuration below illustrates the current possibilites.
@@ -37,7 +33,7 @@ The sample configuration below illustrates the current possibilites.
     }
     {
       "key": "add.get@somedomain.com",
-      "customApiToken": "eyJ0eXAiOiJKV1QLKiFhbGciOiJIUzI1NiJ9.eyJpc3MieJoLYjY0ZTZkMThh...<cutoff>"
+      "customApiToken": "eyJ0eXAiOiJKV1QLKiFhbGciOiJIUzI1NiJ9.eyJpc3MieJoLYjY0ZTZkMThh...<cutoff>",
       "customEndpoint": "https://somerestapi.com/",
       "service": "posts",
       "queryString": "title=Test+post&body=Test+post+body&userId=1"
@@ -57,7 +53,7 @@ The sample configuration below illustrates the current possibilites.
 
 <br />
 
-#### Mapping
+### Mapping
 A mapping is what the services uses to convert an e-mail into a REST API call. If a mapping is found where the <b>key</b> of the mapping matches the <b>to address</b> of the e-mail, the REST API call defined by the mapping is invoked.
 
 | Property | Description |
