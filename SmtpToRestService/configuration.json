@@ -1,0 +1,21 @@
+{
+  "apiToken": "",
+  "endpoint": "https://jsonplaceholder.typicode.com/",
+  "httpMethod": "GET",
+  "mappings": [
+    {
+      "key": "list.posts@somedomain.com",
+      "service": "posts"
+    },
+    {
+      "key": "add.post@somedomain.com",
+      "service": "posts",
+      "customHttpMethod": "POST",
+      "jsonPostData": {
+        "title": "Test post",
+        "body": "Test post body",
+        "userId": 1
+      }
+    }
+  ]
+}
