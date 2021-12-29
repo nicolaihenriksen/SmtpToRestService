@@ -77,9 +77,9 @@ namespace SmtpToRestService
                     {
                         await _restClient.InvokeService(mapping, cancellationToken);
                     }
-                    catch when (!cancellationToken.IsCancellationRequested)
+                    catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
                     {
-                        _logger.LogError(FormattableString.Invariant($"Error invoking REST service for mapping. Key='{mapping.Key}'"));
+                        _logger.LogError(FormattableString.Invariant($"Error invoking REST service for mapping. Key='{mapping.Key}'{Environment.NewLine}{ex}"));
                     }
                 }
                 MessageProcessed?.Invoke(this, EventArgs.Empty);
