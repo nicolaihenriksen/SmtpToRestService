@@ -3,12 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using SmtpToRest;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHostedService<SmtpServerBackgroundService>();
 
-// Add services to the container.
+builder.Services
+    .AddSingleton<IConfiguration, Configuration>()
+    .AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>()
+    .AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
+    .AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
+    .AddSingleton<IRestClient, RestClient>()
+    .AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>()
+    .AddHostedService<SmtpServerBackgroundService>();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
 app.Run();
