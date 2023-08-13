@@ -69,15 +69,11 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 
 <br />
 
+## Install as Docker container
+See [SmtpToRest.Docker](SmtpToRest.Docker/README.md)
+
 ## Install as Windows Service
-In order to install this as a windows service, open up a command prompt (in Administrator mode) and issue the following command:
-```
-sc create smtptorestservice binPath="<full-path-to-deployment-dir>\SmtpToRestService.exe"
-```
-
-Remember to replace **&lt;full-path-to-deployment-dir&gt;** with the actual path where you have deployed the package.
-
-**NOTE:** The **sc** command allows for a number of parameters if you want to tweak the display name, description, startup, dependencies, etc. of the service.
+See [SmtpToRest.WindowsService](SmtpToRest.WindowsService/README.md)
 
 <br />
 
