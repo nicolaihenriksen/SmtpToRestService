@@ -1,0 +1,8 @@
+version: 3
+services:
+  dockerapp:
+    image: smtptorest
+    build:
+      dockerfile: SmtpToRest.Docker\Dockerfile
+      ports:
+        - "25:25"
