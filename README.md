@@ -1,14 +1,14 @@
-# SmtpToRestService
+# SmtpToRest
 
 [![Build status](https://ci.appveyor.com/api/projects/status/10f37ao5nmvw0e7b?svg=true)](https://ci.appveyor.com/project/nicolaihenriksen/smtptorestservice)
 
-Simple .NET Core Windows Service converting "e-mails" to REST API calls.
+Simple .NET Core application converting "e-mails" to REST API calls. Can be executed as a Docker container or as a Windows Service.
 
-I created this service because I needed to trigger some REST API services in my home automation system when certain types of motion events happened on my CCTV cameras. Although my cameras are [ONVIF](https://www.onvif.org/) compliant, they do no not expose these motion events via the [ONVIF Profile S](https://www.onvif.org/profiles/profile-s/), and thus are unavailable in my home automation system integration.
+I created this application because I needed to trigger some REST API services in my home automation system when certain types of motion events happened on my CCTV cameras. Although my cameras are [ONVIF](https://www.onvif.org/) compliant, they do no not expose these motion events via the [ONVIF Profile S](https://www.onvif.org/profiles/profile-s/), and thus are unavailable in my home automation system integration.
 
 My workaround for this problem was to configure the cameras to "send an e-mail" when the desired motion events occurred, but instead of using my normal SMTP server to send the email, I configured the cameras to use the SMTP service hosted by the code in this repository instead. This service then converts those "e-mails" into the desired REST API calls I need in my home automation system.
 
-##### Disclaimer
+### Disclaimer
 Currently, the code attempts to convert all e-mail requests to REST API calls, but it would be a relatively simple task to simply forward certain e-mails to an "actual" SMTP server if needed. Furthermore, the current code cannot use any of the information from the e-mail in the actual REST API call, but this could also be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
 
 ## Configuration
