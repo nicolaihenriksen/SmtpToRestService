@@ -14,7 +14,7 @@ public class RestClientTests
 {
     private const string DefaultBaseAddress = "http://somerestapi.com/";
 
-    private static IConfiguration Arrange_CreateConfiguration(string baseAddress = DefaultBaseAddress, string apiToken = null, string httpMethod = null)
+    private static IConfiguration Arrange_CreateConfiguration(string baseAddress = DefaultBaseAddress, string? apiToken = null, string? httpMethod = null)
     {
         var config = new Mock<IConfiguration>();
         config.SetupGet(c => c.Endpoint).Returns(baseAddress);
@@ -34,7 +34,7 @@ public class RestClientTests
         return (client, requestHeaders);
     }
         
-    private static IHttpClientFactory Arrange_CreateHttpClientFactory(Mock<IHttpClient> client, string optionalBaseAddress = null)
+    private static IHttpClientFactory Arrange_CreateHttpClientFactory(Mock<IHttpClient> client, string? optionalBaseAddress = null)
     {
         var factory = new Mock<IHttpClientFactory>();
         factory.Setup(f => f.Create(client.Object.BaseAddress.AbsoluteUri)).Returns(client.Object);

@@ -7,7 +7,7 @@ namespace SmtpToRest;
 
 public class HttpClientAdapter : IHttpClient
 {
-    public Uri BaseAddress => _adaptee.BaseAddress;
+    public Uri? BaseAddress => _adaptee.BaseAddress;
     public IHttpRequestHeaders DefaultRequestHeaders { get; }
 
     private readonly HttpClient _adaptee;

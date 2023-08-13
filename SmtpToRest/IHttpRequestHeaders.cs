@@ -4,5 +4,5 @@ namespace SmtpToRest;
 
 public interface IHttpRequestHeaders
 {
-    AuthenticationHeaderValue Authorization { get; set; }
+    AuthenticationHeaderValue? Authorization { get; set; }
 }

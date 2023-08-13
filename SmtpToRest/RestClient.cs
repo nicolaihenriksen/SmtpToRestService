@@ -21,6 +21,9 @@ public class RestClient : IRestClient
     public async Task<HttpResponseMessage> InvokeService(ConfigurationMapping mapping, CancellationToken? cancellationToken)
     {
         var endpoint = mapping.CustomEndpoint ?? _configuration.Endpoint;
+        if (endpoint is null)
+            return new HttpResponseMessage(HttpStatusCode.NotFound);
+
         var apiToken = mapping.CustomApiToken ?? _configuration.ApiToken;
         var httpMethod = mapping.CustomHttpMethod ?? _configuration.HttpMethod;
         var isPost = WebRequestMethods.Http.Post == httpMethod;
@@ -32,13 +35,13 @@ public class RestClient : IRestClient
 
         if (isPost)
         {
-            var uriBuilder = new UriBuilder(new Uri(client.BaseAddress, mapping.Service));
+            var uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, mapping.Service));
             var postData = mapping.JsonPostData?.ToString() ?? string.Empty;
             return await client.PostAsync(uriBuilder.Uri, new StringContent(postData), cancellationToken ?? CancellationToken.None);
         }
         else
         {
-            var uriBuilder = new UriBuilder(new Uri(client.BaseAddress, mapping.Service)) { Query = mapping.QueryString };
+            var uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, mapping.Service)) { Query = mapping.QueryString };
             return await client.GetAsync(uriBuilder.Uri, cancellationToken ?? CancellationToken.None);
         }
     }

@@ -4,7 +4,7 @@ namespace SmtpToRest;
 
 public class HttpRequestHeadersAdapter : IHttpRequestHeaders
 {
-    public AuthenticationHeaderValue Authorization
+    public AuthenticationHeaderValue? Authorization
     {
         get => _adaptee.Authorization;
         set => _adaptee.Authorization = value;

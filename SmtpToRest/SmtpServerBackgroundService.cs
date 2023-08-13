@@ -16,7 +16,7 @@ namespace SmtpToRest;
 
 public class SmtpServerBackgroundService : BackgroundService
 {
-    public event EventHandler MessageProcessed;
+    public event EventHandler MessageProcessed = delegate { };
         
     private readonly ILogger<SmtpServerBackgroundService> _logger;
     private readonly IConfiguration _configuration;
@@ -24,7 +24,7 @@ public class SmtpServerBackgroundService : BackgroundService
     private readonly ISmtpServerFactory _smtpServerFactory;
     private readonly IRestClient _restClient;
     private readonly BlockingCollection<IMimeMessage> _messageQueue = new BlockingCollection<IMimeMessage>();
-    private ISmtpServer _smtpServer;
+    private ISmtpServer? _smtpServer;
 
     public SmtpServerBackgroundService(ILogger<SmtpServerBackgroundService> logger, IConfiguration configuration, IMessageStoreFactory messageStoreFactory, ISmtpServerFactory smtpServerFactory, IRestClient restClient)
     {
@@ -71,7 +71,7 @@ public class SmtpServerBackgroundService : BackgroundService
         foreach (var message in _messageQueue.GetConsumingEnumerable(cancellationToken))
         {
             _logger.LogDebug(FormattableString.Invariant($"Processing message..."));
-            if (_configuration.TryGetMapping(message.Address, out var mapping))
+            if (_configuration.TryGetMapping(message.Address, out var mapping) && mapping is not null)
             {
                 try
                 {
@@ -82,7 +82,7 @@ public class SmtpServerBackgroundService : BackgroundService
                     _logger.LogError(FormattableString.Invariant($"Error invoking REST service for mapping. Key='{mapping.Key}'{Environment.NewLine}{ex}"));
                 }
             }
-            MessageProcessed?.Invoke(this, EventArgs.Empty);
+            MessageProcessed.Invoke(this, EventArgs.Empty);
         }
     }
 }
