@@ -1,7 +1,6 @@
-﻿namespace SmtpToRest
+﻿namespace SmtpToRest;
+
+public interface IConfigurationFileReader
 {
-    public interface IConfigurationFileReader
-    {
-        string Read(string path);
-    }
+    string Read(string path);
 }

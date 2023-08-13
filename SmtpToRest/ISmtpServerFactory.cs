@@ -1,10 +1,9 @@
 ﻿using System;
 using SmtpServer;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public interface ISmtpServerFactory
 {
-    public interface ISmtpServerFactory
-    {
-        ISmtpServer Create(ISmtpServerOptions options, IServiceProvider serviceProvider);
-    }
+    ISmtpServer Create(ISmtpServerOptions options, IServiceProvider serviceProvider);
 }

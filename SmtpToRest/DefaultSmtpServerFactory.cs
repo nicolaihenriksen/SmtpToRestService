@@ -1,14 +1,13 @@
 ﻿using System;
 using SmtpServer;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public class DefaultSmtpServerFactory : ISmtpServerFactory
 {
-    public class DefaultSmtpServerFactory : ISmtpServerFactory
+    public ISmtpServer Create(ISmtpServerOptions options, IServiceProvider serviceProvider)
     {
-        public ISmtpServer Create(ISmtpServerOptions options, IServiceProvider serviceProvider)
-        {
-            var adaptee = new SmtpServer.SmtpServer(options, serviceProvider);
-            return new SmtpServerAdapter(adaptee);
-        }
+        var adaptee = new SmtpServer.SmtpServer(options, serviceProvider);
+        return new SmtpServerAdapter(adaptee);
     }
 }

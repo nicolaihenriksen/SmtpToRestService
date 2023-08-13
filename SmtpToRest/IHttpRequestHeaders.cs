@@ -1,9 +1,8 @@
 ﻿using System.Net.Http.Headers;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public interface IHttpRequestHeaders
 {
-    public interface IHttpRequestHeaders
-    {
-        AuthenticationHeaderValue Authorization { get; set; }
-    }
+    AuthenticationHeaderValue Authorization { get; set; }
 }

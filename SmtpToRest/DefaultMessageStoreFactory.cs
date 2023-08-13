@@ -2,13 +2,12 @@
 using Microsoft.Extensions.Logging;
 using SmtpServer.Storage;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public class DefaultMessageStoreFactory : IMessageStoreFactory
 {
-    public class DefaultMessageStoreFactory : IMessageStoreFactory
+    public IMessageStore Create(ILogger<SmtpServerBackgroundService> logger, BlockingCollection<IMimeMessage> messageQueue)
     {
-        public IMessageStore Create(ILogger<SmtpServerBackgroundService> logger, BlockingCollection<IMimeMessage> messageQueue)
-        {
-            return new SimpleMessageStore(logger, messageQueue);
-        }
+        return new SimpleMessageStore(logger, messageQueue);
     }
 }

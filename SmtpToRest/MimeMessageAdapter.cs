@@ -1,17 +1,16 @@
 ﻿using System.Linq;
 using MimeKit;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public class MimeMessageAdapter : IMimeMessage
 {
-    public class MimeMessageAdapter : IMimeMessage
+    public string Address => _adaptee.From.OfType<MailboxAddress>().First().Address;
+
+    private readonly MimeMessage _adaptee;
+
+    public MimeMessageAdapter(MimeMessage adaptee)
     {
-        public string Address => _adaptee.From.OfType<MailboxAddress>().First().Address;
-
-        private readonly MimeMessage _adaptee;
-
-        public MimeMessageAdapter(MimeMessage adaptee)
-        {
-            _adaptee = adaptee;
-        }
+        _adaptee = adaptee;
     }
 }

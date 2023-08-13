@@ -1,12 +1,11 @@
 ﻿using System.IO;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public class DefaultConfigurationFileReader : IConfigurationFileReader
 {
-    public class DefaultConfigurationFileReader : IConfigurationFileReader
+    public string Read(string path)
     {
-        public string Read(string path)
-        {
-            return File.ReadAllText(path);
-        }
+        return File.ReadAllText(path);
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace SmtpToRest
+﻿namespace SmtpToRest;
+
+public interface IMimeMessage
 {
-    public interface IMimeMessage
-    {
-        string Address { get; }
-    }
+    string Address { get; }
 }

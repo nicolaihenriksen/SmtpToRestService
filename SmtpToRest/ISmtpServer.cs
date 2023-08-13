@@ -1,11 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public interface ISmtpServer
 {
-    public interface ISmtpServer
-    {
-        Task StartAsync(CancellationToken cancellationToken);
-        void Shutdown();
-    }
+    Task StartAsync(CancellationToken cancellationToken);
+    void Shutdown();
 }

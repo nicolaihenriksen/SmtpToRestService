@@ -1,7 +1,6 @@
-﻿namespace SmtpToRest
+﻿namespace SmtpToRest;
+
+public interface IHttpClientFactory
 {
-    public interface IHttpClientFactory
-    {
-        IHttpClient Create(string baseAddress);
-    }
+    IHttpClient Create(string baseAddress);
 }

@@ -2,10 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SmtpToRest
+namespace SmtpToRest;
+
+public interface IRestClient
 {
-    public interface IRestClient
-    {
-        Task<HttpResponseMessage> InvokeService(ConfigurationMapping mapping, CancellationToken? cancellationToken = null);
-    }
+    Task<HttpResponseMessage> InvokeService(ConfigurationMapping mapping, CancellationToken? cancellationToken = null);
 }
