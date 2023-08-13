@@ -1,7 +1,5 @@
 # SmtpToRest
 
-[![Build status](https://ci.appveyor.com/api/projects/status/10f37ao5nmvw0e7b?svg=true)](https://ci.appveyor.com/project/nicolaihenriksen/smtptorestservice)
-
 Simple .NET Core application converting "e-mails" to REST API calls. Can be executed as a Docker container or as a Windows Service.
 
 I created this application because I needed to trigger some REST API services in my home automation system when certain types of motion events happened on my CCTV cameras. Although my cameras are [ONVIF](https://www.onvif.org/) compliant, they do no not expose these motion events via the [ONVIF Profile S](https://www.onvif.org/profiles/profile-s/), and thus are unavailable in my home automation system integration.
