@@ -5,10 +5,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
-using SmtpToRest;
 using Xunit;
 
-namespace SmtpToRestService.UnitTests;
+namespace SmtpToRest.UnitTests;
 
 public class RestClientTests
 {

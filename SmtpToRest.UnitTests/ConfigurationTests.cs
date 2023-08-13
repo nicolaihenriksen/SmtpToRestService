@@ -4,10 +4,9 @@ using System.Text.Json;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SmtpToRest;
 using Xunit;
 
-namespace SmtpToRestService.UnitTests;
+namespace SmtpToRest.UnitTests;
 
 public class ConfigurationTests
 {

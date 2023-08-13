@@ -6,11 +6,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using SmtpServer;
 using SmtpServer.Storage;
-using SmtpToRest;
 using Xunit;
-using IMessageStoreFactory = SmtpToRest.IMessageStoreFactory;
 
-namespace SmtpToRestService.UnitTests;
+namespace SmtpToRest.UnitTests;
 
 public class SmtpServerBackgroundServiceTests
 {

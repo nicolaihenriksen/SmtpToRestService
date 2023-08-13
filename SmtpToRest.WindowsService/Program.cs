@@ -1,8 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SmtpToRest;
 
-namespace SmtpToRestService;
+namespace SmtpToRest.WindowsService;
 
 public class Program
 {
