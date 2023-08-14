@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using SmtpToRest.Config;
 using SmtpToRest.Services.Smtp;
 using SmtpToRest.Rest;
+using SmtpToRest.Rest.Decorators;
 
 namespace SmtpToRest.Processing;
 
@@ -12,14 +13,15 @@ public class DefaultMessageProcessor : IMessageProcessor
 {
 	private readonly IConfiguration _configuration;
 	private readonly IRestClient _restClient;
+	private readonly IRestInputDecorator _decorator;
 	private readonly ILogger<DefaultMessageProcessor> _logger;
 
-	public DefaultMessageProcessor(ILogger<DefaultMessageProcessor> logger, IConfiguration configuration, IRestClient restClient)
+	public DefaultMessageProcessor(ILogger<DefaultMessageProcessor> logger, IConfiguration configuration, IRestClient restClient, IRestInputDecorator decorator)
 	{
 		_logger = logger;
 		_configuration = configuration;
 		_restClient = restClient;
-		
+		_decorator = decorator;
 	}
 
 	public async Task<ProcessResult> ProcessAsync(IMimeMessage message, CancellationToken cancellationToken)
@@ -28,7 +30,8 @@ public class DefaultMessageProcessor : IMessageProcessor
 		{
 			try
 			{
-				await _restClient.InvokeService(mapping, cancellationToken);
+				var input = _decorator.Decorate(new RestInput(), mapping, message);
+				await _restClient.InvokeService(input, cancellationToken);
 				return ProcessResult.Success();
 			}
 			catch (Exception ex) when (!cancellationToken.IsCancellationRequested)

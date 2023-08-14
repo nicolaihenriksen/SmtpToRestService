@@ -8,6 +8,7 @@ using Moq;
 using SmtpToRest.Config;
 using SmtpToRest.Rest;
 using Xunit;
+using HttpMethod = SmtpToRest.Rest.HttpMethod;
 
 namespace SmtpToRest.UnitTests;
 
@@ -54,11 +55,11 @@ public class RestClientTests
         var config = Arrange_CreateConfiguration(apiToken: "<api token>");
         var (client, headers) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context" };
+        var input = new RestInput { Service = "context" };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         headers.VerifySet(h => h.Authorization = It.Is<AuthenticationHeaderValue>(v => v.Scheme == "Bearer" && v.Parameter == "<api token>"), Times.Once);
@@ -71,11 +72,11 @@ public class RestClientTests
         var config = Arrange_CreateConfiguration(httpMethod: "GET");
         var (client, headers) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context" };
+        var input = new RestInput { Service = "context" };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context");
@@ -89,11 +90,11 @@ public class RestClientTests
         var config = Arrange_CreateConfiguration(httpMethod: "POST");
         var (client, headers) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context" };
+        var input = new RestInput { Service = "context" };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context");
@@ -101,17 +102,17 @@ public class RestClientTests
     }
 
     [Fact]
-    public async Task InvokeService_ShouldUseGetMethod_WhenGetSetInMapping()
+    public async Task InvokeService_ShouldUseGetMethod_WhenGetSetInInput()
     {
         // Arrange
         var config = Arrange_CreateConfiguration(httpMethod: "POST");
         var (client, headers) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context", CustomHttpMethod = "GET" };
+        var input = new RestInput { Service = "context", HttpMethod = HttpMethod.Get };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context");
@@ -119,18 +120,18 @@ public class RestClientTests
     }
 
     [Fact]
-    public async Task InvokeService_ShouldUseCustomEndpoint_WhenEndpointSetInMapping()
+    public async Task InvokeService_ShouldUseCustomEndpoint_WhenEndpointSetInInput()
     {
         // Arrange
         var customEndpoint = "http://customendpoint.com/";
         var config = Arrange_CreateConfiguration("http://defaultendpoint.com/");
         var (client, headers) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client, customEndpoint);
-        var mapping = new ConfigurationMapping { Service = "context", CustomEndpoint = customEndpoint };
+        var input = new RestInput { Service = "context", Endpoint = customEndpoint };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri("http://customendpoint.com/" + "context");
@@ -138,17 +139,17 @@ public class RestClientTests
     }
 
     [Fact]
-    public async Task InvokeService_ShouldUsePostMethod_WhenGetSetInMapping()
+    public async Task InvokeService_ShouldUsePostMethod_WhenGetSetInInput()
     {
         // Arrange
         var config = Arrange_CreateConfiguration(httpMethod: "GET");
         var (client, headers) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context", CustomHttpMethod = "POST" };
+        var input = new RestInput { Service = "context", HttpMethod = HttpMethod.Post };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context");
@@ -162,11 +163,11 @@ public class RestClientTests
         var config = Arrange_CreateConfiguration();
         var (client, _) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context" };
+        var input = new RestInput { Service = "context" };
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context");
@@ -174,17 +175,17 @@ public class RestClientTests
     }
 
     [Fact]
-    public async Task InvokeService_ShouldUseQueryString_WhenSetInMapping()
+    public async Task InvokeService_ShouldUseQueryString_WhenSetInInput()
     {
         // Arrange
         var config = Arrange_CreateConfiguration();
         var (client, _) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context", QueryString = "param1=value1&param2=value2"};
+        var input = new RestInput { Service = "context", QueryString = "param1=value1&param2=value2"};
         var restClient = new RestClient(config, factory);
 
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context?param1=value1&param2=value2");
@@ -192,7 +193,7 @@ public class RestClientTests
     }
 
     [Fact]
-    public async Task InvokeService_ShouldUseJsonPostData_WhenSetInMapping()
+    public async Task InvokeService_ShouldUseJsonPostData_WhenSetInInput()
     {
         // Arrange
         var jsonPostData = "{ \"param1\": \"value1\", \"param2\": \"value2\" }";
@@ -200,11 +201,11 @@ public class RestClientTests
         var config = Arrange_CreateConfiguration(httpMethod: "POST");
         var (client, _) = Arrange_CreateMockHttpClient(config.Endpoint);
         var factory = Arrange_CreateHttpClientFactory(client);
-        var mapping = new ConfigurationMapping { Service = "context", JsonPostData = json };
+        var input = new RestInput { Service = "context", JsonPostData = json };
         var restClient = new RestClient(config, factory);
             
         // Act
-        await restClient.InvokeService(mapping, CancellationToken.None);
+        await restClient.InvokeService(input, CancellationToken.None);
 
         // Assert
         var expectedUri = new Uri(DefaultBaseAddress + "context");

@@ -1,9 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmtpToRest.Config;
-using SmtpToRest.Processing;
-using SmtpToRest.Rest;
-using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.WindowsService;
 
@@ -18,15 +15,9 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((_, services) =>
             {
-                services
-                    .AddSingleton<IConfiguration, Configuration>()
-                    .AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>()
-                    .AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
-                    .AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
-                    .AddSingleton<IMessageProcessor, DefaultMessageProcessor>()
-                    .AddSingleton<IRestClient, RestClient>()
-                    .AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>()
-                    .AddHostedService<SmtpServerBackgroundService>();
+	            services
+		            .UseSmtpToRestDefaults()
+		            .AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>();
             })
             .UseWindowsService();
 }

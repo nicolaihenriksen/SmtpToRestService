@@ -19,31 +19,44 @@ public class RestClient : IRestClient
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<HttpResponseMessage> InvokeService(ConfigurationMapping mapping, CancellationToken? cancellationToken)
+    public async Task<HttpResponseMessage> InvokeService(RestInput input, CancellationToken cancellationToken)
     {
-        var endpoint = mapping.CustomEndpoint ?? _configuration.Endpoint;
+        string? endpoint = input.Endpoint;
         if (endpoint is null)
             return new HttpResponseMessage(HttpStatusCode.NotFound);
 
-        var apiToken = mapping.CustomApiToken ?? _configuration.ApiToken;
-        var httpMethod = mapping.CustomHttpMethod ?? _configuration.HttpMethod;
-        var isPost = WebRequestMethods.Http.Post == httpMethod;
-
         var client = _httpClientFactory.Create(endpoint);
 
-        if (!string.IsNullOrEmpty(apiToken))
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiToken);
+        if (!string.IsNullOrEmpty(input.ApiToken))
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", input.ApiToken);
 
-        if (isPost)
+        UriBuilder uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, input.Service));
+		switch (input.HttpMethod)
         {
-            var uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, mapping.Service));
-            var postData = mapping.JsonPostData?.ToString() ?? string.Empty;
-            return await client.PostAsync(uriBuilder.Uri, new StringContent(postData), cancellationToken ?? CancellationToken.None);
-        }
-        else
-        {
-            var uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, mapping.Service)) { Query = mapping.QueryString };
-            return await client.GetAsync(uriBuilder.Uri, cancellationToken ?? CancellationToken.None);
-        }
+	        case HttpMethod.Post:
+		        dynamic postData = input.JsonPostData ?? string.Empty;
+		        return await client.PostAsync(uriBuilder.Uri, new StringContent(postData), cancellationToken);
+	        default:
+				uriBuilder.Query = input.QueryString;
+				return await client.GetAsync(uriBuilder.Uri, cancellationToken);
+		}
     }
+}
+
+public class RestInput
+{
+    public string? ApiToken { get; set; }
+    public HttpMethod HttpMethod { get; set; } = HttpMethod.Get;
+    public string? Endpoint { get; set; }
+	public string? Service { get; set; }
+    public string? QueryString { get; set; }
+    public dynamic? JsonPostData { get; set; }
+}
+
+public enum HttpMethod
+{
+    Get,
+    Post,
+    Put,
+    Delete
 }

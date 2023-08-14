@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SmtpToRest.Config;
@@ -89,20 +90,23 @@ public class ConfigurationTests
         var config = new Configuration(log.Object, configReader.Object);
 
         // Assert
-        config.TryGetMapping("<key1>", out var mapping1).Should().BeTrue();
-        config.TryGetMapping("<key2>", out var mapping2).Should().BeTrue();
+        if (!config.TryGetMapping("<key1>", out var mapping1) || mapping1 is null)
+	        throw new AssertionFailedException("Unable to read mapping");
+        if (!config.TryGetMapping("<key2>", out var mapping2) || mapping2 is null)
+	        throw new AssertionFailedException("Unable to read mapping");
+
         mapping1.CustomApiToken.Should().Be("<token1>");
         mapping1.CustomEndpoint.Should().Be("<endpoint1>");
         mapping1.CustomHttpMethod.Should().Be("<httpMethod1>");
         mapping1.Service.Should().Be("<service1>");
         mapping1.QueryString.Should().Be("<queryString1>");
-        Assert.Equal("<jsonPostData1>", mapping1.JsonPostData.ToString());
+        Assert.Equal("<jsonPostData1>", mapping1.JsonPostData?.ToString());
         mapping2.CustomApiToken.Should().Be("<token2>");
         mapping2.CustomEndpoint.Should().Be("<endpoint2>");
         mapping2.CustomHttpMethod.Should().Be("<httpMethod2>");
         mapping2.Service.Should().Be("<service2>");
         mapping2.QueryString.Should().Be("<queryString2>");
-        Assert.Equal("<jsonPostData2>", mapping2.JsonPostData.ToString());
+        Assert.Equal("<jsonPostData2>", mapping2.JsonPostData?.ToString());
     }
 
     [Fact]
@@ -136,9 +140,10 @@ public class ConfigurationTests
         // Act
         var config = new Configuration(log.Object, configReader.Object);
 
-        // Assert
-        config.TryGetMapping("<key>", out var mapping).Should().BeTrue();
+		// Assert
+		if (!config.TryGetMapping("<key>", out var mapping) || mapping is null)
+			throw new AssertionFailedException("Unable to read mapping");
         var jsonPostDataString = JsonSerializer.Serialize(jsonPostDataObject);
-        Assert.Equal(jsonPostDataString, mapping.JsonPostData.ToString());
+        Assert.Equal(jsonPostDataString, mapping.JsonPostData?.ToString());
     }
 }
