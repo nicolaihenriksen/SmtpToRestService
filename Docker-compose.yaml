@@ -8,5 +8,6 @@ services:
       dockerfile: SmtpToRest.Docker\Dockerfile
     ports:
       - "8025:25"
+      - "8587:587"
     volumes:
       - ./SmtpToRest:/app/config:ro

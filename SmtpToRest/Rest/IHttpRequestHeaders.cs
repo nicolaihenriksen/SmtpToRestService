@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Rest;
 
 public interface IHttpRequestHeaders
 {

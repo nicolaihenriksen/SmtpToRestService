@@ -4,6 +4,7 @@ using System.Text.Json;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SmtpToRest.Config;
 using Xunit;
 
 namespace SmtpToRest.UnitTests;
@@ -16,7 +17,7 @@ public class ConfigurationTests
         // Arrange
         var log = new Mock<ILogger<Configuration>>();
         var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns("{ invalid JSON document }");
+        configReader.Setup(c => c.Read()).Returns("{ invalid JSON document }");
 
         // Act
         Action act = () => new Configuration(log.Object, configReader.Object);
@@ -38,7 +39,7 @@ public class ConfigurationTests
             
         var log = new Mock<ILogger<Configuration>>();
         var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
+        configReader.Setup(c => c.Read()).Returns(json);
 
         // Act
         var config = new Configuration(log.Object, configReader.Object);
@@ -82,7 +83,7 @@ public class ConfigurationTests
 
         var log = new Mock<ILogger<Configuration>>();
         var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
+        configReader.Setup(c => c.Read()).Returns(json);
 
         // Act
         var config = new Configuration(log.Object, configReader.Object);
@@ -130,7 +131,7 @@ public class ConfigurationTests
         });
         var log = new Mock<ILogger<Configuration>>();
         var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
+        configReader.Setup(c => c.Read()).Returns(json);
 
         // Act
         var config = new Configuration(log.Object, configReader.Object);

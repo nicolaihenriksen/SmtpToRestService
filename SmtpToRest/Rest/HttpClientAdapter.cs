@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Rest;
 
 public class HttpClientAdapter : IHttpClient
 {
@@ -16,7 +16,7 @@ public class HttpClientAdapter : IHttpClient
         _adaptee = adaptee;
         DefaultRequestHeaders = new HttpRequestHeadersAdapter(adaptee.DefaultRequestHeaders);
     }
-        
+
     public Task<HttpResponseMessage> PostAsync(Uri uri, HttpContent content, CancellationToken cancellationToken)
     {
         return _adaptee.PostAsync(uri, content, cancellationToken);

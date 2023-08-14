@@ -1,7 +1,7 @@
 ﻿using System;
 using SmtpServer;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Services.Smtp;
 
 public interface ISmtpServerFactory
 {

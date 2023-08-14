@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Config;
 
 public class Configuration : IConfiguration
 {
@@ -17,12 +16,12 @@ public class Configuration : IConfiguration
     private readonly Dictionary<string, ConfigurationMapping> _mappings = new Dictionary<string, ConfigurationMapping>();
     private readonly ILogger<Configuration> _logger;
     private readonly IConfigurationFileReader _configurationFileReader;
-    private static string CurrentPath => new FileInfo(typeof(Configuration).Assembly.Location).Directory?.FullName;
 
     public Configuration(ILogger<Configuration> logger, IConfigurationFileReader configurationFileReader)
     {
         _logger = logger;
         _configurationFileReader = configurationFileReader;
+        /*
         var fileSystemWatcher = new FileSystemWatcher(CurrentPath)
         {
             Filter = Filename,
@@ -30,6 +29,7 @@ public class Configuration : IConfiguration
         };
         fileSystemWatcher.Changed += (sender, args) => ReloadConfiguration(args.Name!);
         fileSystemWatcher.EnableRaisingEvents = true;
+        */
         ReloadConfiguration(Filename, false);
     }
 
@@ -37,14 +37,14 @@ public class Configuration : IConfiguration
     {
         if (Filename != filename)
             return;
-            
+
         lock (_mappings)
         {
             try
             {
                 _mappings.Clear();
-                var json = _configurationFileReader.Read(Path.Combine(CurrentPath, filename));
-                var configRoot = JsonSerializer.Deserialize<ConfigurationRoot>(json, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+                var json = _configurationFileReader.Read();
+                var configRoot = JsonSerializer.Deserialize<ConfigurationRoot>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 ApiToken = configRoot?.ApiToken;
                 Endpoint = configRoot?.Endpoint;
                 HttpMethod = configRoot?.HttpMethod;
@@ -85,23 +85,4 @@ public class Configuration : IConfiguration
             return false;
         }
     }
-}
-
-public class ConfigurationRoot
-{
-    public string? ApiToken { get; set; }
-    public string? Endpoint { get; set; }
-    public string? HttpMethod { get; set; } = WebRequestMethods.Http.Get;
-    public List<ConfigurationMapping>? Mappings { get; set; }
-}
-    
-public class ConfigurationMapping
-{
-    public string? Key { get; set; }
-    public string? CustomApiToken { get; set; }
-    public string? CustomEndpoint { get; set; }
-    public string? CustomHttpMethod { get; set; }
-    public string? Service { get; set; }
-    public string? QueryString { get; set; }
-    public dynamic? JsonPostData { get; set; }
 }

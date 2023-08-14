@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Rest;
 
 public interface IHttpClient
 {

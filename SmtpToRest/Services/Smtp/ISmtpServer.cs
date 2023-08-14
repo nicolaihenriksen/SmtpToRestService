@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Services.Smtp;
 
 public interface ISmtpServer
 {

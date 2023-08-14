@@ -1,4 +1,4 @@
-﻿namespace SmtpToRest;
+﻿namespace SmtpToRest.Config;
 
 public interface IConfiguration
 {

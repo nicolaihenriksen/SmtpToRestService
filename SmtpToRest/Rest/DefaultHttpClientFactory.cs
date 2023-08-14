@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Rest;
 
 public class DefaultHttpClientFactory : IHttpClientFactory
 {

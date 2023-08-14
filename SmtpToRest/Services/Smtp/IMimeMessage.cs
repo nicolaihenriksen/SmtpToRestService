@@ -1,4 +1,4 @@
-﻿namespace SmtpToRest;
+﻿namespace SmtpToRest.Services.Smtp;
 
 public interface IMimeMessage
 {

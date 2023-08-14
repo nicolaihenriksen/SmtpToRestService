@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SmtpServer.Storage;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Services.Smtp;
 
 public interface IMessageStoreFactory
 {

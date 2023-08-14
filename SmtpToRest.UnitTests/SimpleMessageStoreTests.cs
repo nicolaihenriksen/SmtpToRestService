@@ -11,6 +11,7 @@ using MimeKit;
 using MimeKit.Text;
 using Moq;
 using SmtpServer;
+using SmtpToRest.Services.Smtp;
 using Xunit;
 
 namespace SmtpToRest.UnitTests;

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using MimeKit;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Services.Smtp;
 
 public class MimeMessageAdapter : IMimeMessage
 {

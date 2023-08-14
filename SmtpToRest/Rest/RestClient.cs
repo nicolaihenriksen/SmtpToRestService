@@ -4,8 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using SmtpToRest.Config;
 
-namespace SmtpToRest;
+namespace SmtpToRest.Rest;
 
 public class RestClient : IRestClient
 {
@@ -17,7 +18,7 @@ public class RestClient : IRestClient
         _configuration = configuration;
         _httpClientFactory = httpClientFactory;
     }
-        
+
     public async Task<HttpResponseMessage> InvokeService(ConfigurationMapping mapping, CancellationToken? cancellationToken)
     {
         var endpoint = mapping.CustomEndpoint ?? _configuration.Endpoint;
@@ -29,7 +30,7 @@ public class RestClient : IRestClient
         var isPost = WebRequestMethods.Http.Post == httpMethod;
 
         var client = _httpClientFactory.Create(endpoint);
-            
+
         if (!string.IsNullOrEmpty(apiToken))
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiToken);
 

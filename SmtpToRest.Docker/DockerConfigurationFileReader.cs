@@ -1,10 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using SmtpToRest.Config;
 
 namespace SmtpToRest.Docker
 {
-	public class DockerConfigurationFileReader : IConfigurationFileReader
+    public class DockerConfigurationFileReader : IConfigurationFileReader
 	{
 		private readonly IWebHostEnvironment _environment;
 
@@ -13,7 +14,7 @@ namespace SmtpToRest.Docker
 			_environment = environment;
 		}
 
-		public string Read(string path)
+		public string Read()
 		{
 			string configFilePath = Path.Combine(_environment.ContentRootPath, "config", Configuration.Filename);
 			if (!File.Exists(configFilePath))
