@@ -6,6 +6,8 @@ I created this application because I needed to trigger some REST API services in
 
 My workaround for this problem was to configure the cameras to "send an e-mail" when the desired motion events occurred, but instead of using my normal SMTP server to send the email, I configured the cameras to use the SMTP service hosted by the code in this repository instead. This service then converts those "e-mails" into the desired REST API calls I need in my home automation system.
 
+The project has since then become a hobby project where I am experimenting with adding Docker support, CI/CD pipelines and other fun stuff.
+
 ### Disclaimer
 Currently, the code attempts to convert all e-mail requests to REST API calls, but it would be a relatively simple task to simply forward certain e-mails to an "actual" SMTP server if needed. Furthermore, the current code cannot use any of the information from the e-mail in the actual REST API call, but this could also be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
 
