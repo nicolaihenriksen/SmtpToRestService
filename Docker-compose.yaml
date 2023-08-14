@@ -3,7 +3,10 @@ version: '3'
 services:
   app:
     image: smtptorest
+    container_name: smtp_to_rest_service
     build:
       dockerfile: SmtpToRest.Docker\Dockerfile
     ports:
-      - "25:25"
+      - "8025:25"
+    volumes:
+      - ./SmtpToRest:/app/config:ro

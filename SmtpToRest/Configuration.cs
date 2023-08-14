@@ -13,7 +13,7 @@ public class Configuration : IConfiguration
     public string? Endpoint { get; private set; }
     public string? HttpMethod { get; private set; }
 
-    private const string Filename = "configuration.json";
+    public const string Filename = "configuration.json";
     private readonly Dictionary<string, ConfigurationMapping> _mappings = new Dictionary<string, ConfigurationMapping>();
     private readonly ILogger<Configuration> _logger;
     private readonly IConfigurationFileReader _configurationFileReader;

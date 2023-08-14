@@ -3,6 +3,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": false,
+      "DockerfileRunArguments": "-v {OutDir}:/app/config -p 8025:80",
       "environmentVariables": {
         "ASPNETCORE_URLS": "http://+:80"
       },
