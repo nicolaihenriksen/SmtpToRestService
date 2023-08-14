@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "SmtpToRestService": {
+    "WindowsService": {
       "commandName": "Project"
     }
   }
