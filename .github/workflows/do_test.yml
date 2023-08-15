@@ -18,4 +18,6 @@ jobs:
 
       - name: Print username
         run: |
-          echo "The username is: $env:DOCKERHUB_USERNAME"
+          echo "1. The username is: $env:DOCKERHUB_USERNAME"
+          echo "2. The username is: $DOCKERHUB_USERNAME"
+          echo "3. The username is: $%DOCKERHUB_USERNAME%"
