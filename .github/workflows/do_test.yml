@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      user_name: ${{ secrets.DOCKERHUB_USERNAME }}
 
     steps:
       - name: Checkout repo
@@ -18,6 +17,6 @@ jobs:
 
       - name: Print username
         run: |
-          echo "1. The username is: $env:DOCKERHUB_USERNAME"
-          echo "2. The username is: $DOCKERHUB_USERNAME"
-          echo "3. The username is: $%DOCKERHUB_USERNAME%"
+          echo "1. The username is: $env:user_name"
+          echo "2. The username is: user_name"
+          echo "3. The username is: %user_name%"
