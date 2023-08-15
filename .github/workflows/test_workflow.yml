@@ -1,23 +1,13 @@
 name: Test workflow
 
 on:
-  workflow_call:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
 
 jobs:
-  testing:
-    name: Testing
-    runs-on: ubuntu-latest
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Print username
-        run: |
-          echo "The GitHub Action Secret will be masked: "
-          echo ${{ secrets.DOCKERHUB_USERNAME }}
-          echo "Trick to echo GitHub Actions Secret: "
-          echo ${{ secrets.DOCKERHUB_USERNAME }} | sed 's/./& /g'
+  build:
+    name: Build artifacts
+    uses: ./.github/workflows/do_test.yml
