@@ -2,6 +2,7 @@ name: Do Test
 
 on:
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   testing:
@@ -14,6 +15,4 @@ jobs:
 
       - name: Print username
         run: |
-          echo "$user_name"
-          echo "$env:user_name"
-          echo "%user_name%"
+          echo "${{ secrets.DOCKERHUB_USERNAME }}"
