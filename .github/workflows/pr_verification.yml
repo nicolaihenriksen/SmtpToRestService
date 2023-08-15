@@ -1,0 +1,17 @@
+name: Pull Request Verification
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    name: Build artifacts
+    uses: ./.github/workflows/build_artifacts.yml
