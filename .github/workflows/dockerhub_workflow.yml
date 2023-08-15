@@ -1,0 +1,13 @@
+name: Publish Docker Image
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    name: Publish To Docker Hub
+    uses: ./.github/workflows/publish_dockerimage.yml
