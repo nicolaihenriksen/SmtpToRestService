@@ -8,15 +8,12 @@ jobs:
     name: Testing
     runs-on: ubuntu-latest
 
-    env:
-      user_name: ${{ secrets.DOCKERHUB_USERNAME }}
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Print username
         run: |
-          echo "1. The username is: $env:user_name"
-          echo "2. The username is: user_name"
-          echo "3. The username is: %user_name%"
+          echo "$user_name"
+          echo "$env:user_name"
+          echo "%user_name%"

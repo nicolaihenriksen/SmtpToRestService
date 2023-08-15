@@ -7,6 +7,9 @@ defaults:
   run:
     shell: pwsh
 
+env:
+  user_name: ${{ secrets.DOCKERHUB_USERNAME }}
+
 jobs:
   build:
     name: Build artifacts
