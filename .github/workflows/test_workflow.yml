@@ -1,0 +1,23 @@
+name: Test workflow
+
+on:
+  workflow_call:
+
+jobs:
+  testing:
+    name: Testing
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Print username
+        run: |
+          echo "The GitHub Action Secret will be masked: "
+          echo ${{ secrets.DOCKERHUB_USERNAME }}
+          echo "Trick to echo GitHub Actions Secret: "
+          echo ${{ secrets.DOCKERHUB_USERNAME }} | sed 's/./& /g'
