@@ -1,12 +1,9 @@
-name: Pull Request Verification
+name: Build
 
 on:
   push:
     branches:
-      - master
-      - containerize
-  pull_request:
-    branches: [ master ]
+      - '**'
   workflow_dispatch:
 
 defaults:
