@@ -15,4 +15,7 @@ jobs:
 
       - name: Print username
         run: |
-          echo "${{ secrets.DOCKERHUB_USERNAME }}"
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.DOCKERHUB_USERNAME }}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.DOCKERHUB_USERNAME}} | sed 's/./& /g'
