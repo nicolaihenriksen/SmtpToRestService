@@ -34,3 +34,13 @@ jobs:
       - name: Test
         timeout-minutes: 5
         run: dotnet test ${{ env.solution }} --configuration ${{ inputs.build-configuration }} --no-build --verbosity normal --blame-crash
+
+      - name: Build self-contained EXE for Windows Service
+        timeout-minutes: 5
+        run: .\SmtpToRest.WindowsService\Publish.ps1
+    
+      - name: Upload self-contained EXE as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: SmtpToRest.WindowsService.zip
+          path: "SmtpToRest.WindowsService/publish/SmtpToRest.WindowsService.zip"
