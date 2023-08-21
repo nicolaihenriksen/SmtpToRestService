@@ -1,3 +1,3 @@
-dotnet publish SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:DebugType=None -p:DebugSymbols=false -o:./publish
-rm ./publish/appsettings.Development.json
-Compress-Archive -Path ./publish/* -DestinationPath ./publish/SmtpToRest.WindowsService.zip
+dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:DebugType=None -p:DebugSymbols=false -o:./SmtpToRest.WindowsService/publish
+rm ./SmtpToRest.WindowsService/publish/appsettings.Development.json
+Compress-Archive -Path ./SmtpToRest.WindowsService/publish/* -DestinationPath ./SmtpToRest.WindowsService/publish/SmtpToRest.WindowsService.zip
