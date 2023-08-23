@@ -1,7 +1,23 @@
 # SmtpToRest.Docker
 
-TODO: Details regarding the docker image and docker compose file.
+SmtpToRest can be run in a docker container by pulling the docker image from [Docker Hub](https://hub.docker.com/).
+When executing containerized, it is important to map a volume which holds the directory where the `configuration.json`
+file is located. An example docker compose file can be found below.
 
-TODO: Links
-- https://medium.com/@__hungrywolf/web-api-and-docker-compose-453f9b824ff9
-- https://www.corstianboerman.com/blog/2021-01-31/accessing-the-file-system-with-asp-net-core-and-docker
+## Docker Compose
+
+```docker
+version: '3'
+
+services:
+  app:
+    image: nicolaihenriksen/smtptorest:latest
+    container_name: smtp_to_rest_service
+    ports:
+      - "8025:25"
+      - "8587:587"
+    volumes:
+      - ./<mapped-config-dir>:/app/config:ro
+```
+
+**NOTE:** Remember to replace `<mapped-config-dir>` with an actual directory where the `configuration.json` file is located.
