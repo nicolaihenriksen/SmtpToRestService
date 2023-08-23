@@ -13,7 +13,7 @@ public class Configuration : IConfiguration
     public string? HttpMethod { get; private set; }
 
     public const string Filename = "configuration.json";
-    private readonly Dictionary<string, ConfigurationMapping> _mappings = new Dictionary<string, ConfigurationMapping>();
+    private readonly Dictionary<string, ConfigurationMapping> _mappings = new();
     private readonly ILogger<Configuration> _logger;
     private readonly IConfigurationFileReader _configurationFileReader;
     private readonly string _configurationPath;
@@ -32,7 +32,7 @@ public class Configuration : IConfiguration
 		        Filter = Filename,
 		        NotifyFilter = NotifyFilters.LastWrite
 	        };
-	        fileSystemWatcher.Changed += (sender, args) => ReloadConfiguration();
+	        fileSystemWatcher.Changed += (_, _) => ReloadConfiguration();
 	        fileSystemWatcher.EnableRaisingEvents = true;
         }
     }
