@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmtpToRest.Config;
@@ -17,7 +18,7 @@ public class Program
             {
 	            services
 		            .UseSmtpToRestDefaults()
-		            .AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>();
-            })
+		            .AddSingleton<IConfigurationProvider>(sp => new ConfigurationProvider(() => Path.Combine(System.AppContext.BaseDirectory)));
+			})
             .UseWindowsService();
 }

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace SmtpToRest.Config;
 
 public class DefaultConfigurationFileReader : IConfigurationFileReader
 {
-	public string Read()
+	public string Read(string path)
 	{
-		string configFilePath = Path.Combine(Assembly.GetExecutingAssembly().Location, Configuration.Filename);
-		if (!File.Exists(configFilePath))
+		if (!File.Exists(path))
 		{
-			throw new InvalidOperationException($"'{Configuration.Filename}' could not be found at specified path: '{configFilePath}'");
+			throw new InvalidOperationException($"'{Configuration.Filename}' could not be found at specified path: '{path}'");
 		}
-		return File.ReadAllText(configFilePath);
+		return File.ReadAllText(path);
 	}
 }

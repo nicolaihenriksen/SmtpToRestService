@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
 		services
 			.UseDecorators()
 			.AddSingleton<IConfiguration, Configuration>()
+			.AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>()
 			.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
 			.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
 			.AddSingleton<IMessageProcessor, DefaultMessageProcessor>()

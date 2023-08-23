@@ -17,11 +17,13 @@ public class ConfigurationTests
     {
         // Arrange
         var log = new Mock<ILogger<Configuration>>();
+        var configProvider = new Mock<IConfigurationProvider>();
+        configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
         var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read()).Returns("{ invalid JSON document }");
+        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns("{ invalid JSON document }");
 
         // Act
-        Action act = () => new Configuration(log.Object, configReader.Object);
+        Action act = () => new Configuration(log.Object, configProvider.Object, configReader.Object);
             
         // Assert
         act.Should().Throw<JsonException>();
@@ -39,14 +41,16 @@ public class ConfigurationTests
         });
             
         var log = new Mock<ILogger<Configuration>>();
-        var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read()).Returns(json);
+        var configProvider = new Mock<IConfigurationProvider>();
+        configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
+		var configReader = new Mock<IConfigurationFileReader>();
+        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
-        var config = new Configuration(log.Object, configReader.Object);
+        var config = new Configuration(log.Object, configProvider.Object, configReader.Object);
 
-        // Assert
-        config.Endpoint.Should().Be("<endpoint>");
+		// Assert
+		config.Endpoint.Should().Be("<endpoint>");
         config.ApiToken.Should().Be("<token>");
         config.HttpMethod.Should().Be("<httpMethod>");
     }
@@ -82,15 +86,17 @@ public class ConfigurationTests
             }
         });
 
-        var log = new Mock<ILogger<Configuration>>();
-        var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read()).Returns(json);
+		var log = new Mock<ILogger<Configuration>>();
+		var configProvider = new Mock<IConfigurationProvider>();
+		configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
+		var configReader = new Mock<IConfigurationFileReader>();
+        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
-        var config = new Configuration(log.Object, configReader.Object);
+        var config = new Configuration(log.Object, configProvider.Object, configReader.Object);
 
-        // Assert
-        if (!config.TryGetMapping("<key1>", out var mapping1) || mapping1 is null)
+		// Assert
+		if (!config.TryGetMapping("<key1>", out var mapping1) || mapping1 is null)
 	        throw new AssertionFailedException("Unable to read mapping");
         if (!config.TryGetMapping("<key2>", out var mapping2) || mapping2 is null)
 	        throw new AssertionFailedException("Unable to read mapping");
@@ -134,11 +140,13 @@ public class ConfigurationTests
             }
         });
         var log = new Mock<ILogger<Configuration>>();
-        var configReader = new Mock<IConfigurationFileReader>();
-        configReader.Setup(c => c.Read()).Returns(json);
+        var configProvider = new Mock<IConfigurationProvider>();
+        configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
+		var configReader = new Mock<IConfigurationFileReader>();
+        configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
-        var config = new Configuration(log.Object, configReader.Object);
+        var config = new Configuration(log.Object, configProvider.Object, configReader.Object);
 
 		// Assert
 		if (!config.TryGetMapping("<key>", out var mapping) || mapping is null)

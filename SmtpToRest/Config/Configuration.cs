@@ -16,34 +16,32 @@ public class Configuration : IConfiguration
     private readonly Dictionary<string, ConfigurationMapping> _mappings = new Dictionary<string, ConfigurationMapping>();
     private readonly ILogger<Configuration> _logger;
     private readonly IConfigurationFileReader _configurationFileReader;
+    private readonly string _configurationPath;
 
-    public Configuration(ILogger<Configuration> logger, IConfigurationFileReader configurationFileReader)
+    public Configuration(ILogger<Configuration> logger, IConfigurationProvider configurationProvider, IConfigurationFileReader configurationFileReader)
     {
         _logger = logger;
         _configurationFileReader = configurationFileReader;
-        /*
-        var fileSystemWatcher = new FileSystemWatcher(CurrentPath)
+        _configurationPath = Path.Combine(configurationProvider.GetConfigurationFileDirectory(), Filename);
+        ReloadConfiguration(false);
+
+		var fileSystemWatcher = new FileSystemWatcher(_configurationPath)
         {
             Filter = Filename,
             NotifyFilter = NotifyFilters.LastWrite
         };
-        fileSystemWatcher.Changed += (sender, args) => ReloadConfiguration(args.Name!);
+        fileSystemWatcher.Changed += (sender, args) => ReloadConfiguration();
         fileSystemWatcher.EnableRaisingEvents = true;
-        */
-        ReloadConfiguration(Filename, false);
     }
 
-    private void ReloadConfiguration(string filename, bool continueOnError = true)
+    private void ReloadConfiguration(bool continueOnError = true)
     {
-        if (Filename != filename)
-            return;
-
         lock (_mappings)
         {
             try
             {
                 _mappings.Clear();
-                var json = _configurationFileReader.Read();
+                var json = _configurationFileReader.Read(_configurationPath);
                 var configRoot = JsonSerializer.Deserialize<ConfigurationRoot>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 ApiToken = configRoot?.ApiToken;
                 Endpoint = configRoot?.Endpoint;

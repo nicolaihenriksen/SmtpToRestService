@@ -2,5 +2,5 @@
 
 public interface IConfigurationFileReader
 {
-    string Read();
+	string Read(string path);
 }
