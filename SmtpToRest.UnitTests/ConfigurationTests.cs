@@ -23,7 +23,7 @@ public class ConfigurationTests
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns("{ invalid JSON document }");
 
         // Act
-        Action act = () => new Configuration(log.Object, configProvider.Object, configReader.Object);
+        Action act = () => new Configuration(log.Object, configProvider.Object, configReader.Object, false);
             
         // Assert
         act.Should().Throw<JsonException>();
@@ -47,7 +47,7 @@ public class ConfigurationTests
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
-        var config = new Configuration(log.Object, configProvider.Object, configReader.Object);
+        var config = new Configuration(log.Object, configProvider.Object, configReader.Object, false);
 
 		// Assert
 		config.Endpoint.Should().Be("<endpoint>");
@@ -93,7 +93,7 @@ public class ConfigurationTests
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
-        var config = new Configuration(log.Object, configProvider.Object, configReader.Object);
+        var config = new Configuration(log.Object, configProvider.Object, configReader.Object, false);
 
 		// Assert
 		if (!config.TryGetMapping("<key1>", out var mapping1) || mapping1 is null)
@@ -146,7 +146,7 @@ public class ConfigurationTests
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
-        var config = new Configuration(log.Object, configProvider.Object, configReader.Object);
+        var config = new Configuration(log.Object, configProvider.Object, configReader.Object, false);
 
 		// Assert
 		if (!config.TryGetMapping("<key>", out var mapping) || mapping is null)

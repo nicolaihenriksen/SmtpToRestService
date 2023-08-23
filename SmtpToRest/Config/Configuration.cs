@@ -18,20 +18,23 @@ public class Configuration : IConfiguration
     private readonly IConfigurationFileReader _configurationFileReader;
     private readonly string _configurationPath;
 
-    public Configuration(ILogger<Configuration> logger, IConfigurationProvider configurationProvider, IConfigurationFileReader configurationFileReader)
+    public Configuration(ILogger<Configuration> logger, IConfigurationProvider configurationProvider, IConfigurationFileReader configurationFileReader, bool watch = true)
     {
         _logger = logger;
         _configurationFileReader = configurationFileReader;
         _configurationPath = Path.Combine(configurationProvider.GetConfigurationFileDirectory(), Filename);
         ReloadConfiguration(false);
 
-		var fileSystemWatcher = new FileSystemWatcher(_configurationPath)
+        if (watch)
         {
-            Filter = Filename,
-            NotifyFilter = NotifyFilters.LastWrite
-        };
-        fileSystemWatcher.Changed += (sender, args) => ReloadConfiguration();
-        fileSystemWatcher.EnableRaisingEvents = true;
+	        var fileSystemWatcher = new FileSystemWatcher(_configurationPath)
+	        {
+		        Filter = Filename,
+		        NotifyFilter = NotifyFilters.LastWrite
+	        };
+	        fileSystemWatcher.Changed += (sender, args) => ReloadConfiguration();
+	        fileSystemWatcher.EnableRaisingEvents = true;
+        }
     }
 
     private void ReloadConfiguration(bool continueOnError = true)
