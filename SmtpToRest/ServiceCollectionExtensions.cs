@@ -12,7 +12,8 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection UseSmtpToRestDefaults(this IServiceCollection services)
 	{
 		services
-			.UseDecorators()
+			.AddDefaultDecorators()
+			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
 			.AddSingleton<IConfiguration, Configuration>()
 			.AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>()
 			.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
@@ -24,15 +25,13 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	private static IServiceCollection UseDecorators(this IServiceCollection services)
+	private static IServiceCollection AddDefaultDecorators(this IServiceCollection services)
 	{
 		services
 			.AddSingleton<IRestInputDecorator, ConfigurationDecorator>()
 			.AddSingleton<IRestInputDecorator, EndpointOverridesDecorator>()
 			.AddSingleton<IRestInputDecorator, QueryStringDecorator>()
-			.AddSingleton<IRestInputDecorator, JsonPostDataDecorator>()
-			// Add the aggregate decorator which consumes all the registered IRestInputDecorators allowing external injection of custom decorators.
-			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>();
+			.AddSingleton<IRestInputDecorator, JsonPostDataDecorator>();
 		return services;
 	}
 }
