@@ -8,7 +8,9 @@ namespace SmtpToRest.Config;
 
 internal class Configuration : IConfiguration
 {
-    public string? ApiToken { get; private set; }
+	public string? SmtpHost { get; private set; }
+	public int[]? SmtpPorts { get; private set; }
+	public string? ApiToken { get; private set; }
     public string? Endpoint { get; private set; }
     public string? HttpMethod { get; private set; }
 
@@ -53,6 +55,8 @@ internal class Configuration : IConfiguration
                 _mappings.Clear();
                 var json = _configurationFileReader.Read(_configurationPath);
                 var configRoot = JsonSerializer.Deserialize<ConfigurationRoot>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                SmtpHost = configRoot?.SmtpHost;
+                SmtpPorts = configRoot?.SmtpPorts;
                 ApiToken = configRoot?.ApiToken;
                 Endpoint = configRoot?.Endpoint;
                 HttpMethod = configRoot?.HttpMethod;
