@@ -2,6 +2,11 @@ name:  Publish Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version being released'
+        required: true
+        type: string
 
 jobs:
   push_to_registry:
