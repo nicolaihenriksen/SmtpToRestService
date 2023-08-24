@@ -1,14 +1,15 @@
-# SmtpToRestService
+# SmtpToRest
+[![Build](https://github.com/nicolaihenriksen/SmtpToRestService/actions/workflows/build_workflow.yml/badge.svg)](https://github.com/nicolaihenriksen/SmtpToRestService/actions/workflows/build_workflow.yml)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/10f37ao5nmvw0e7b?svg=true)](https://ci.appveyor.com/project/nicolaihenriksen/smtptorestservice)
+Simple .NET Core application converting "e-mails" to REST API calls. Can be executed as a Docker container or as a Windows Service.
 
-Simple .NET Core Windows Service converting "e-mails" to REST API calls.
-
-I created this service because I needed to trigger some REST API services in my home automation system when certain types of motion events happened on my CCTV cameras. Although my cameras are [ONVIF](https://www.onvif.org/) compliant, they do no not expose these motion events via the [ONVIF Profile S](https://www.onvif.org/profiles/profile-s/), and thus are unavailable in my home automation system integration.
+I created this application because I needed to trigger some REST API services in my home automation system when certain types of motion events happened on my CCTV cameras. Although my cameras are [ONVIF](https://www.onvif.org/) compliant, they do no not expose these motion events via the [ONVIF Profile S](https://www.onvif.org/profiles/profile-s/), and thus are unavailable in my home automation system integration.
 
 My workaround for this problem was to configure the cameras to "send an e-mail" when the desired motion events occurred, but instead of using my normal SMTP server to send the email, I configured the cameras to use the SMTP service hosted by the code in this repository instead. This service then converts those "e-mails" into the desired REST API calls I need in my home automation system.
 
-##### Disclaimer
+The project has since then become a hobby project where I am experimenting with adding Docker support, CI/CD pipelines and other fun stuff.
+
+### Disclaimer
 Currently, the code attempts to convert all e-mail requests to REST API calls, but it would be a relatively simple task to simply forward certain e-mails to an "actual" SMTP server if needed. Furthermore, the current code cannot use any of the information from the e-mail in the actual REST API call, but this could also be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
 
 ## Configuration
@@ -69,15 +70,11 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 
 <br />
 
+## Install as Docker container
+See [SmtpToRest.Docker](SmtpToRest.Docker/README.md)
+
 ## Install as Windows Service
-In order to install this as a windows service, open up a command prompt (in Administrator mode) and issue the following command:
-```
-sc create smtptorestservice binPath="<full-path-to-deployment-dir>\SmtpToRestService.exe"
-```
-
-Remember to replace **&lt;full-path-to-deployment-dir&gt;** with the actual path where you have deployed the package.
-
-**NOTE:** The **sc** command allows for a number of parameters if you want to tweak the display name, description, startup, dependencies, etc. of the service.
+See [SmtpToRest.WindowsService](SmtpToRest.WindowsService/README.md)
 
 <br />
 

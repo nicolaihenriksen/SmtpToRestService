@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": false,
+      "DockerfileRunArguments": "-v {OutDir}:/app/config -p 8025:80 -p 8587:587",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "http://+:80"
+      },
+      "publishAllPorts": true
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
+}

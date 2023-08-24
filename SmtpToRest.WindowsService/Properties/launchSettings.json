@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "WindowsService": {
+      "commandName": "Project"
+    }
+  }
+}

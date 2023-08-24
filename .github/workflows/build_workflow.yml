@@ -1,0 +1,16 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    name: Build artifacts
+    uses: ./.github/workflows/build_artifacts.yml
