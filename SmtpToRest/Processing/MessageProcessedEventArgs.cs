@@ -2,7 +2,7 @@
 
 namespace SmtpToRest.Processing;
 
-public class MessageProcessedEventArgs : EventArgs
+internal class MessageProcessedEventArgs : EventArgs
 {
     public ProcessResult ProcessResult { get; }
 

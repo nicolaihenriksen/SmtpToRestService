@@ -1,6 +1,6 @@
 ﻿namespace SmtpToRest.Config;
 
-public interface IConfigurationFileReader
+internal interface IConfigurationFileReader
 {
 	string Read(string path);
 }

@@ -4,7 +4,7 @@ using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.Rest.Decorators;
 
-public class ConfigurationDecorator : DecoratorBase, IRestInputDecorator
+internal class ConfigurationDecorator : DecoratorBase, IRestInputDecorator
 {
 	private readonly IConfiguration _configuration;
 

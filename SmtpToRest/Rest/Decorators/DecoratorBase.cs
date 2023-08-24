@@ -1,6 +1,6 @@
 ﻿namespace SmtpToRest.Rest.Decorators;
 
-public abstract class DecoratorBase
+internal abstract class DecoratorBase
 {
 	// TODO: Declare available placeholders as constants
 

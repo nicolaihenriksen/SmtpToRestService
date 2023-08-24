@@ -12,7 +12,7 @@ using SmtpServer.Storage;
 
 namespace SmtpToRest.Services.Smtp;
 
-public class SimpleMessageStore : MessageStore
+internal class SimpleMessageStore : MessageStore
 {
     private readonly ILogger<SmtpServerBackgroundService> _logger;
     private readonly BlockingCollection<IMimeMessage> _messageQueue;

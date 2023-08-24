@@ -4,7 +4,7 @@ using SmtpServer.Storage;
 
 namespace SmtpToRest.Services.Smtp;
 
-public class DefaultMessageStoreFactory : IMessageStoreFactory
+internal class DefaultMessageStoreFactory : IMessageStoreFactory
 {
     public IMessageStore Create(ILogger<SmtpServerBackgroundService> logger, BlockingCollection<IMimeMessage> messageQueue)
     {

@@ -3,7 +3,7 @@ using SmtpServer;
 
 namespace SmtpToRest.Services.Smtp;
 
-public interface ISmtpServerFactory
+internal interface ISmtpServerFactory
 {
     ISmtpServer Create(ISmtpServerOptions options, IServiceProvider serviceProvider);
 }

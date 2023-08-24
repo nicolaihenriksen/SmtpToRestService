@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SmtpToRest.Config;
 
-public class DefaultConfigurationFileReader : IConfigurationFileReader
+internal class DefaultConfigurationFileReader : IConfigurationFileReader
 {
 	public string Read(string path)
 	{

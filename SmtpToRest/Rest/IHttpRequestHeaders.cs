@@ -2,7 +2,7 @@
 
 namespace SmtpToRest.Rest;
 
-public interface IHttpRequestHeaders
+internal interface IHttpRequestHeaders
 {
     AuthenticationHeaderValue? Authorization { get; set; }
 }

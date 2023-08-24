@@ -9,14 +9,14 @@ using SmtpToRest.Rest.Decorators;
 
 namespace SmtpToRest.Processing;
 
-public class DefaultMessageProcessor : IMessageProcessor
+internal class DefaultMessageProcessor : IMessageProcessor
 {
 	private readonly IConfiguration _configuration;
 	private readonly IRestClient _restClient;
-	private readonly IRestInputDecorator _decorator;
+	private readonly IRestInputDecoratorInternal _decorator;
 	private readonly ILogger<DefaultMessageProcessor> _logger;
 
-	public DefaultMessageProcessor(ILogger<DefaultMessageProcessor> logger, IConfiguration configuration, IRestClient restClient, IRestInputDecorator decorator)
+	public DefaultMessageProcessor(ILogger<DefaultMessageProcessor> logger, IConfiguration configuration, IRestClient restClient, IRestInputDecoratorInternal decorator)
 	{
 		_logger = logger;
 		_configuration = configuration;

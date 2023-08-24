@@ -1,6 +1,6 @@
 ﻿namespace SmtpToRest.Rest;
 
-public interface IHttpClientFactory
+internal interface IHttpClientFactory
 {
     IHttpClient Create(string baseAddress);
 }

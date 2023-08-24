@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmtpToRest.Rest;
 
-public interface IHttpClient
+internal interface IHttpClient
 {
     Uri? BaseAddress { get; }
     IHttpRequestHeaders DefaultRequestHeaders { get; }
