@@ -1,4 +1,6 @@
 {
+  "smtpHost": "localhost",
+  "smtpPorts": [ 25, 587 ],
   "apiToken": "",
   "endpoint": "https://jsonplaceholder.typicode.com/",
   "httpMethod": "GET",

@@ -6,24 +6,27 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SmtpServer;
 using SmtpServer.ComponentModel;
+using SmtpToRest.Config;
 using SmtpToRest.Processing;
 
 namespace SmtpToRest.Services.Smtp;
 
 internal class SmtpServerBackgroundService : BackgroundService
 {
-    public event EventHandler<MessageProcessedEventArgs> MessageProcessed = delegate { };
+    public event EventHandler<MessageProcessedEventArgs>? MessageProcessed;
 
     private readonly ILogger<SmtpServerBackgroundService> _logger;
+    private readonly IConfiguration _configuration;
     private readonly IMessageProcessor _messageProcessor;
     private readonly IMessageStoreFactory _messageStoreFactory;
     private readonly ISmtpServerFactory _smtpServerFactory;
-    private readonly BlockingCollection<IMimeMessage> _messageQueue = new BlockingCollection<IMimeMessage>();
+    private readonly BlockingCollection<IMimeMessage> _messageQueue = new();
     private ISmtpServer? _smtpServer;
 
-    public SmtpServerBackgroundService(ILogger<SmtpServerBackgroundService> logger, IMessageProcessor messageProcessor, IMessageStoreFactory messageStoreFactory, ISmtpServerFactory smtpServerFactory)
+    public SmtpServerBackgroundService(ILogger<SmtpServerBackgroundService> logger, IConfiguration configuration, IMessageProcessor messageProcessor, IMessageStoreFactory messageStoreFactory, ISmtpServerFactory smtpServerFactory)
     {
         _logger = logger;
+        _configuration = configuration;
         _messageProcessor = messageProcessor;
         _messageStoreFactory = messageStoreFactory;
         _smtpServerFactory = smtpServerFactory;
@@ -35,8 +38,8 @@ internal class SmtpServerBackgroundService : BackgroundService
         try
         {
             var options = new SmtpServerOptionsBuilder()
-                .ServerName("localhost")
-                .Port(25, 587)
+                .ServerName(_configuration.SmtpHost ?? "localhost")
+                .Port(_configuration.SmtpPorts ?? new[] { 25, 587 })
                 .Build();
 
             var serviceProvider = new ServiceProvider();
@@ -66,7 +69,7 @@ internal class SmtpServerBackgroundService : BackgroundService
         {
             _logger.LogDebug(FormattableString.Invariant($"Processing message..."));
             var result = await _messageProcessor.ProcessAsync(message, cancellationToken);
-            MessageProcessed.Invoke(this, new MessageProcessedEventArgs(result));
+            MessageProcessed?.Invoke(this, new MessageProcessedEventArgs(result));
         }
     }
 }

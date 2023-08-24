@@ -5,7 +5,7 @@ namespace SmtpToRest.Services.Smtp;
 
 internal class MimeMessageAdapter : IMimeMessage
 {
-    public string Address => _adaptee.From.OfType<MailboxAddress>().First().Address;
+    public string Address => _adaptee.From.Mailboxes.First().Address;
 
     private readonly MimeMessage _adaptee;
 

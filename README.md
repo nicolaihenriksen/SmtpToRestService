@@ -17,6 +17,8 @@ The sample configuration below illustrates the current possibilites.
 
 ```json
 {
+  "smtpHost": "localhost",
+  "smtpPorts": [ 25, 587 ],
   "apiToken": "<place your API token here if needed>",
   "endpoint": "https://jsonplaceholder.typicode.com/",
   "httpMethod": "GET",
@@ -49,10 +51,12 @@ The sample configuration below illustrates the current possibilites.
 
 | Property | Description |
 | --- | --- |
+|smtpHost|<b>Optional</b><br />Defines the host (endpoint) where the SMTP server will be listening. Defaults to "localhost".</b><br /><b>Note</b> Does not support runtime updates|
+|smtpPorts|<b>Optional</b><br />Defines ports the SMTP server will be listening on. Defaults to ports 25 and 587.</b><br /><b>Note</b> Does not support runtime updates|
 |apiToken|<b>Optional</b><br />Defines the API token used for mappings (unless overridden in the mapping). Should be set if the REST service requires you to provide an API key.|
 |endpoint|<b>Required - if "customEndpoint" not set on mapping</b><br />Defines the common endpoint used for mappings (unless overridden in the mapping).|
 |httpMethod|<b>Optional - defaults to "GET"</b><br />Defines the common HTTP method to use for mappings (unless overridden in the mapping).|
-|mappings|<b>Optional (but boring service if omitted)</b><br />Defines a list of mappings (see below)|
+|mappings|<b>Optional (but boring service if omitted)</b><br />Defines a list of mappings (see below).|
 
 <br />
 
