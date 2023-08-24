@@ -4,7 +4,7 @@ using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.Rest.Decorators;
 
-public class EndpointOverridesDecorator : DecoratorBase, IRestInputDecorator
+internal class EndpointOverridesDecorator : DecoratorBase, IRestInputDecorator
 {
 	public RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
 	{

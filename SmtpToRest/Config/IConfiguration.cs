@@ -1,6 +1,6 @@
 ﻿namespace SmtpToRest.Config;
 
-public interface IConfiguration
+internal interface IConfiguration
 {
     string? ApiToken { get; }
     string? Endpoint { get; }

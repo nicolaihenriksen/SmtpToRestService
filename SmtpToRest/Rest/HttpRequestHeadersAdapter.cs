@@ -2,7 +2,7 @@
 
 namespace SmtpToRest.Rest;
 
-public class HttpRequestHeadersAdapter : IHttpRequestHeaders
+internal class HttpRequestHeadersAdapter : IHttpRequestHeaders
 {
     public AuthenticationHeaderValue? Authorization
     {

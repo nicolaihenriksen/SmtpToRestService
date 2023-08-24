@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SmtpToRest.Services.Smtp;
 
-public class SmtpServerAdapter : ISmtpServer
+internal class SmtpServerAdapter : ISmtpServer
 {
     private readonly SmtpServer.SmtpServer _adaptee;
 

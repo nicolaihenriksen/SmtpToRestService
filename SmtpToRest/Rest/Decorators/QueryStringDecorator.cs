@@ -3,7 +3,7 @@ using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.Rest.Decorators;
 
-public class QueryStringDecorator : DecoratorBase, IRestInputDecorator
+internal class QueryStringDecorator : DecoratorBase, IRestInputDecorator
 {
 	public RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
 	{

@@ -26,18 +26,13 @@ public static class ServiceCollectionExtensions
 
 	private static IServiceCollection UseDecorators(this IServiceCollection services)
 	{
-		// TODO: UGH! I need to find a better approach for this
 		services
-			.AddSingleton<ConfigurationDecorator>()
-			.AddSingleton<EndpointOverridesDecorator>()
-			.AddSingleton<QueryStringDecorator>()
-			.AddSingleton<JsonPostDataDecorator>()
-			.AddSingleton<IRestInputDecorator>(provider => new AggregateDecorator(
-					provider.GetRequiredService<ConfigurationDecorator>(),
-					provider.GetRequiredService<EndpointOverridesDecorator>(),
-					provider.GetRequiredService<QueryStringDecorator>(),
-					provider.GetRequiredService<JsonPostDataDecorator>()));
-
+			.AddSingleton<IRestInputDecorator, ConfigurationDecorator>()
+			.AddSingleton<IRestInputDecorator, EndpointOverridesDecorator>()
+			.AddSingleton<IRestInputDecorator, QueryStringDecorator>()
+			.AddSingleton<IRestInputDecorator, JsonPostDataDecorator>()
+			// Add the aggregate decorator which consumes all the registered IRestInputDecorators allowing external injection of custom decorators.
+			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>();
 		return services;
 	}
 }

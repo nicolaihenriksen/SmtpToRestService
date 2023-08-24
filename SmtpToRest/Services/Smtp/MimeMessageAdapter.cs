@@ -3,7 +3,7 @@ using MimeKit;
 
 namespace SmtpToRest.Services.Smtp;
 
-public class MimeMessageAdapter : IMimeMessage
+internal class MimeMessageAdapter : IMimeMessage
 {
     public string Address => _adaptee.From.OfType<MailboxAddress>().First().Address;
 

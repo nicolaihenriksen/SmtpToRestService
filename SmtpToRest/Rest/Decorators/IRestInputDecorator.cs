@@ -7,3 +7,8 @@ public interface IRestInputDecorator
 {
     RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message);
 }
+
+internal interface IRestInputDecoratorInternal
+{
+	RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message);
+}

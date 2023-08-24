@@ -1,16 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using SmtpToRest.Config;
 using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.Rest.Decorators;
 
-public class AggregateDecorator : DecoratorBase, IRestInputDecorator
+internal class AggregateDecorator : DecoratorBase, IRestInputDecoratorInternal
 {
-	private readonly IRestInputDecorator[] _decorators;
+	private readonly List<IRestInputDecorator> _decorators;
 
-	public AggregateDecorator(params IRestInputDecorator[] decorators)
+	public AggregateDecorator(IEnumerable<IRestInputDecorator> decorators)
 	{
-		_decorators = decorators;
+		_decorators = decorators?.ToList() ?? new List<IRestInputDecorator>();
 	}
 
 	public RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)

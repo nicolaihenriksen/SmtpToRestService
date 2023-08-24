@@ -8,7 +8,7 @@ using SmtpToRest.Config;
 
 namespace SmtpToRest.Rest;
 
-public class RestClient : IRestClient
+internal class RestClient : IRestClient
 {
     private readonly IConfiguration _configuration;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -41,22 +41,4 @@ public class RestClient : IRestClient
 				return await client.GetAsync(uriBuilder.Uri, cancellationToken);
 		}
     }
-}
-
-public class RestInput
-{
-    public string? ApiToken { get; set; }
-    public HttpMethod HttpMethod { get; set; } = HttpMethod.Get;
-    public string? Endpoint { get; set; }
-	public string? Service { get; set; }
-    public string? QueryString { get; set; }
-    public dynamic? JsonPostData { get; set; }
-}
-
-public enum HttpMethod
-{
-    Get,
-    Post,
-    Put,
-    Delete
 }

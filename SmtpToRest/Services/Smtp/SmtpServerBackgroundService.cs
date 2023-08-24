@@ -10,7 +10,7 @@ using SmtpToRest.Processing;
 
 namespace SmtpToRest.Services.Smtp;
 
-public class SmtpServerBackgroundService : BackgroundService
+internal class SmtpServerBackgroundService : BackgroundService
 {
     public event EventHandler<MessageProcessedEventArgs> MessageProcessed = delegate { };
 

@@ -4,7 +4,7 @@ using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.Processing;
 
-public interface IMessageProcessor
+internal interface IMessageProcessor
 {
     Task<ProcessResult> ProcessAsync(IMimeMessage message, CancellationToken cancellationToken);
 }

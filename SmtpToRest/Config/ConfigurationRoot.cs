@@ -3,7 +3,7 @@ using System.Net;
 
 namespace SmtpToRest.Config;
 
-public class ConfigurationRoot
+internal class ConfigurationRoot
 {
 	public string? ApiToken { get; set; }
 	public string? Endpoint { get; set; }

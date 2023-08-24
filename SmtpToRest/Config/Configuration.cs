@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SmtpToRest.Config;
 
-public class Configuration : IConfiguration
+internal class Configuration : IConfiguration
 {
     public string? ApiToken { get; private set; }
     public string? Endpoint { get; private set; }
@@ -22,17 +22,24 @@ public class Configuration : IConfiguration
     {
         _logger = logger;
         _configurationFileReader = configurationFileReader;
-        _configurationPath = Path.Combine(configurationProvider.GetConfigurationFileDirectory(), Filename);
+        string configDir = configurationProvider.GetConfigurationFileDirectory();
+        _configurationPath = Path.Combine(configDir, Filename);
         ReloadConfiguration(false);
 
         if (watch)
         {
-	        var fileSystemWatcher = new FileSystemWatcher(_configurationPath)
+	        var fileSystemWatcher = new FileSystemWatcher(configDir)
 	        {
 		        Filter = Filename,
 		        NotifyFilter = NotifyFilters.LastWrite
 	        };
-	        fileSystemWatcher.Changed += (_, _) => ReloadConfiguration();
+	        fileSystemWatcher.Changed += (_, args) =>
+	        {
+		        if (Equals(args.Name, Filename))
+		        {
+			        ReloadConfiguration();
+		        }
+	        };
 	        fileSystemWatcher.EnableRaisingEvents = true;
         }
     }

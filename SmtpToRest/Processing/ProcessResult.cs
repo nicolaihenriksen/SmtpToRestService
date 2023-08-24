@@ -1,6 +1,6 @@
 ﻿namespace SmtpToRest.Processing;
 
-public class ProcessResult
+internal class ProcessResult
 {
     public bool IsSuccess { get; } = true;
     public string? Error { get; }

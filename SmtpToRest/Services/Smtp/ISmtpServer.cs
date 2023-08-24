@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SmtpToRest.Services.Smtp;
 
-public interface ISmtpServer
+internal interface ISmtpServer
 {
     Task StartAsync(CancellationToken cancellationToken);
     void Shutdown();
