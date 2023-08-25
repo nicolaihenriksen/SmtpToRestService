@@ -6,16 +6,21 @@ on:
       - '**'
     paths-ignore:
       - '**/README.md'
-      - '.github/**'
   workflow_dispatch:
 
-defaults:
-  run:
-    shell: pwsh
-
 jobs:
+  resolve_version:
+    name: Resolve Version
+    runs-on: ubuntu-latest
+    outputs:
+      releaseVersion: ${{ steps.step1.outputs.version }}
+    steps:
+      - id: step1
+        run: echo "version=1.2.5" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build artifacts
+    needs: resolve_version
     uses: ./.github/workflows/build_artifacts.yml
     with:
-      isRelease: false
+      releaseVersion: ${{ needs.resolve_version.outputs.releaseVersion }}

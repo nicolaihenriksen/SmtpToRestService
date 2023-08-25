@@ -3,10 +3,6 @@ name: Build Artifacts
 on:
   workflow_call:
     inputs:
-      isRelease:
-        default: false
-        required: false
-        type: boolean
       releaseVersion:
         default: ""
         required: false
