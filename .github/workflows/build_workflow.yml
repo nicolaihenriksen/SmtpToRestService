@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - '**'
+    paths-ignore:
+      - '**/README.md'
+      - '.github/**'
   workflow_dispatch:
 
 defaults:
