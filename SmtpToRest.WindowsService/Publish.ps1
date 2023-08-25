@@ -1,2 +1,2 @@
-dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:DebugType=None -p:DebugSymbols=false -o:./SmtpToRest.WindowsService/publish
+dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:DebugType=None -p:DebugSymbols=false -f net7.0 -o:./SmtpToRest.WindowsService/publish
 rm ./SmtpToRest.WindowsService/publish/appsettings.Development.json
