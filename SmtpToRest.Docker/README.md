@@ -20,4 +20,5 @@ services:
       - ./<mapped-config-dir>:/app/config:ro
 ```
 
+
 **NOTE:** Remember to replace `<mapped-config-dir>` with an actual directory where the `configuration.json` file is located.
