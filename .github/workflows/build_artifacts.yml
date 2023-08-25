@@ -2,6 +2,16 @@ name: Build Artifacts
 
 on:
   workflow_call:
+    inputs:
+      isRelease:
+        default: false
+        required: false
+        type: boolean
+      releaseVersion:
+        default: ""
+        required: false
+        type: string
+
 
 env:
   baseVersion: 1.0.0
@@ -16,13 +26,13 @@ jobs:
 
     steps:
       - name: List inputs
-        run: echo "env.isRelease is '${{ env.isRelease }}', env.releaseVersion is '${{ env.releaseVersion }}'"
+        run: echo "inputs.isRelease is '${{ inputs.isRelease }}', inputs.releaseVersion is '${{ inputs.releaseVersion }}'"
 
       - name: Set Version
         run: |
-          if ("${{ env.releaseVersion }}" != "") {
-            echo "buildVersion=${{ env.releaseVersion }}.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            echo "nugetVersion=${{ env.releaseVersion }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          if (!"${{ inputs.releaseVersion }}".equals("")) {
+            echo "buildVersion=${{ inputs.releaseVersion }}.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            echo "nugetVersion=${{ inputs.releaseVersion }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           } else {
             echo "buildVersion=${{ env.baseVersion }}.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
             echo "nugetVersion=${{ env.baseVersion }}-ci${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append

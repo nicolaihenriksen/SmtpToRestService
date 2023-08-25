@@ -9,10 +9,6 @@ on:
       - '.github/**'
   workflow_dispatch:
 
-env:
-  configuration: Release
-  isRelease: false
-
 defaults:
   run:
     shell: pwsh
@@ -22,4 +18,4 @@ jobs:
     name: Build artifacts
     uses: ./.github/workflows/build_artifacts.yml
     with:
-      isRelease: ${{ env.isRelease }}
+      isRelease: false
