@@ -39,3 +39,4 @@ jobs:
       nugetVersion: ${{ needs.determine_workflow_type.outputs.version }}
       publish: ${{ needs.determine_workflow_type.outputs.publish == 'true' }}
       debug: false
+    secrets: inherit
