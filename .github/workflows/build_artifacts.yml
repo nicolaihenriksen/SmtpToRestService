@@ -18,7 +18,7 @@ on:
       
 jobs:
   build:
-    name: Build and Test
+    name: Build, Test, Upload artifacts, and Publish
     runs-on: windows-latest
 
     env:
@@ -68,6 +68,7 @@ jobs:
         if: inputs.debug == false
         uses: actions/upload-artifact@v3
         with:
+          name: Nuget-nupkgs.zip
           path: "SmtpToRest/pack"
 
       - name: Log in to Docker Hub
