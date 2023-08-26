@@ -71,6 +71,10 @@ jobs:
           name: Nuget-nupkgs.zip
           path: "SmtpToRest/pack"
 
+      - name: Push to NuGet
+        if: inputs.publish && inputs.debug == false
+        run: dotnet nuget push "./SmtpToRest/pack/*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+
       - name: Log in to Docker Hub
         if: inputs.publish
         uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc
