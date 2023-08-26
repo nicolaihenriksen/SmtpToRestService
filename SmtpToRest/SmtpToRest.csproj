@@ -1,5 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <Authors>Nicolai Henriksen</Authors>
+    <Product>SMTP To REST conversion service</Product>
+    <PackageTags>SMTP;REST</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>
+      Simple library converting "e-mails" to REST API calls in a flexible and extendable manner.
+    </Description>
+    <RepositoryUrl>https://github.com/nicolaihenriksen/SmtpToRestService</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="MimeKitLite" />
@@ -15,6 +33,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>false</Pack>
     </Content>
   </ItemGroup>
 

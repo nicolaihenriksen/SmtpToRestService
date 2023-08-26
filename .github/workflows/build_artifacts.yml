@@ -18,7 +18,7 @@ on:
       
 jobs:
   build:
-    name: Build and Test
+    name: Build, Test, Upload artifacts, and Publish
     runs-on: windows-latest
 
     env:
@@ -59,6 +59,17 @@ jobs:
         with:
           name: SmtpToRest.WindowsService.zip
           path: "SmtpToRest.WindowsService/publish"
+
+      - name: Build nuget package
+        timeout-minutes: 5
+        run: dotnet pack .\SmtpToRest\SmtpToRest.csproj -p:Configuration=Release -p:Version=${{ inputs.nugetVersion }} -o:./SmtpToRest/pack
+
+      - name: Upload nupkg as artifact
+        if: inputs.debug == false
+        uses: actions/upload-artifact@v3
+        with:
+          name: Nuget-nupkgs.zip
+          path: "SmtpToRest/pack"
 
       - name: Log in to Docker Hub
         if: inputs.publish
