@@ -6,14 +6,36 @@ on:
       - '**'
     paths-ignore:
       - '**/README.md'
-      - '.github/**'
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
-defaults:
-  run:
-    shell: pwsh
-
 jobs:
+  determine_workflow_type:
+    name: Determine Workflow type
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.vars.outputs.version }}
+      publish: ${{ steps.vars.outputs.publish }}
+    steps:
+      - name: Set output
+        id: vars
+        run: |
+          if ("${{ github.ref }}".startsWith("refs/tags/v")) {
+            $tagVersion = "${{ github.ref }}".substring(11)
+            echo "version=$tagVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            echo "publish=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          } else {
+            echo "version=1.0.0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            echo "publish=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          }
+
   build:
-    name: Build artifacts
+    name: Build
+    needs: determine_workflow_type
     uses: ./.github/workflows/build_artifacts.yml
+    with:
+      buildVersion: ${{ needs.determine_workflow_type.outputs.version }}.${{ github.run_number }}
+      nugetVersion: ${{ needs.determine_workflow_type.outputs.version }}
+      publish: ${{ needs.determine_workflow_type.outputs.publish == 'true' }}
+      debug: false

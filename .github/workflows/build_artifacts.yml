@@ -1,13 +1,21 @@
-name: Build Artifacts
+name: Build And Publish (Reusable Workflow)
 
 on:
   workflow_call:
     inputs:
-      build-configuration:
-        default: 'Release'
-        required: false
+      buildVersion:
+        required: true
         type: string
-
+      nugetVersion:
+        required: true
+        type: string
+      publish:
+        required: true
+        type: boolean
+      debug:
+        required: true
+        type: boolean
+      
 jobs:
   build:
     name: Build and Test
@@ -17,30 +25,51 @@ jobs:
       solution: SmtpToRest.sln
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup .NET
+        if: inputs.debug == false
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
             7.x
           
       - name: Restore dependencies
+        if: inputs.debug == false
         run: dotnet restore ${{ env.solution }}
   
       - name: Build
-        run: dotnet build ${{ env.solution }} --configuration ${{ inputs.build-configuration }} --no-restore -p:Platform="Any CPU" -p:TreatWarningsAsErrors=True
+        if: inputs.debug == false
+        run: dotnet build ${{ env.solution }} --configuration Release --no-restore -p:Platform="Any CPU" -p:TreatWarningsAsErrors=True
+        env:
+          BuildVersion: ${{ inputs.buildVersion }}
   
       - name: Test
+        if: inputs.debug == false
         timeout-minutes: 5
-        run: dotnet test ${{ env.solution }} --configuration ${{ inputs.build-configuration }} --no-build --verbosity normal --blame-crash
+        run: dotnet test ${{ env.solution }} --configuration Release --no-build --verbosity normal --blame-crash
 
       - name: Build self-contained EXE for Windows Service
+        if: inputs.debug == false
         timeout-minutes: 5
-        run: .\SmtpToRest.WindowsService\Publish.ps1
+        run: .\SmtpToRest.WindowsService\Publish.ps1 -BuildVersion ${{ inputs.buildVersion }}
     
       - name: Upload self-contained EXE as artifact
+        if: inputs.debug == false
         uses: actions/upload-artifact@v3
         with:
           name: SmtpToRest.WindowsService.zip
           path: "SmtpToRest.WindowsService/publish"
+
+  publish:
+    name: Publish
+    needs: build
+    if: inputs.publish
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: List inputs
+        if: inputs.debug == true
+        run: echo "Publishing..."
+      
