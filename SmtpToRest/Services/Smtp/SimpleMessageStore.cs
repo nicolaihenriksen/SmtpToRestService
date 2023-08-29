@@ -14,10 +14,10 @@ namespace SmtpToRest.Services.Smtp;
 
 internal class SimpleMessageStore : MessageStore
 {
-    private readonly ILogger<SmtpServerBackgroundService> _logger;
+    private readonly ILogger<SimpleMessageStore> _logger;
     private readonly BlockingCollection<IMimeMessage> _messageQueue;
 
-    public SimpleMessageStore(ILogger<SmtpServerBackgroundService> logger, BlockingCollection<IMimeMessage> messageQueue)
+    public SimpleMessageStore(ILogger<SimpleMessageStore> logger, BlockingCollection<IMimeMessage> messageQueue)
     {
         _logger = logger;
         _messageQueue = messageQueue;
