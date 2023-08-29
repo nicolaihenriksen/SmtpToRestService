@@ -31,8 +31,8 @@ internal class DefaultMessageProcessor : IMessageProcessor
 			try
 			{
 				var input = _decorator.Decorate(new RestInput(), mapping, message);
-				await _restClient.InvokeService(input, cancellationToken);
-				return ProcessResult.Success();
+				var response = await _restClient.InvokeService(input, cancellationToken);
+				return response.IsSuccessStatusCode ? ProcessResult.Success() : ProcessResult.Failure(response.ReasonPhrase ?? "Unknown error");
 			}
 			catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
 			{

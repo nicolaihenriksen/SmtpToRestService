@@ -2,7 +2,7 @@
 
 internal class ProcessResult
 {
-    public bool IsSuccess { get; } = true;
+	public bool IsSuccess => string.IsNullOrWhiteSpace(Error);
     public string? Error { get; }
 
     private ProcessResult(string? error = null)

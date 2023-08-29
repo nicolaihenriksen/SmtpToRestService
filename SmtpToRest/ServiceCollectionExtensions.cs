@@ -10,7 +10,7 @@ namespace SmtpToRest;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection UseSmtpToRestDefaults(this IServiceCollection services, Action<SmtpToRestOptions>? configure = null)
+	public static IServiceCollection AddSmtpToRest(this IServiceCollection services, Action<SmtpToRestOptions>? configure = null)
 	{
 		SmtpToRestOptions options = new();
 		configure?.Invoke(options);

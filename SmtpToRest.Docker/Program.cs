@@ -8,7 +8,7 @@ using System.IO;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-	.UseSmtpToRestDefaults()
+	.AddSmtpToRest()
 	.AddSingleton<IConfigurationProvider>(sp =>
 	{
 		IWebHostEnvironment env = sp.GetRequiredService<IWebHostEnvironment>();
