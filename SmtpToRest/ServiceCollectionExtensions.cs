@@ -21,6 +21,15 @@ public static class ServiceCollectionExtensions
 		if (options.UseBuiltInHttpClientFactory)
 			services.AddHttpClient();
 
+		if (options.UseBuiltInMessageStoreFactory)
+			services.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>();
+
+		if (options.UseBuiltInSmtpServerFactory)
+			services.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>();
+
+		if (options.UseBuiltInMessageProcessor)
+			services.AddSingleton<IMessageProcessor, DefaultMessageProcessor>();
+
 		switch (options.ConfigurationMode)
 		{
 			case ConfigurationMode.ConfigurationProvider:
@@ -34,7 +43,7 @@ public static class ServiceCollectionExtensions
 			case ConfigurationMode.OptionInjection:
 				if (options.Configuration is null)
 					throw new InvalidOperationException($"When {nameof(options.ConfigurationMode)} is {ConfigurationMode.OptionInjection}, the {nameof(options.Configuration)} must be supplied.");
-				services.AddSingleton<IConfiguration>(_ => options.Configuration);
+				services.AddSingleton(_ => options.Configuration);
 				break;
 			case ConfigurationMode.None:
 			default:
@@ -43,11 +52,9 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
-			.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
-			.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
-			.AddSingleton<IMessageProcessor, DefaultMessageProcessor>()
 			.AddSingleton<IRestClient, RestClient>()
 			.AddHostedService<SmtpServerBackgroundService>();
+
 		return services;
 	}
 
