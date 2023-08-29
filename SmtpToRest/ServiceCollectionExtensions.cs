@@ -18,6 +18,9 @@ public static class ServiceCollectionExtensions
 		if (options.UseBuiltInDecorators)
 			services.AddDefaultDecorators();
 
+		if (options.UseBuiltInHttpClientFactory)
+			services.AddHttpClient();
+
 		switch (options.ConfigurationMode)
 		{
 			case ConfigurationMode.ConfigurationProvider:
@@ -39,7 +42,6 @@ public static class ServiceCollectionExtensions
 		}
 
 		services
-			.AddHttpClient()
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
 			.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
 			.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
