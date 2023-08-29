@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpToRest.Docker", "SmtpTo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmtpToRest", "SmtpToRest\SmtpToRest.csproj", "{CA93D257-285A-4D1B-BC55-EA7B13E40C58}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FBC4FD07-997C-4159-93F0-6AF90A3B67AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4BB25CA4-BCD1-4D64-882E-C09A6875B732} = {FBC4FD07-997C-4159-93F0-6AF90A3B67AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5D5F182-594B-49AC-AFED-593D2BEE0B7A}

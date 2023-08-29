@@ -75,10 +75,13 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 <br />
 
 ## Install as Docker container
-See [SmtpToRest.Docker](SmtpToRest.Docker/README.md)
+See [SmtpToRest.Docker](SmtpToRest.Docker/README.md) for more information.
 
 ## Install as Windows Service
-See [SmtpToRest.WindowsService](SmtpToRest.WindowsService/README.md)
+See [SmtpToRest.WindowsService](SmtpToRest.WindowsService/README.md) for more information.
+
+## Self-host (e.g. using GenericHost)
+See [SmtpToRest](SmtpToRest/README.md) for more information.
 
 <br />
 

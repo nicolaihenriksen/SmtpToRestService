@@ -43,7 +43,7 @@ internal class SmtpServerBackgroundService : BackgroundService
                 .Build();
 
             var serviceProvider = new ServiceProvider();
-            var messageStore = _messageStoreFactory.Create(_logger, _messageQueue);
+            var messageStore = _messageStoreFactory.Create(_messageQueue);
             serviceProvider.Add(messageStore);
             _smtpServer = _smtpServerFactory.Create(options, serviceProvider);
 

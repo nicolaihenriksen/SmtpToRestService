@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 using SmtpToRest.Config;
 using SmtpToRest.Processing;
 using SmtpToRest.Rest;
@@ -9,29 +10,60 @@ namespace SmtpToRest;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection UseSmtpToRestDefaults(this IServiceCollection services)
+	public static IServiceCollection UseSmtpToRestDefaults(this IServiceCollection services, Action<SmtpToRestOptions>? configure = null)
 	{
+		SmtpToRestOptions options = new();
+		configure?.Invoke(options);
+
+		if (options.UseBuiltInDecorators)
+			services.AddDefaultDecorators();
+
+		if (options.UseBuiltInHttpClientFactory)
+			services.AddHttpClient();
+
+		if (options.UseBuiltInMessageStoreFactory)
+			services.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>();
+
+		if (options.UseBuiltInSmtpServerFactory)
+			services.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>();
+
+		if (options.UseBuiltInMessageProcessor)
+			services.AddSingleton<IMessageProcessor, DefaultMessageProcessor>();
+
+		switch (options.ConfigurationMode)
+		{
+			case ConfigurationMode.ConfigurationProvider:
+				services
+					.AddSingleton<IConfiguration, Configuration>()
+					.AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>();
+				break;
+			case ConfigurationMode.ServiceInjection:
+				// Do nothing, the caller will inject their own instance into the service collection
+				break;
+			case ConfigurationMode.OptionInjection:
+				if (options.Configuration is null)
+					throw new InvalidOperationException($"When {nameof(options.ConfigurationMode)} is {ConfigurationMode.OptionInjection}, the {nameof(options.Configuration)} must be supplied.");
+				services.AddSingleton(_ => options.Configuration);
+				break;
+			case ConfigurationMode.None:
+			default:
+				throw new InvalidOperationException($"Invalid {nameof(options.ConfigurationMode)} supplied.");
+		}
+
 		services
-			.AddDefaultDecorators()
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
-			.AddSingleton<IConfiguration, Configuration>()
-			.AddSingleton<IConfigurationFileReader, DefaultConfigurationFileReader>()
-			.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
-			.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
-			.AddSingleton<IMessageProcessor, DefaultMessageProcessor>()
 			.AddSingleton<IRestClient, RestClient>()
-			.AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>()
 			.AddHostedService<SmtpServerBackgroundService>();
+
 		return services;
 	}
 
-	private static IServiceCollection AddDefaultDecorators(this IServiceCollection services)
+	private static void AddDefaultDecorators(this IServiceCollection services)
 	{
 		services
 			.AddSingleton<IRestInputDecorator, ConfigurationDecorator>()
 			.AddSingleton<IRestInputDecorator, EndpointOverridesDecorator>()
 			.AddSingleton<IRestInputDecorator, QueryStringDecorator>()
 			.AddSingleton<IRestInputDecorator, JsonPostDataDecorator>();
-		return services;
 	}
 }

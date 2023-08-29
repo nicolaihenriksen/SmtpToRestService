@@ -1,10 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using Microsoft.Extensions.Logging;
 using SmtpServer.Storage;
 
 namespace SmtpToRest.Services.Smtp;
 
-internal interface IMessageStoreFactory
+public interface IMessageStoreFactory
 {
-    IMessageStore Create(ILogger<SmtpServerBackgroundService> logger, BlockingCollection<IMimeMessage> messageQueue);
+    IMessageStore Create(BlockingCollection<IMimeMessage> messageQueue);
 }
