@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using SmtpToRest.Config;
 using SmtpToRest.Processing;
@@ -39,12 +39,12 @@ public static class ServiceCollectionExtensions
 		}
 
 		services
+			.AddHttpClient()
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
 			.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>()
 			.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>()
 			.AddSingleton<IMessageProcessor, DefaultMessageProcessor>()
 			.AddSingleton<IRestClient, RestClient>()
-			.AddSingleton<IHttpClientFactory, DefaultHttpClientFactory>()
 			.AddHostedService<SmtpServerBackgroundService>();
 		return services;
 	}

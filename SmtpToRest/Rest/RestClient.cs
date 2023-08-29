@@ -25,7 +25,8 @@ internal class RestClient : IRestClient
         if (endpoint is null)
             return new HttpResponseMessage(HttpStatusCode.NotFound);
 
-        var client = _httpClientFactory.Create(endpoint);
+        var client = _httpClientFactory.CreateClient();
+        client.BaseAddress = new Uri(endpoint);
 
         if (!string.IsNullOrEmpty(input.ApiToken))
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", input.ApiToken);
