@@ -34,9 +34,11 @@ internal class RestClient : IRestClient
 	        case HttpMethod.Post:
 		        dynamic postData = input.JsonPostData ?? string.Empty;
 		        return await client.PostAsync(uriBuilder.Uri, new StringContent(postData), cancellationToken);
-	        default:
-				uriBuilder.Query = input.QueryString;
-				return await client.GetAsync(uriBuilder.Uri, cancellationToken);
+	        case HttpMethod.Get:
+		        uriBuilder.Query = Uri.EscapeDataString(input.QueryString ?? string.Empty);
+		        return await client.GetAsync(uriBuilder.Uri, cancellationToken);
+			default:
+                return await client.SendAsync(new HttpRequestMessage(input.HttpMethod.ToSystemNetHttpMethod(), uriBuilder.Uri), cancellationToken);
 		}
     }
 }
