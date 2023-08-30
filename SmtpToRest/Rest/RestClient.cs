@@ -4,18 +4,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using SmtpToRest.Config;
 
 namespace SmtpToRest.Rest;
 
 internal class RestClient : IRestClient
 {
-    private readonly IConfiguration _configuration;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public RestClient(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public RestClient(IHttpClientFactory httpClientFactory)
     {
-        _configuration = configuration;
         _httpClientFactory = httpClientFactory;
     }
 
