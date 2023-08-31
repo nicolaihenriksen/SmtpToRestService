@@ -13,7 +13,7 @@
       "key": "add.post@somedomain.com",
       "service": "posts",
       "customHttpMethod": "POST",
-      "jsonPostData": {
+      "content": {
         "title": "Test post",
         "body": "Test post body",
         "userId": 1

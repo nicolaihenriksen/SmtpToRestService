@@ -31,7 +31,7 @@ The sample configuration below illustrates the current possibilites.
       "key": "add.post@somedomain.com",
       "customHttpMethod": "POST",
       "service": "posts",
-      "jsonPostData": {
+      "content": {
         "title": "Test post",
         "body": "Test post body",
         "userId": 1
@@ -70,7 +70,7 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 |customHttpMethod|<b>Optional</b><br />Defines the HTTP method for this particular mapping.|
 |service|<b>Required</b><br />Defines the path appended to the enpoint to complete the URL.
 |queryString|<b>Optional</b><br />Defines a query string to be appended to the URL (used in GET requests).|
-|jsonPostData|<b>Optional</b><br />Defines a JSON object to be set as the body of the request (used in POST requests).|
+|content|<b>Optional</b><br />Defines the content (often times a JSON object) to be set as the content of the request (often used in POST requests).|
 
 <br />
 
