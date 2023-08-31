@@ -8,5 +8,5 @@ public class ConfigurationMapping
 	public string? CustomHttpMethod { get; set; }
 	public string? Service { get; set; }
 	public string? QueryString { get; set; }
-	public dynamic? JsonPostData { get; set; }
+	public dynamic? Content { get; set; }
 }

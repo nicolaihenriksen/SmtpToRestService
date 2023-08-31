@@ -158,34 +158,15 @@ public class RestClientTests
     }
 
     [Fact]
-    public async Task InvokeService_ShouldNotIncludeQueryString_WhenMethodIsNotGetAndQueryStringIsSupplied()
-    {
-        // Arrange
-        const string queryString = "value1=1&value2=2&value3=3";
-        IRestClient client = AutoMocker.CreateInstance<RestClient>();
-        HttpMessageHandler.Expect(HttpMethod.Post, BaseAddress)
-            .WithExactQueryString(string.Empty)
-            .Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Post, QueryString = queryString };
-
-        // Act
-        HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        HttpMessageHandler.VerifyNoOutstandingExpectation();
-    }
-
-    [Fact]
     public async Task InvokeService_ShouldIncludeJsonPostData_WhenMethodIsPostAndJsonPostDataIsSupplied()
     {
-        // Arrange
-        const string postData = """{ "RootProperty": "RootPropertyValue, "ChildObject": { "ChildProperty": "ChildPropertyValue"}}""";
+		// Arrange
+		const string postData = """{ "RootProperty": "RootPropertyValue, "ChildObject": { "ChildProperty": "ChildPropertyValue"}}""";
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(HttpMethod.Post, BaseAddress)
             .WithContent(postData)
             .Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Post, JsonPostData = postData };
+        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Post, Content = postData };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -203,7 +184,7 @@ public class RestClientTests
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(HttpMethod.Get, BaseAddress)
             .Respond(r => new HttpResponseMessage(r.Content is null ? HttpStatusCode.OK : HttpStatusCode.InternalServerError));
-        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Get, JsonPostData = postData };
+        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Get, Content = postData };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);

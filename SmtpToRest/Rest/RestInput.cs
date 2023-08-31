@@ -7,5 +7,5 @@ public class RestInput
 	public string? Endpoint { get; set; }
 	public string? Service { get; set; }
 	public string? QueryString { get; set; }
-	public dynamic? JsonPostData { get; set; }
+	public string? Content { get; set; }
 }

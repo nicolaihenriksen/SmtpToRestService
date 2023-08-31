@@ -71,7 +71,7 @@ public class ConfigurationTests
                     customHttpMethod = "<httpMethod1>",
                     service = "<service1>",
                     queryString = "<queryString1>",
-                    jsonPostData = "<jsonPostData1>"
+                    content = "<contentData1>"
                 },
                 new
                 {
@@ -81,7 +81,7 @@ public class ConfigurationTests
                     customHttpMethod = "<httpMethod2>",
                     service = "<service2>",
                     queryString = "<queryString2>",
-                    jsonPostData = "<jsonPostData2>"
+                    content = "<contentData2>"
                 }
             }
         });
@@ -106,20 +106,20 @@ public class ConfigurationTests
         mapping1.CustomHttpMethod.Should().Be("<httpMethod1>");
         mapping1.Service.Should().Be("<service1>");
         mapping1.QueryString.Should().Be("<queryString1>");
-        Assert.Equal("<jsonPostData1>", mapping1.JsonPostData?.ToString());
+        Assert.Equal("<contentData1>", mapping1.Content?.ToString());
         mapping2.CustomApiToken.Should().Be("<token2>");
         mapping2.CustomEndpoint.Should().Be("<endpoint2>");
         mapping2.CustomHttpMethod.Should().Be("<httpMethod2>");
         mapping2.Service.Should().Be("<service2>");
         mapping2.QueryString.Should().Be("<queryString2>");
-        Assert.Equal("<jsonPostData2>", mapping2.JsonPostData?.ToString());
+        Assert.Equal("<contentData2>", mapping2.Content?.ToString());
     }
 
     [Fact]
     public void Ctor_ShouldCorrectlyReadMapping_WhenJsonPostDataIsJsonObject()
     {
         // Arrange
-        var jsonPostDataObject = new
+        var contentObject = new
         {
             customSimpleType = 12,
             customComplexType = new
@@ -135,7 +135,7 @@ public class ConfigurationTests
                 new
                 {
                     key = "<key>",
-                    jsonPostData = jsonPostDataObject
+                    content = contentObject
                 },
             }
         });
@@ -151,7 +151,7 @@ public class ConfigurationTests
         // Assert
         if (!config.TryGetMapping("<key>", out var mapping) || mapping is null)
             throw new AssertionFailedException("Unable to read mapping");
-        var jsonPostDataString = JsonSerializer.Serialize(jsonPostDataObject);
-        Assert.Equal(jsonPostDataString, mapping.JsonPostData?.ToString());
+        var jsonPostDataString = JsonSerializer.Serialize(contentObject);
+        Assert.Equal(jsonPostDataString, mapping.Content?.ToString());
     }
 }

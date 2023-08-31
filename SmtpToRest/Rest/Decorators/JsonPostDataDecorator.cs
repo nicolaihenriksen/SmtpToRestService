@@ -10,7 +10,7 @@ internal class JsonPostDataDecorator : DecoratorBase, IRestInputDecorator
 		if (restInput.HttpMethod == HttpMethod.Post)
 		{
 			// TODO: Handle placeholder replacements
-			restInput.JsonPostData = mapping.JsonPostData;
+			restInput.Content = mapping.Content;
 		}
 		return restInput;
 	}
