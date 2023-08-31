@@ -8,7 +8,7 @@ var builder = Host.CreateDefaultBuilder(args)
 	.ConfigureServices((_, services) =>
 	{
 		services
-			.UseSmtpToRestDefaults()
+			.AddSmtpToRest()
 			.AddSingleton<IConfigurationProvider>(sp => new ConfigurationProvider(() => Path.Combine(System.AppContext.BaseDirectory)));
 	})
 	.UseWindowsService();

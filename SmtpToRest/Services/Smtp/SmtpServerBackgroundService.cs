@@ -47,7 +47,7 @@ internal class SmtpServerBackgroundService : BackgroundService
             serviceProvider.Add(messageStore);
             _smtpServer = _smtpServerFactory.Create(options, serviceProvider);
 
-            var messageProcessingTask = Task.Factory.StartNew(async () => await ProcessMessages(stoppingToken), stoppingToken).ContinueWith(a => { }, stoppingToken);
+            var messageProcessingTask = Task.Factory.StartNew(async () => await ProcessMessagesAsync(stoppingToken), stoppingToken).ContinueWith(a => { }, stoppingToken);
             var serverTask = _smtpServer.StartAsync(stoppingToken);
             await Task.WhenAll(messageProcessingTask, serverTask);
         }
@@ -63,13 +63,13 @@ internal class SmtpServerBackgroundService : BackgroundService
         return Task.CompletedTask;
     }
 
-    private async Task ProcessMessages(CancellationToken cancellationToken)
+    private async Task ProcessMessagesAsync(CancellationToken cancellationToken)
     {
-        foreach (var message in _messageQueue.GetConsumingEnumerable(cancellationToken))
+        foreach (IMimeMessage message in _messageQueue.GetConsumingEnumerable(cancellationToken))
         {
-            _logger.LogDebug(FormattableString.Invariant($"Processing message..."));
-            var result = await _messageProcessor.ProcessAsync(message, cancellationToken);
-            MessageProcessed?.Invoke(this, new MessageProcessedEventArgs(result));
-        }
+			_logger.LogDebug(FormattableString.Invariant($"Processing message..."));
+			var result = await _messageProcessor.ProcessAsync(message, cancellationToken);
+			MessageProcessed?.Invoke(this, new MessageProcessedEventArgs(result));
+		}
     }
 }
