@@ -15,7 +15,7 @@ using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using IMessageStoreFactory = SmtpToRest.Services.Smtp.IMessageStoreFactory;
 
-namespace SmtpToRest.IntegrationTests;
+namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
 public partial class SmtpServerBackgroundServiceTests : IDisposable
 {

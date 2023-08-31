@@ -8,7 +8,7 @@ using Moq;
 using SmtpToRest.Config;
 using Xunit;
 
-namespace SmtpToRest.UnitTests;
+namespace SmtpToRest.UnitTests.Config;
 
 public class ConfigurationTests
 {
@@ -24,7 +24,7 @@ public class ConfigurationTests
 
         // Act
         Action act = () => new Configuration(log.Object, configProvider.Object, configReader.Object, false);
-            
+
         // Assert
         act.Should().Throw<JsonException>();
     }
@@ -39,18 +39,18 @@ public class ConfigurationTests
             apiToken = "<token>",
             httpMethod = "<httpMethod>"
         });
-            
+
         var log = new Mock<ILogger<Configuration>>();
         var configProvider = new Mock<IConfigurationProvider>();
         configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
-		var configReader = new Mock<IConfigurationFileReader>();
+        var configReader = new Mock<IConfigurationFileReader>();
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
         var config = new Configuration(log.Object, configProvider.Object, configReader.Object, false);
 
-		// Assert
-		config.Endpoint.Should().Be("<endpoint>");
+        // Assert
+        config.Endpoint.Should().Be("<endpoint>");
         config.ApiToken.Should().Be("<token>");
         config.HttpMethod.Should().Be("<httpMethod>");
     }
@@ -86,20 +86,20 @@ public class ConfigurationTests
             }
         });
 
-		var log = new Mock<ILogger<Configuration>>();
-		var configProvider = new Mock<IConfigurationProvider>();
-		configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
-		var configReader = new Mock<IConfigurationFileReader>();
+        var log = new Mock<ILogger<Configuration>>();
+        var configProvider = new Mock<IConfigurationProvider>();
+        configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
+        var configReader = new Mock<IConfigurationFileReader>();
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
         var config = new Configuration(log.Object, configProvider.Object, configReader.Object, false);
 
-		// Assert
-		if (!config.TryGetMapping("<key1>", out var mapping1) || mapping1 is null)
-	        throw new AssertionFailedException("Unable to read mapping");
+        // Assert
+        if (!config.TryGetMapping("<key1>", out var mapping1) || mapping1 is null)
+            throw new AssertionFailedException("Unable to read mapping");
         if (!config.TryGetMapping("<key2>", out var mapping2) || mapping2 is null)
-	        throw new AssertionFailedException("Unable to read mapping");
+            throw new AssertionFailedException("Unable to read mapping");
 
         mapping1.CustomApiToken.Should().Be("<token1>");
         mapping1.CustomEndpoint.Should().Be("<endpoint1>");
@@ -142,15 +142,15 @@ public class ConfigurationTests
         var log = new Mock<ILogger<Configuration>>();
         var configProvider = new Mock<IConfigurationProvider>();
         configProvider.Setup(c => c.GetConfigurationFileDirectory()).Returns(string.Empty);
-		var configReader = new Mock<IConfigurationFileReader>();
+        var configReader = new Mock<IConfigurationFileReader>();
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns(json);
 
         // Act
         var config = new Configuration(log.Object, configProvider.Object, configReader.Object, false);
 
-		// Assert
-		if (!config.TryGetMapping("<key>", out var mapping) || mapping is null)
-			throw new AssertionFailedException("Unable to read mapping");
+        // Assert
+        if (!config.TryGetMapping("<key>", out var mapping) || mapping is null)
+            throw new AssertionFailedException("Unable to read mapping");
         var jsonPostDataString = JsonSerializer.Serialize(jsonPostDataObject);
         Assert.Equal(jsonPostDataString, mapping.JsonPostData?.ToString());
     }

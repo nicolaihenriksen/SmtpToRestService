@@ -14,7 +14,7 @@ using SmtpServer;
 using SmtpToRest.Services.Smtp;
 using Xunit;
 
-namespace SmtpToRest.UnitTests;
+namespace SmtpToRest.UnitTests.Services.Smtp;
 
 public class SimpleMessageStoreTests
 {
@@ -25,8 +25,8 @@ public class SimpleMessageStoreTests
         var logger = new Mock<ILogger<SimpleMessageStore>>();
         var messageQueue = new BlockingCollection<IMimeMessage>();
         var messageStore = new SimpleMessageStore(logger.Object, messageQueue);
-        var message = new MimeMessage(new[] {new MailboxAddress(Encoding.UTF8, "Some sender", "some@sender.com")},
-            new[] {new MailboxAddress(Encoding.UTF8, "Some recipient", "some@recipient.com")},
+        var message = new MimeMessage(new[] { new MailboxAddress(Encoding.UTF8, "Some sender", "some@sender.com") },
+            new[] { new MailboxAddress(Encoding.UTF8, "Some recipient", "some@recipient.com") },
             "subject",
             new TextPart(new TextFormat()));
         await using var stream = new MemoryStream();

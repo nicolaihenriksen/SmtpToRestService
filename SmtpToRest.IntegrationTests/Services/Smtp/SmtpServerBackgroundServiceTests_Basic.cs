@@ -1,14 +1,14 @@
-﻿using RichardSzalay.MockHttp;
+﻿using FluentAssertions;
+using Moq;
+using RichardSzalay.MockHttp;
 using SmtpToRest.Config;
 using SmtpToRest.Processing;
+using SmtpToRest.Services.Smtp;
 using System.Net;
 using System.Net.Http;
-using FluentAssertions;
-using Moq;
-using SmtpToRest.Services.Smtp;
 using Xunit;
 
-namespace SmtpToRest.IntegrationTests;
+namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
 public partial class SmtpServerBackgroundServiceTests
 {
