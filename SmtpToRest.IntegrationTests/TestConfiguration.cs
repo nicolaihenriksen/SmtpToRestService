@@ -6,11 +6,11 @@ namespace SmtpToRest.IntegrationTests;
 
 internal class TestConfiguration : IConfiguration
 {
-	public string? SmtpHost { get; } = "localhost";
-	public int[]? SmtpPorts { get; } = new[] {25};
-	public string? ApiToken { get; } = "TestApiToken";
-	public string? Endpoint { get; } = "http://testendpoint";
-	public string? HttpMethod { get; } = WebRequestMethods.Http.Get;
+	public string? SmtpHost { get; set; } = "localhost";
+	public int[]? SmtpPorts { get; set; } = new[] {25};
+	public string? ApiToken { get; set; } = "TestApiToken";
+	public string? Endpoint { get; set; } = "http://testendpoint";
+	public string? HttpMethod { get; set; } = WebRequestMethods.Http.Get;
 
 	private readonly Dictionary<string, ConfigurationMapping> _mappings = new();
 

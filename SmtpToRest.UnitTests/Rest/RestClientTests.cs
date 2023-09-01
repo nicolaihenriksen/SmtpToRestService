@@ -121,11 +121,12 @@ public class RestClientTests
     {
         // Arrange
         const string queryString = "value1=1&value2=2&value3=3";
-        string escaped = Uri.EscapeDataString(queryString);
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(HttpMethod.Get, BaseAddress)
-            .WithExactQueryString(escaped)
-            .Respond(HttpStatusCode.OK);
+            .WithQueryString("value1", "1")
+            .WithQueryString("value2", "2")
+            .WithQueryString("value3", "3")
+			.Respond(HttpStatusCode.OK);
         RestInput input = new RestInput { Endpoint = BaseAddress, QueryString = queryString };
 
         // Act
@@ -144,7 +145,7 @@ public class RestClientTests
         string escaped = Uri.EscapeDataString(queryString);
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(HttpMethod.Get, BaseAddress)
-            .WithExactQueryString(escaped)
+            .WithQueryString("stringValue", "This is a text that needs escaping because 1 < 2")
             .Respond(HttpStatusCode.OK);
         RestInput input = new RestInput { Endpoint = BaseAddress, QueryString = queryString };
 

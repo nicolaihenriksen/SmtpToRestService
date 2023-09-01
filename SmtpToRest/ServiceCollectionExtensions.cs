@@ -63,6 +63,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddSingleton<IRestInputDecorator, ConfigurationDecorator>()
 			.AddSingleton<IRestInputDecorator, EndpointOverridesDecorator>()
+			.AddSingleton<IRestInputDecorator, ServiceDecorator>()
 			.AddSingleton<IRestInputDecorator, QueryStringDecorator>()
 			.AddSingleton<IRestInputDecorator, ContentDecorator>();
 	}

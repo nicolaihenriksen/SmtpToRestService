@@ -2,5 +2,5 @@
 
 public interface IMimeMessage
 {
-    string Address { get; }
+    string? Address { get; }
 }
