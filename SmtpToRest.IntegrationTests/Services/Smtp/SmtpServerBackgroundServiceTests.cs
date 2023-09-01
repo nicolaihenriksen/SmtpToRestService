@@ -24,7 +24,8 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 	private readonly CancellationTokenSource _cts = new();
 	private readonly ManualResetEventSlim _sync = new();
 
-	public IHost Host { get; }
+	private IHostBuilder HostBuilder { get; }
+	private IHost? Host { get; set; }
 	private TestConfiguration Configuration { get; } = new();
 	private BlockingCollection<IMimeMessage>? MessageQueue { get; set; }
 	private MockHttpMessageHandler HttpMessageHandler { get; } = new();
@@ -56,7 +57,7 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 			.Setup(f => f.Create(It.IsAny<ISmtpServerOptions>(), It.IsAny<IServiceProvider>()))
 			.Returns(smtpServer.Object);
 
-		Host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
+		HostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
 			.ConfigureServices(services =>
 			{
 				services.AddSmtpToRest(options =>
@@ -70,16 +71,26 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 				services.AddSingleton(_ => httpClientFactory.Object);
 				services.AddSingleton(_ => messageStoreFactory.Object);
 				services.AddSingleton(_ => smtpServerFactory.Object);
-			})
-			.Build();
-
-		Host.StartAsync(_cts.Token).Wait();
-		_sync.Wait();
+			});
 	}
 
 	public void Dispose()
 	{
 		_cts.Cancel();
+	}
+
+	private void StartHost(Action<IServiceCollection>? services = null)
+	{
+		if (Host != null)
+			return;
+
+		if (services != null)
+		{
+			HostBuilder.ConfigureServices(services);
+		}
+		Host = HostBuilder.Build();
+		Host.StartAsync(_cts.Token).Wait();
+		_sync.Wait();
 	}
 
 	private Mock<IMimeMessage> Arrange(string address, ConfigurationMapping mapping)
@@ -99,9 +110,10 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 
 	private ProcessResult? SendMessage(IMimeMessage message)
 	{
+		StartHost();
 		ManualResetEventSlim sync = new();
 		ProcessResult? result = default;
-		SmtpServerBackgroundService smtpServer = (SmtpServerBackgroundService) Host.Services.GetRequiredService<IHostedService>();
+		SmtpServerBackgroundService smtpServer = (SmtpServerBackgroundService) Host!.Services.GetRequiredService<IHostedService>();
 		smtpServer.MessageProcessed += OnMessageProcessed;
 		MessageQueue!.Add(message);
 		sync.Wait(TimeSpan.FromSeconds(2));
