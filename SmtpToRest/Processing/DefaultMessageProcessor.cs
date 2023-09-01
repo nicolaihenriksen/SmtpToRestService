@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SmtpToRest.Config;
@@ -26,12 +27,13 @@ internal class DefaultMessageProcessor : IMessageProcessor
 
 	public async Task<ProcessResult> ProcessAsync(IMimeMessage message, CancellationToken cancellationToken)
 	{
-		if (_configuration.TryGetMapping(message.Address, out var mapping) && mapping is not null)
+		if (_configuration.TryGetMapping(message.Address, out ConfigurationMapping? mapping) && mapping is not null)
 		{
 			try
 			{
-				var input = _decorator.Decorate(new RestInput(), mapping, message);
-				var response = await _restClient.InvokeService(input, cancellationToken);
+				RestInput input = new();
+				_decorator.Decorate(input, mapping, message);
+				HttpResponseMessage response = await _restClient.InvokeService(input, cancellationToken);
 				return response.IsSuccessStatusCode ? ProcessResult.Success() : ProcessResult.Failure(response.ReasonPhrase ?? "Unknown error");
 			}
 			catch (Exception ex) when (!cancellationToken.IsCancellationRequested)

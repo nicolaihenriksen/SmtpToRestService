@@ -13,12 +13,11 @@ internal class ConfigurationDecorator : DecoratorBase, IRestInputDecorator
 		_configuration = configuration;
 	}
 
-	public RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
+	public void Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
 	{
 		restInput.ApiToken = _configuration.ApiToken;
 		if (Enum.TryParse(_configuration.HttpMethod, true, out HttpMethod parsedHttpMethod))
 			restInput.HttpMethod = parsedHttpMethod;
 		restInput.Endpoint = _configuration.Endpoint;
-		return restInput;
 	}
 }

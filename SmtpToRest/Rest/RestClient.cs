@@ -28,15 +28,15 @@ internal class RestClient : IRestClient
         if (!string.IsNullOrEmpty(input.ApiToken))
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", input.ApiToken);
 
-        UriBuilder uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, input.Service));
-		switch (input.HttpMethod)
+        UriBuilder uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, input.Service))
+        {
+	        Query = Uri.EscapeDataString(input.QueryString ?? string.Empty)
+        };
+        switch (input.HttpMethod)
         {
 	        case HttpMethod.Post:
-		        dynamic postData = input.JsonPostData ?? string.Empty;
-		        return await client.PostAsync(uriBuilder.Uri, new StringContent(postData), cancellationToken);
-	        case HttpMethod.Get:
-		        uriBuilder.Query = Uri.EscapeDataString(input.QueryString ?? string.Empty);
-		        return await client.GetAsync(uriBuilder.Uri, cancellationToken);
+		        string content = input.Content ?? string.Empty;
+		        return await client.PostAsync(uriBuilder.Uri, new StringContent(content), cancellationToken);
 			default:
                 return await client.SendAsync(new HttpRequestMessage(input.HttpMethod.ToSystemNetHttpMethod(), uriBuilder.Uri), cancellationToken);
 		}
