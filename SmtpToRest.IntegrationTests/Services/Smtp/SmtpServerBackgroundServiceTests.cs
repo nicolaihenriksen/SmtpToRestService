@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 using SmtpServer;
@@ -13,6 +14,7 @@ using SmtpServer.Storage;
 using SmtpToRest.Config;
 using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 using IMessageStoreFactory = SmtpToRest.Services.Smtp.IMessageStoreFactory;
 
 namespace SmtpToRest.IntegrationTests.Services.Smtp;
@@ -26,6 +28,7 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 
 	private IHostBuilder HostBuilder { get; }
 	private IHost? Host { get; set; }
+	private Mock<ILogger> Logger { get; } = new();
 	private TestConfiguration Configuration { get; } = new();
 	private BlockingCollection<IMimeMessage>? MessageQueue { get; set; }
 	private MockHttpMessageHandler HttpMessageHandler { get; } = new();
@@ -72,6 +75,11 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 				services.AddSingleton(_ => messageStoreFactory.Object);
 				services.AddSingleton(_ => smtpServerFactory.Object);
 			});
+		HostBuilder.ConfigureLogging(loggingBuilder =>
+		{
+			loggingBuilder.ClearProviders();
+			loggingBuilder.AddProvider(new CustomLoggerProvider(Logger.Object));
+		});
 	}
 
 	public void Dispose()
@@ -124,6 +132,26 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 		{
 			result = e.ProcessResult;
 			sync.Set();
+		}
+	}
+
+	private void AssertLog(LogLevel logLevel, string message, Type? exceptionType = null)
+	{
+		if (exceptionType != null)
+		{
+			Logger.Verify(l => l.Log(logLevel,
+				It.IsAny<EventId>(),
+				It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains(message)),
+				It.Is<Exception>(ex => ex.GetType().IsAssignableTo(exceptionType)),
+				It.IsAny<Func<It.IsAnyType, Exception, string>>()!), Times.AtLeastOnce);
+		}
+		else
+		{
+			Logger.Verify(l => l.Log(logLevel,
+				It.IsAny<EventId>(),
+				It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains(message)),
+				It.IsAny<Exception>(),
+				It.IsAny<Func<It.IsAnyType, Exception, string>>()!), Times.AtLeastOnce);
 		}
 	}
 }

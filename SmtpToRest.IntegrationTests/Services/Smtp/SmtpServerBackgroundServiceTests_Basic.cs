@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Moq;
 using RichardSzalay.MockHttp;
 using SmtpToRest.Config;
@@ -6,6 +7,7 @@ using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using System.Net;
 using System.Net.Http;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace SmtpToRest.IntegrationTests.Services.Smtp;
@@ -152,5 +154,16 @@ public partial class SmtpServerBackgroundServiceTests
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
 		Assert.NotNull(result);
 		result.IsSuccess.Should().BeTrue();
+	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryBasic)]
+	public void StartHost_ShouldLog()
+	{
+		// Act
+		StartHost();
+
+		// Assert
+		AssertLog(LogLevel.Information, "Starting", typeof(ArgumentException));
 	}
 }
