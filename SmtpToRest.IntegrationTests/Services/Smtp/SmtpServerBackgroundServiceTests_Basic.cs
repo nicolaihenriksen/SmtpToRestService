@@ -13,12 +13,56 @@ namespace SmtpToRest.IntegrationTests.Services.Smtp;
 public partial class SmtpServerBackgroundServiceTests
 {
 	[Fact]
-	public void ProcessMessages_Should_When()
+	public void ProcessMessages_ShouldReturnFailedResult_WhenMessageDoesNotHaveSenderAddress()
+	{
+		// Arrange
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		Mock<IMimeMessage> message = new();
+		message
+			.SetupGet(m => m.Address)
+			.Returns((string)null!);
+		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Respond(HttpStatusCode.OK);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeFalse();
+		HttpMessageHandler.GetMatchCount(request).Should().Be(0);
+		result.Error.Should().Contain("No address found in message");
+	}
+
+	[Fact]
+	public void ProcessMessages_ShouldReturnFailedResult_WhenNoMappingIsFound()
+	{
+		// Arrange
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		Mock<IMimeMessage> message = new();
+		message
+			.SetupGet(m => m.Address)
+			.Returns("sender@somewhere.com");
+		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Respond(HttpStatusCode.OK);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeFalse();
+		HttpMessageHandler.GetMatchCount(request).Should().Be(0);
+		result.Error.Should().Contain("No mapping found for");
+	}
+
+	[Fact]
+	public void ProcessMessages_ShouldSucceed_WhenMatchingMappingIsFound()
 	{
 		// Arrange
 		ConfigurationMapping mapping = new();
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
-		HttpMessageHandler.Expect(HttpMethod.Get, "http://testendpoint")
+		HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
