@@ -61,6 +61,13 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 			.Returns(smtpServer.Object);
 
 		HostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
+			.ConfigureLogging((context, loggingBuilder) =>
+			{
+				loggingBuilder
+					.ClearProviders()
+					.AddProvider(new CustomLoggerProvider(Logger.Object))
+					.AddFilter(_ => true);
+			})
 			.ConfigureServices(services =>
 			{
 				services.AddSmtpToRest(options =>
@@ -75,11 +82,6 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 				services.AddSingleton(_ => messageStoreFactory.Object);
 				services.AddSingleton(_ => smtpServerFactory.Object);
 			});
-		HostBuilder.ConfigureLogging(loggingBuilder =>
-		{
-			loggingBuilder.ClearProviders();
-			loggingBuilder.AddProvider(new CustomLoggerProvider(Logger.Object));
-		});
 	}
 
 	public void Dispose()

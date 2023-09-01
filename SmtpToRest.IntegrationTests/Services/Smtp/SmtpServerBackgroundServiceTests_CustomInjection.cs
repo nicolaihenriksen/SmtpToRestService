@@ -5,7 +5,9 @@ using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SmtpToRest.Config;
+using SmtpToRest.Rest;
 using SmtpToRest.Rest.Decorators;
 using Xunit;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -210,5 +212,31 @@ public partial class SmtpServerBackgroundServiceTests
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
 		Assert.NotNull(result);
 		result.IsSuccess.Should().BeTrue();
+	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryCustomInjection)]
+	public void ProcessMessages_ShouldUseCustomRestClient_WhenCustomRestClientInjected()
+	{
+		// Arrange
+		StartHost(services =>
+		{
+			services.AddSingleton<IRestClient, CustomRestClient>();
+		});
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		ConfigurationMapping mapping = new();
+		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+		HttpMessageHandler
+			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Respond(HttpStatusCode.OK);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		HttpMessageHandler.VerifyNoOutstandingExpectation();
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeTrue();
+		AssertLog(LogLevel.Debug, "Custom rest client decorator");
 	}
 }

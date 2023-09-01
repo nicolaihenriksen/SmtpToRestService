@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 
 namespace SmtpToRest.Rest;
 
-internal interface IRestClient
+public interface IRestClient
 {
     Task<HttpResponseMessage> InvokeService(RestInput input, CancellationToken cancellationToken);
 }
+
+public interface IDefaultRestClient : IRestClient
+{ }
