@@ -52,7 +52,9 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
-			.AddSingleton<IRestClient, RestClient>()
+			.AddSingleton<RestClient>()
+			.AddSingleton<IRestClient>(sp => sp.GetRequiredService<RestClient>())
+			.AddSingleton<IDefaultRestClient>(sp => sp.GetRequiredService<RestClient>())
 			.AddHostedService<SmtpServerBackgroundService>();
 
 		return services;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmtpToRest.Rest;
 
-internal class RestClient : IRestClient
+internal class RestClient : IDefaultRestClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
