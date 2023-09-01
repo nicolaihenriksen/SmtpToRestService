@@ -28,9 +28,9 @@ internal class RestClient : IRestClient
         if (!string.IsNullOrEmpty(input.ApiToken))
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", input.ApiToken);
 
-        UriBuilder uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, input.Service))
+		UriBuilder uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, input.Service))
         {
-	        Query = Uri.EscapeDataString(input.QueryString ?? string.Empty)
+	        Query = EscapeQueryString(input.QueryString ?? string.Empty)
         };
         switch (input.HttpMethod)
         {
@@ -40,5 +40,20 @@ internal class RestClient : IRestClient
 			default:
                 return await client.SendAsync(new HttpRequestMessage(input.HttpMethod.ToSystemNetHttpMethod(), uriBuilder.Uri), cancellationToken);
 		}
+    }
+
+    // Simplistic/naive escape of query string; should probably be refactored at some point.
+    private static string EscapeQueryString(string queryString)
+    {
+        string[] keyValuePairs = queryString.Split('&');
+        for (int i = 0; i < keyValuePairs.Length; i++)
+        {
+            string[] keyValuePair = keyValuePairs[i].Split('=');
+			if (keyValuePair.Length != 2)
+				continue;
+
+            keyValuePairs[i] = $"{Uri.EscapeDataString(keyValuePair[0])}={Uri.EscapeDataString(keyValuePair[1])}";
+		}
+        return string.Join("&", keyValuePairs);
     }
 }

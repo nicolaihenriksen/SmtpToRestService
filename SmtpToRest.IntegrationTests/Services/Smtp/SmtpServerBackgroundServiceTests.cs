@@ -19,6 +19,8 @@ namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
 public partial class SmtpServerBackgroundServiceTests : IDisposable
 {
+	private const string CategoryKey = "Category";
+
 	private readonly CancellationTokenSource _cts = new();
 	private readonly ManualResetEventSlim _sync = new();
 

@@ -12,7 +12,10 @@ namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
 public partial class SmtpServerBackgroundServiceTests
 {
+	private const string CategoryBasic = "Basic";
+
 	[Fact]
+	[Trait(CategoryKey, CategoryBasic)]
 	public void ProcessMessages_ShouldReturnFailedResult_WhenMessageDoesNotHaveSenderAddress()
 	{
 		// Arrange
@@ -35,6 +38,7 @@ public partial class SmtpServerBackgroundServiceTests
 	}
 
 	[Fact]
+	[Trait(CategoryKey, CategoryBasic)]
 	public void ProcessMessages_ShouldReturnFailedResult_WhenNoMappingIsFound()
 	{
 		// Arrange
@@ -57,6 +61,7 @@ public partial class SmtpServerBackgroundServiceTests
 	}
 
 	[Fact]
+	[Trait(CategoryKey, CategoryBasic)]
 	public void ProcessMessages_ShouldSucceed_WhenMatchingMappingIsFound()
 	{
 		// Arrange
@@ -69,8 +74,8 @@ public partial class SmtpServerBackgroundServiceTests
 		ProcessResult? result = SendMessage(message.Object);
 
 		// Assert
+		HttpMessageHandler.VerifyNoOutstandingExpectation();
 		Assert.NotNull(result);
 		result.IsSuccess.Should().BeTrue();
-		HttpMessageHandler.VerifyNoOutstandingExpectation();
 	}
 }
