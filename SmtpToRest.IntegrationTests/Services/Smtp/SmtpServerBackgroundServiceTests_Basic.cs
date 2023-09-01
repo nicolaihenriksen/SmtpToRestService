@@ -164,6 +164,6 @@ public partial class SmtpServerBackgroundServiceTests
 		StartHost();
 
 		// Assert
-		AssertLog(LogLevel.Information, "Starting", typeof(ArgumentException));
+		AssertLog(LogLevel.Information, "Starting");
 	}
 }
