@@ -89,12 +89,11 @@ internal class Configuration : IConfiguration
         mapping = null;
         lock (_mappings)
         {
-            if (_mappings.TryGetValue(key, out var fetchedMapping))
-            {
-                mapping = fetchedMapping;
-                return true;
-            }
-            return false;
+	        if (!_mappings.TryGetValue(key, out ConfigurationMapping? fetchedMapping))
+		        return false;
+
+	        mapping = fetchedMapping;
+            return true;
         }
     }
 }

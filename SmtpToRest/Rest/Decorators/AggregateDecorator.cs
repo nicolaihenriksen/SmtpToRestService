@@ -14,6 +14,6 @@ internal class AggregateDecorator : DecoratorBase, IRestInputDecoratorInternal
 		_decorators = decorators?.ToList() ?? new List<IRestInputDecorator>();
 	}
 
-	public RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
-		=> _decorators.Aggregate(restInput, (current, decorator) => decorator.Decorate(current, mapping, message));
+	public void Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
+		=> _decorators.ForEach(d => d.Decorate(restInput, mapping, message));
 }

@@ -5,13 +5,9 @@ namespace SmtpToRest.Rest.Decorators;
 
 internal class QueryStringDecorator : DecoratorBase, IRestInputDecorator
 {
-	public RestInput Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
+	public void Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
 	{
-		if (restInput.HttpMethod == HttpMethod.Get)
-		{
-			// TODO: Handle placeholder replacements
-			restInput.QueryString = mapping.QueryString;
-		}
-		return restInput;
+		// TODO: Handle placeholder replacements
+		restInput.QueryString = mapping.QueryString;
 	}
 }
