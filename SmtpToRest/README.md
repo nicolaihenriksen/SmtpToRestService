@@ -91,19 +91,19 @@ This handler simply decorates each request with an additional header before send
 ```csharp
 internal class RetryHttpMessageHandler : DelegatingHandler
 {
-	private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy = Policy<HttpResponseMessage>
-																			.Handle<HttpRequestException>()
-																			.RetryAsync(3);
+    private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy = Policy<HttpResponseMessage>
+                                                                            .Handle<HttpRequestException>()
+                                                                            .RetryAsync(3);
 
-	protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-	    PolicyResult<HttpResponseMessage> result = await _retryPolicy.ExecuteAndCaptureAsync(() => base.SendAsync(request, cancellationToken));
-	    if (result.Outcome == OutcomeType.Failure)
-	    {
-		    throw new HttpRequestException("Error sending request", result.FinalException);
-	    }
-		return result.Result;
-	}
+        PolicyResult<HttpResponseMessage> result = await _retryPolicy.ExecuteAndCaptureAsync(() => base.SendAsync(request, cancellationToken));
+        if (result.Outcome == OutcomeType.Failure)
+        {
+            throw new HttpRequestException("Error sending request", result.FinalException);
+        }
+        return result.Result;
+    }
 }
 ```
 This handler leverages the [Polly](https://github.com/App-vNext/Polly) nuget package to implement a very simplistic 3-retries
