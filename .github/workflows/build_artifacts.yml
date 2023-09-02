@@ -19,7 +19,7 @@ on:
 jobs:
   build:
     name: Build, Test, Upload artifacts, and Publish
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     env:
       solution: SmtpToRest.sln
@@ -49,16 +49,16 @@ jobs:
         timeout-minutes: 5
         run: dotnet test ${{ env.solution }} --configuration Release --no-build --verbosity normal --blame-crash
 
-      - name: Build self-contained EXE for Windows Service
-        timeout-minutes: 5
-        run: .\SmtpToRest.WindowsService\Publish.ps1 -BuildVersion ${{ inputs.buildVersion }}
+#      - name: Build self-contained EXE for Windows Service
+#        timeout-minutes: 5
+#        run: .\SmtpToRest.WindowsService\Publish.ps1 -BuildVersion ${{ inputs.buildVersion }}
     
-      - name: Upload self-contained EXE as artifact
-        if: inputs.debug == false
-        uses: actions/upload-artifact@v3
-        with:
-          name: SmtpToRest.WindowsService.zip
-          path: "SmtpToRest.WindowsService/publish"
+#      - name: Upload self-contained EXE as artifact
+#        if: inputs.debug == false
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: SmtpToRest.WindowsService.zip
+#          path: "SmtpToRest.WindowsService/publish"
 
       - name: Build nuget package
         timeout-minutes: 5
