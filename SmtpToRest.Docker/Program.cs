@@ -5,7 +5,7 @@ using SmtpToRest;
 using SmtpToRest.Config;
 using System.IO;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services
 	.AddSmtpToRest()
@@ -15,5 +15,5 @@ builder.Services
 		return new ConfigurationProvider(() => Path.Combine(env.ContentRootPath, "config"));
 	});
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 app.Run();
