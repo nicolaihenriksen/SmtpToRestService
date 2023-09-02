@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace SmtpToRest.Rest;
 
-internal class RestClient : IDefaultRestClient
+internal class RestClient : IRestClient
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+	private readonly IHttpClientConfiguration _httpClientConfiguration;
+	private readonly IHttpClientFactory _httpClientFactory;
 
-    public RestClient(IHttpClientFactory httpClientFactory)
+    public RestClient(IHttpClientConfiguration httpClientConfiguration, IHttpClientFactory httpClientFactory)
     {
-        _httpClientFactory = httpClientFactory;
+	    _httpClientConfiguration = httpClientConfiguration;
+	    _httpClientFactory = httpClientFactory;
     }
 
     public async Task<HttpResponseMessage> InvokeService(RestInput input, CancellationToken cancellationToken)
@@ -22,7 +24,7 @@ internal class RestClient : IDefaultRestClient
         if (endpoint is null)
             return new HttpResponseMessage(HttpStatusCode.NotFound);
 
-        var client = _httpClientFactory.CreateClient();
+        var client = _httpClientFactory.CreateClient(_httpClientConfiguration.HttpClientName);
         client.BaseAddress = new Uri(endpoint);
 
         if (!string.IsNullOrEmpty(input.ApiToken))

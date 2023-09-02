@@ -10,7 +10,7 @@ namespace SmtpToRest;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddSmtpToRest(this IServiceCollection services, Action<SmtpToRestOptions>? configure = null)
+	public static IServiceCollection AddSmtpToRest(this IServiceCollection services, Action<SmtpToRestOptions>? configure = null, Action<IHttpClientBuilder>? httpConfiguration = null)
 	{
 		SmtpToRestOptions options = new();
 		configure?.Invoke(options);
@@ -18,8 +18,12 @@ public static class ServiceCollectionExtensions
 		if (options.UseBuiltInDecorators)
 			services.AddDefaultDecorators();
 
+		string httpClientName = options.HttpClientName ?? SmtpToRestOptions.DefaultHttpClientName;
 		if (options.UseBuiltInHttpClientFactory)
-			services.AddHttpClient();
+		{
+			IHttpClientBuilder httpClientBuilder = services.AddHttpClient(httpClientName);
+			httpConfiguration?.Invoke(httpClientBuilder);
+		}
 
 		if (options.UseBuiltInMessageStoreFactory)
 			services.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>();
@@ -52,10 +56,9 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
-			.AddSingleton<RestClient>()
-			.AddSingleton<IRestClient>(sp => sp.GetRequiredService<RestClient>())
-			.AddSingleton<IDefaultRestClient>(sp => sp.GetRequiredService<RestClient>())
-			.AddHostedService<SmtpServerBackgroundService>();
+			.AddSingleton<IRestClient, RestClient>()
+			.AddHostedService<SmtpServerBackgroundService>()
+			.AddSingleton<IHttpClientConfiguration>(_ => new HttpClientConfiguration(httpClientName));
 
 		return services;
 	}

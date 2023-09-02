@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using SmtpToRest;
 using SmtpToRest.Config;
 
-var builder = Host.CreateDefaultBuilder(args)
+IHostBuilder builder = Host.CreateDefaultBuilder(args)
 	.ConfigureServices((_, services) =>
 	{
 		services
@@ -13,5 +13,5 @@ var builder = Host.CreateDefaultBuilder(args)
 	})
 	.UseWindowsService();
 
-var app = builder.Build();
+IHost app = builder.Build();
 app.Run();

@@ -7,7 +7,6 @@ using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmtpToRest.Config;
-using SmtpToRest.Rest;
 using SmtpToRest.Rest.Decorators;
 using Xunit;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -216,27 +215,84 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomRestClient_WhenCustomRestClientInjected()
+	public void ProcessMessages_ShouldUseHttpMessageHandler_WhenInjected()
 	{
 		// Arrange
+		Options.UseBuiltInHttpClientFactory = true;
 		StartHost(services =>
 		{
-			services.AddSingleton<IRestClient, CustomRestClient>();
+			services.AddTransient<CustomHttpMessageHandler>();
+		}, httpConfig =>
+		{
+			httpConfig.AddHttpMessageHandler<CustomHttpMessageHandler>();
 		});
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		ConfigurationMapping mapping = new();
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
-		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
-			.Respond(HttpStatusCode.OK);
 
 		// Act
 		ProcessResult? result = SendMessage(message.Object);
 
 		// Assert
-		HttpMessageHandler.VerifyNoOutstandingExpectation();
 		Assert.NotNull(result);
-		result.IsSuccess.Should().BeTrue();
-		AssertLog(LogLevel.Debug, "Custom rest client decorator");
+		result.IsSuccess.Should().BeFalse();
+		result.Error.Should().Be("CustomHttpMessageHandler terminated the request");
+		AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
+	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryCustomInjection)]
+	public void ProcessMessages_ShouldUseHttpMessageHandlerWithDefaultName_WhenInjectedWithNullName()
+	{
+		// Arrange
+		Options.UseBuiltInHttpClientFactory = true;
+		Options.HttpClientName = null;
+		StartHost(services =>
+		{
+			services.AddTransient<CustomHttpMessageHandler>();
+		}, httpConfig =>
+		{
+			httpConfig.AddHttpMessageHandler<CustomHttpMessageHandler>();
+		});
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		ConfigurationMapping mapping = new();
+		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeFalse();
+		result.Error.Should().Be("CustomHttpMessageHandler terminated the request");
+		AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
+	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryCustomInjection)]
+	public void ProcessMessages_ShouldUseHttpMessageHandlerWithCustomName_WhenInjectedWithCustomName()
+	{
+		// Arrange
+		Options.UseBuiltInHttpClientFactory = true;
+		Options.HttpClientName = "CustomHttpClient";
+		StartHost(services =>
+		{
+			services.AddTransient<CustomHttpMessageHandler>();
+		}, httpConfig =>
+		{
+			httpConfig.AddHttpMessageHandler<CustomHttpMessageHandler>();
+		});
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		ConfigurationMapping mapping = new();
+		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeFalse();
+		result.Error.Should().Be("CustomHttpMessageHandler terminated the request");
+		AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
 	}
 }
