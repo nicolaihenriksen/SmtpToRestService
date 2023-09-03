@@ -23,7 +23,7 @@ In order for the application to do anything useful, you need to configure the ap
 
 The first approach will require you to point the host to the file using a `SmtpToRest.Config.ConfigurationProvider` like this:
 ```csharp
-serviceCollection.AddSingleton<IConfigurationProvider>(sp => new ConfigurationProvider(
+serviceCollection.AddSingleton<SmtpToRest.Config.IConfigurationProvider>(sp => new SmtpToRest.Config.ConfigurationProvider(
     () => Path.Combine(System.AppContext.BaseDirectory)));
 ```
 The path provided here needs to point to the directory containing the `configuration.json` file.
@@ -32,7 +32,7 @@ The path provided here needs to point to the directory containing the `configura
 
 The second approach will require you to add your own implementation of `SmtpToRest.Config.IConfiguration` (e.g. `MyCustomConfiguration`) and inject it directly into the `IServiceCollection` (typically as a singleton):
 ```csharp
-serviceCollection.AddSingleton<IConfiguration, MyCustomConfiguration>();
+serviceCollection.AddSingleton<SmtpToRest.Config.IConfiguration, MyCustomConfiguration>();
 ```
 <br/>
 
