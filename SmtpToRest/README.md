@@ -128,3 +128,22 @@ httpConfig =>
     httpConfig.AddHttpMessageHandler<CustomHeaderHttpMessageHandler>();
 });
 ```
+
+The `HttpClient` is, by default, added to the `IServiceCollection` using a default name of 'SmtpToRest'. If for some reason
+that clashes with an existing named client you have, you can easily change it:
+```csharp
+serviceCollection.AddSmtpToRest(options => 
+{
+    options.HttpClientName = "CustomHttpClientName";
+});
+```
+
+Alternatively, if you have an existing client which you want to leverage, you could tell SmtpToRest does not register a
+client (factory) and point it to an existing one instead:
+```csharp
+serviceCollection.AddSmtpToRest(options => 
+{
+    options.HttpClientName = "ExistingHttpClientName";
+    option.UseBuiltInHttpClientFactory = false;
+});
+```
