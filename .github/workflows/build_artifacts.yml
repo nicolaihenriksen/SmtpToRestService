@@ -99,4 +99,16 @@ jobs:
           file: ./SmtpToRest.Docker/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}      
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Zip Self-contained EXE artifact
+        run: zip -j SmtpToRest.WindowsService.zip SmtpToRest.WindowsService/publish/*
+
+      - name: Create release
+        if: inputs.publish && inputs.debug == false
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "SmtpToRest/pack/*.nupkg,SmtpToRest.WindowsService.zip"
+          tag: ${{ inputs.nugetVersion }}
+          generateReleaseNotes: true
+          draft: true
