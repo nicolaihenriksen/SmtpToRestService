@@ -8,11 +8,11 @@ internal class ContentDecorator : DecoratorBase, IRestInputDecorator
 {
 	public void Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
 	{
-		string? content = null;
+		string? content = restInput.Content;
 		if (mapping.Content is string stringContent)
 			content = stringContent;
-		else
-			content = mapping.Content != null ? JsonSerializer.Serialize(mapping.Content) : restInput.Content;
+		else if (mapping.Content is not null)
+			content = JsonSerializer.Serialize(mapping.Content);
 
 		// TODO: Handle placeholder replacements
 		restInput.Content = content;

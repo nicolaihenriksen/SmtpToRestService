@@ -68,7 +68,11 @@ internal class SmtpServerBackgroundService : BackgroundService
         foreach (IMimeMessage message in _messageQueue.GetConsumingEnumerable(cancellationToken))
         {
 			_logger.LogDebug(FormattableString.Invariant($"Processing message..."));
-			var result = await _messageProcessor.ProcessAsync(message, cancellationToken);
+			ProcessResult result = await _messageProcessor.ProcessAsync(message, cancellationToken);
+			if (!result.IsSuccess)
+			{
+				_logger.LogError("Error processing message. Error='{Error}'", result.Error);
+			}
 			MessageProcessed?.Invoke(this, new MessageProcessedEventArgs(result));
 		}
     }

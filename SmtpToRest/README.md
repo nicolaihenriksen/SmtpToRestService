@@ -23,7 +23,7 @@ In order for the application to do anything useful, you need to configure the ap
 
 The first approach will require you to point the host to the file using a `SmtpToRest.Config.ConfigurationProvider` like this:
 ```csharp
-serviceCollection.AddSingleton<IConfigurationProvider>(sp => new ConfigurationProvider(
+serviceCollection.AddSingleton<SmtpToRest.Config.IConfigurationProvider>(sp => new SmtpToRest.Config.ConfigurationProvider(
     () => Path.Combine(System.AppContext.BaseDirectory)));
 ```
 The path provided here needs to point to the directory containing the `configuration.json` file.
@@ -32,7 +32,7 @@ The path provided here needs to point to the directory containing the `configura
 
 The second approach will require you to add your own implementation of `SmtpToRest.Config.IConfiguration` (e.g. `MyCustomConfiguration`) and inject it directly into the `IServiceCollection` (typically as a singleton):
 ```csharp
-serviceCollection.AddSingleton<IConfiguration, MyCustomConfiguration>();
+serviceCollection.AddSingleton<SmtpToRest.Config.IConfiguration, MyCustomConfiguration>();
 ```
 <br/>
 
@@ -126,5 +126,24 @@ httpConfig =>
 {
     // Register the handler in the HttpClient pipeline used by the SmtpToRest service
     httpConfig.AddHttpMessageHandler<CustomHeaderHttpMessageHandler>();
+});
+```
+
+The `HttpClient` is, by default, added to the `IServiceCollection` using a default name of 'SmtpToRest'. If for some reason
+that clashes with an existing named client you have, you can easily change it:
+```csharp
+serviceCollection.AddSmtpToRest(options => 
+{
+    options.HttpClientName = "CustomHttpClientName";
+});
+```
+
+Alternatively, if you have an existing client which you want to leverage, you could tell SmtpToRest does not register a
+client (factory) and point it to an existing one instead:
+```csharp
+serviceCollection.AddSmtpToRest(options => 
+{
+    options.HttpClientName = "ExistingHttpClientName";
+    option.UseBuiltInHttpClientFactory = false;
 });
 ```

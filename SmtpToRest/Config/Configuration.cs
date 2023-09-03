@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace SmtpToRest.Config;
 
@@ -19,6 +21,7 @@ internal class Configuration : IConfiguration
     private readonly ILogger<Configuration> _logger;
     private readonly IConfigurationFileReader _configurationFileReader;
     private readonly string _configurationPath;
+    private readonly PhysicalFileProvider? _fileProvider;
 
     public Configuration(ILogger<Configuration> logger, IConfigurationProvider configurationProvider, IConfigurationFileReader configurationFileReader, bool watch = true)
     {
@@ -30,19 +33,20 @@ internal class Configuration : IConfiguration
 
         if (watch)
         {
-	        var fileSystemWatcher = new FileSystemWatcher(configDir)
+	        _fileProvider = new PhysicalFileProvider(configDir);
+	        WatchForConfigurationFileChanges();
+
+	        void WatchForConfigurationFileChanges()
 	        {
-		        Filter = Filename,
-		        NotifyFilter = NotifyFilters.LastWrite
-	        };
-	        fileSystemWatcher.Changed += (_, args) =>
-	        {
-		        if (Equals(args.Name, Filename))
-		        {
-			        ReloadConfiguration();
-		        }
-	        };
-	        fileSystemWatcher.EnableRaisingEvents = true;
+		        IChangeToken token = _fileProvider.Watch(Filename);
+				token.RegisterChangeCallback(ConfigurationFileChanged, null);
+			}
+            void ConfigurationFileChanged(object? _)
+            {
+				_logger.LogInformation("Configuration was modified, reloading from: {ConfigurationFilePath}", _configurationPath);
+				ReloadConfiguration();
+                WatchForConfigurationFileChanges();
+			}
         }
     }
 
