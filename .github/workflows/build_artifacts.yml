@@ -59,7 +59,7 @@ jobs:
         if: inputs.debug == false
         uses: actions/upload-artifact@v3
         with:
-          name: SmtpToRest.WindowsService.zip
+          name: SmtpToRest.WindowsService
           path: "SmtpToRest.WindowsService/publish"
 
       - name: Build nuget package
@@ -70,7 +70,7 @@ jobs:
         if: inputs.debug == false
         uses: actions/upload-artifact@v3
         with:
-          name: Nuget-nupkgs.zip
+          name: Nuget-nupkgs
           path: "SmtpToRest/pack"
 
       - name: Push to NuGet

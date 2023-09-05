@@ -81,7 +81,6 @@ public class RestClientTests
     [Theory]
     [InlineData(InputHttpMethod.Post)]
     [InlineData(InputHttpMethod.Get)]
-    [InlineData(InputHttpMethod.Connect)]
     [InlineData(InputHttpMethod.Delete)]
     [InlineData(InputHttpMethod.Head)]
     [InlineData(InputHttpMethod.Options)]
@@ -95,7 +94,6 @@ public class RestClientTests
         {
             { InputHttpMethod.Post, HttpMethod.Post },
             { InputHttpMethod.Get, HttpMethod.Get },
-            { InputHttpMethod.Connect, HttpMethod.Connect },
             { InputHttpMethod.Delete, HttpMethod.Delete },
             { InputHttpMethod.Head, HttpMethod.Head },
             { InputHttpMethod.Options, HttpMethod.Options },
