@@ -37,7 +37,7 @@ jobs:
     uses: ./.github/workflows/build_artifacts.yml
     with:
       buildVersion: ${{ needs.determine_workflow_type.outputs.version }}.${{ github.run_number }}
-      nugetVersion: ${{ needs.determine_workflow_type.outputs.version }}-alpha
+      nugetVersion: ${{ needs.determine_workflow_type.outputs.version }}-alpha2
       publish: ${{ needs.determine_workflow_type.outputs.publish == 'true' }}
       debug: false
     secrets: inherit
