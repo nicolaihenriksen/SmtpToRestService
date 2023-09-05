@@ -9,7 +9,6 @@ internal static class HttpMethodExtensions
 		{
 			HttpMethod.Post => System.Net.Http.HttpMethod.Post,
 			HttpMethod.Get => System.Net.Http.HttpMethod.Get,
-			HttpMethod.Connect => System.Net.Http.HttpMethod.Connect,
 			HttpMethod.Delete => System.Net.Http.HttpMethod.Delete,
 			HttpMethod.Head => System.Net.Http.HttpMethod.Head,
 			HttpMethod.Options => System.Net.Http.HttpMethod.Options,

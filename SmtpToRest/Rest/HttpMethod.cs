@@ -4,7 +4,6 @@ public enum HttpMethod
 {
 	Post,
 	Get,
-	Connect,
 	Delete,
 	Head,
 	Options,

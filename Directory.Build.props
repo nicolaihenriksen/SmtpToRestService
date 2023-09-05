@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <TargetFrameworks>net7.0</TargetFrameworks>
     <Nullable>enable</Nullable>
+    <LangVersion>11</LangVersion>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <BuildVersion Condition="'$(BuildVersion)' == ''">1.0.0</BuildVersion>
