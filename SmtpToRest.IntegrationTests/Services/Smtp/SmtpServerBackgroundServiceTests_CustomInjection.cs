@@ -295,4 +295,29 @@ public partial class SmtpServerBackgroundServiceTests
 		result.Error.Should().Be("CustomHttpMessageHandler terminated the request");
 		AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
 	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryCustomInjection)]
+	public void ProcessMessages_ShouldUseAdditionalMessageProcessor_WhenInjected()
+	{
+		StartHost(services =>
+		{
+			services.AddSingleton<IMessageProcessor, CustomMessageProcessor>();
+		});
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		ConfigurationMapping mapping = new();
+		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+		HttpMessageHandler
+			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Respond(HttpStatusCode.OK);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		HttpMessageHandler.VerifyNoOutstandingExpectation();
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeTrue();
+		AssertLog(LogLevel.Debug, "CustomMessageProcessor pre-processing message");
+	}
 }
