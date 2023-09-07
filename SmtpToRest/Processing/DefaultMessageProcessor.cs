@@ -10,7 +10,7 @@ using SmtpToRest.Rest.Decorators;
 
 namespace SmtpToRest.Processing;
 
-internal class DefaultMessageProcessor : IMessageProcessor
+internal class DefaultMessageProcessor : IMessageProcessorInternal
 {
 	private readonly IConfiguration _configuration;
 	private readonly IRestClient _restClient;
