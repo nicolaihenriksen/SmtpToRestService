@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -17,16 +18,23 @@ internal class SmtpServerBackgroundService : BackgroundService
 
     private readonly ILogger<SmtpServerBackgroundService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly IMessageProcessor _messageProcessor;
+    private readonly IEnumerable<IMessageProcessor> _additionalMessageProcessors;
+    private readonly IMessageProcessorInternal _messageProcessor;
     private readonly IMessageStoreFactory _messageStoreFactory;
     private readonly ISmtpServerFactory _smtpServerFactory;
     private readonly BlockingCollection<IMimeMessage> _messageQueue = new();
     private ISmtpServer? _smtpServer;
 
-    public SmtpServerBackgroundService(ILogger<SmtpServerBackgroundService> logger, IConfiguration configuration, IMessageProcessor messageProcessor, IMessageStoreFactory messageStoreFactory, ISmtpServerFactory smtpServerFactory)
+    public SmtpServerBackgroundService(ILogger<SmtpServerBackgroundService> logger,
+	    IConfiguration configuration,
+	    IEnumerable<IMessageProcessor> additionalMessageProcessors,
+	    IMessageProcessorInternal messageProcessor,
+	    IMessageStoreFactory messageStoreFactory,
+	    ISmtpServerFactory smtpServerFactory)
     {
         _logger = logger;
         _configuration = configuration;
+        _additionalMessageProcessors = additionalMessageProcessors;
         _messageProcessor = messageProcessor;
         _messageStoreFactory = messageStoreFactory;
         _smtpServerFactory = smtpServerFactory;
@@ -68,6 +76,17 @@ internal class SmtpServerBackgroundService : BackgroundService
         foreach (IMimeMessage message in _messageQueue.GetConsumingEnumerable(cancellationToken))
         {
 			_logger.LogDebug(FormattableString.Invariant($"Processing message..."));
+			foreach (IMessageProcessor processor in _additionalMessageProcessors)
+			{
+				try
+				{
+					await processor.ProcessAsync(message, cancellationToken);
+				}
+                catch(Exception ex)
+				{
+					_logger.LogError(ex, "Error processing message. AdditionalMessageProcessor type='{MessageProcessorType}', Error='{Error}'", processor.GetType().FullName, ex.Message);
+				}
+			}
 			ProcessResult result = await _messageProcessor.ProcessAsync(message, cancellationToken);
 			if (!result.IsSuccess)
 			{

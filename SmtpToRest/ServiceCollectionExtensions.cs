@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
 			services.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>();
 
 		if (options.UseBuiltInMessageProcessor)
-			services.AddSingleton<IMessageProcessor, DefaultMessageProcessor>();
+			services.AddSingleton<IMessageProcessorInternal, DefaultMessageProcessor>();
 
 		switch (options.ConfigurationMode)
 		{
