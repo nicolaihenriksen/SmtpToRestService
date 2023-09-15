@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -11,16 +10,15 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 using SmtpServer;
-using SmtpServer.Storage;
 using SmtpToRest.Config;
 using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
-using IMessageStoreFactory = SmtpToRest.Services.Smtp.IMessageStoreFactory;
+using IMessageStore = SmtpToRest.Services.Smtp.IMessageStore;
 
 namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
-public partial class SmtpServerBackgroundServiceTests : IDisposable
+public partial class SmtpServerHostedServiceTests : IDisposable
 {
 	private const string CategoryKey = "Category";
 
@@ -33,15 +31,15 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 	private Mock<ILogger> Logger { get; } = new();
 	private SmtpToRestOptions Options { get; } = new();
 	private TestConfiguration Configuration { get; } = new();
-	private BlockingCollection<IMimeMessage>? MessageQueue { get; set; }
 	private MockHttpMessageHandler HttpMessageHandler { get; } = new();
+	private Mock<IMessageStore> MessageStore { get; } = new();
 
-	public SmtpServerBackgroundServiceTests()
+	public SmtpServerHostedServiceTests()
 	{
 		Options.Configuration = Configuration;
 		Options.ConfigurationMode = ConfigurationMode.OptionInjection;
 		Options.UseBuiltInHttpClientFactory = false;
-		Options.UseBuiltInMessageStoreFactory = false;
+		Options.UseBuiltInMessageStore = false;
 		Options.UseBuiltInSmtpServerFactory = false;
 
 		HttpMessageHandler.Fallback.Respond(HttpStatusCode.InternalServerError);
@@ -50,16 +48,6 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 			.Setup(f => f.CreateClient(It.IsAny<string>()))
 			.Returns(new HttpClient(HttpMessageHandler));
 		HttpClientFactory = httpClientFactory.Object;
-
-		Mock<IMessageStoreFactory> messageStoreFactory = new();
-		messageStoreFactory
-			.Setup(f => f.Create(It.IsAny<BlockingCollection<IMimeMessage>>()))
-			.Callback((BlockingCollection<IMimeMessage> messageQueue) =>
-			{
-				MessageQueue = messageQueue;
-				_sync.Set();
-			})
-			.Returns(new Mock<IMessageStore>().Object);
 
 		Mock<ISmtpServer> smtpServer = new();
 		smtpServer
@@ -80,7 +68,7 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 			})
 			.ConfigureServices(services =>
 			{
-				services.AddSingleton(_ => messageStoreFactory.Object);
+				services.AddSingleton(_ => MessageStore.Object);
 				services.AddSingleton(_ => smtpServerFactory.Object);
 			});
 	}
@@ -88,9 +76,10 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 	public void Dispose()
 	{
 		_cts.Cancel();
+		GC.SuppressFinalize(this);
 	}
 
-	private void StartHost(Action<IServiceCollection>? services = null, Action<IHttpClientBuilder>? httpConfig = null)
+	private async Task StartHost(Action<IServiceCollection>? services = null, Action<IHttpClientBuilder>? httpConfig = null)
 	{
 		if (Host != null)
 			return;
@@ -102,7 +91,7 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 				options.ConfigurationMode = Options.ConfigurationMode;
 				options.Configuration = Options.Configuration;
 				options.UseBuiltInHttpClientFactory = Options.UseBuiltInHttpClientFactory;
-				options.UseBuiltInMessageStoreFactory = Options.UseBuiltInMessageStoreFactory;
+				options.UseBuiltInMessageStore = Options.UseBuiltInMessageStore;
 				options.UseBuiltInSmtpServerFactory = Options.UseBuiltInSmtpServerFactory;
 				options.HttpClientName = Options.HttpClientName;
 			}, httpConfig ?? (_ => { }));
@@ -117,8 +106,7 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 			HostBuilder.ConfigureServices(services);
 		}
 		Host = HostBuilder.Build();
-		Host.StartAsync(_cts.Token).Wait();
-		_sync.Wait();
+		await Host.StartAsync(_cts.Token);
 	}
 
 	private Mock<IMimeMessage> Arrange(string fromAddress, ConfigurationMapping mapping)
@@ -136,14 +124,14 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 		return message;
 	}
 
-	private ProcessResult? SendMessage(IMimeMessage message)
+	private async Task<ProcessResult?> SendMessageAsync(IMimeMessage message)
 	{
-		StartHost();
+		await StartHost();
 		ManualResetEventSlim sync = new();
 		ProcessResult? result = default;
-		SmtpServerBackgroundService smtpServer = (SmtpServerBackgroundService) Host!.Services.GetRequiredService<IHostedService>();
+		SmtpServerHostedService smtpServer = (SmtpServerHostedService) Host!.Services.GetRequiredService<IHostedService>();
 		smtpServer.MessageProcessed += OnMessageProcessed;
-		MessageQueue!.Add(message);
+		MessageStore.Raise(m => m.MessageReceived += null, new MessageReceivedEventArgs(message));
 
 		if (Debugger.IsAttached)
 			sync.Wait(-1);

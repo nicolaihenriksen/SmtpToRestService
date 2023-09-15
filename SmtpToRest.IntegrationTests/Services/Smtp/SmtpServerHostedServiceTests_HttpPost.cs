@@ -5,18 +5,19 @@ using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using SmtpToRest.Config;
 using Xunit;
 
 namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
-public partial class SmtpServerBackgroundServiceTests
+public partial class SmtpServerHostedServiceTests
 {
 	private const string CategoryHttpPost = "HTTP POST";
 
 	[Fact]
 	[Trait(CategoryKey, CategoryHttpPost)]
-	public void ProcessMessages_ShouldIncludeJsonContent_WhenSuppliedInMapping()
+	public async Task ProcessMessages_ShouldIncludeJsonContent_WhenSuppliedInMapping()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Post.ToString();
@@ -35,7 +36,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -45,7 +46,7 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryHttpPost)]
-	public void ProcessMessages_ShouldIncludeStringContent_WhenSuppliedInMapping()
+	public async Task ProcessMessages_ShouldIncludeStringContent_WhenSuppliedInMapping()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Post.ToString();
@@ -60,7 +61,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();

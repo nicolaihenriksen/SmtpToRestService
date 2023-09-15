@@ -4,6 +4,7 @@ using RichardSzalay.MockHttp;
 using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmtpToRest.Config;
@@ -13,16 +14,16 @@ using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
-public partial class SmtpServerBackgroundServiceTests
+public partial class SmtpServerHostedServiceTests
 {
 	private const string CategoryCustomInjection = "Custom DI Injections";
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomEndpoint_WhenOverriddenByCustomDecorator()
+	public async Task ProcessMessages_ShouldUseCustomEndpoint_WhenOverriddenByCustomDecorator()
 	{
 		// Arrange
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IRestInputDecorator>(_ => new CustomRestInputDecorator(
 				(restInput, _, _) =>
@@ -41,7 +42,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -51,10 +52,10 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomService_WhenOverriddenByCustomDecorator()
+	public async Task ProcessMessages_ShouldUseCustomService_WhenOverriddenByCustomDecorator()
 	{
 		// Arrange
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IRestInputDecorator>(_ => new CustomRestInputDecorator(
 				(restInput, _, _) =>
@@ -73,7 +74,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -83,10 +84,10 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomApiToken_WhenOverriddenByCustomDecorator()
+	public async Task ProcessMessages_ShouldUseCustomApiToken_WhenOverriddenByCustomDecorator()
 	{
 		// Arrange
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IRestInputDecorator>(_ => new CustomRestInputDecorator(
 				(restInput, _, _) =>
@@ -106,7 +107,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -116,10 +117,10 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomHttpMethod_WhenOverriddenByCustomDecorator()
+	public async Task ProcessMessages_ShouldUseCustomHttpMethod_WhenOverriddenByCustomDecorator()
 	{
 		// Arrange
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IRestInputDecorator>(_ => new CustomRestInputDecorator(
 				(restInput, _, _) =>
@@ -138,7 +139,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -148,10 +149,10 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomQueryString_WhenOverriddenByCustomDecorator()
+	public async Task ProcessMessages_ShouldUseCustomQueryString_WhenOverriddenByCustomDecorator()
 	{
 		// Arrange
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IRestInputDecorator>(_ => new CustomRestInputDecorator(
 				(restInput, _, _) =>
@@ -172,7 +173,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -182,10 +183,10 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomContent_WhenOverriddenByCustomDecorator()
+	public async Task ProcessMessages_ShouldUseCustomContent_WhenOverriddenByCustomDecorator()
 	{
 		// Arrange
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IRestInputDecorator>(_ => new CustomRestInputDecorator(
 				(restInput, _, _) =>
@@ -205,7 +206,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -215,11 +216,11 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseHttpMessageHandler_WhenInjected()
+	public async Task ProcessMessages_ShouldUseHttpMessageHandler_WhenInjected()
 	{
 		// Arrange
 		Options.UseBuiltInHttpClientFactory = true;
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddTransient<CustomHttpMessageHandler>();
 		}, httpConfig =>
@@ -231,7 +232,7 @@ public partial class SmtpServerBackgroundServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		Assert.NotNull(result);
@@ -242,12 +243,12 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseHttpMessageHandlerWithDefaultName_WhenInjectedWithNullName()
+	public async Task ProcessMessages_ShouldUseHttpMessageHandlerWithDefaultName_WhenInjectedWithNullName()
 	{
 		// Arrange
 		Options.UseBuiltInHttpClientFactory = true;
 		Options.HttpClientName = null;
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddTransient<CustomHttpMessageHandler>();
 		}, httpConfig =>
@@ -259,7 +260,7 @@ public partial class SmtpServerBackgroundServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		Assert.NotNull(result);
@@ -270,12 +271,12 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseHttpMessageHandlerWithCustomName_WhenInjectedWithCustomName()
+	public async Task ProcessMessages_ShouldUseHttpMessageHandlerWithCustomName_WhenInjectedWithCustomName()
 	{
 		// Arrange
 		Options.UseBuiltInHttpClientFactory = true;
 		Options.HttpClientName = "CustomHttpClient";
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddTransient<CustomHttpMessageHandler>();
 		}, httpConfig =>
@@ -287,7 +288,7 @@ public partial class SmtpServerBackgroundServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		Assert.NotNull(result);
@@ -298,9 +299,9 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseAdditionalMessageProcessor_WhenInjected()
+	public async Task ProcessMessages_ShouldUseAdditionalMessageProcessor_WhenInjected()
 	{
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IMessageProcessor, CustomMessageProcessor>();
 		});
@@ -312,7 +313,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -323,9 +324,9 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
-	public void ProcessMessages_ShouldUseCustomMappingKeyExtractor_WhenInjected()
+	public async Task ProcessMessages_ShouldUseCustomMappingKeyExtractor_WhenInjected()
 	{
-		StartHost(services =>
+		await StartHost(services =>
 		{
 			services.AddSingleton<IConfigurationMappingKeyExtractor, CustomConfigurationMappingKeyExtractor>();
 		});
@@ -346,7 +347,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
