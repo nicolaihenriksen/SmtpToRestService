@@ -15,14 +15,20 @@ internal class DefaultMessageProcessor : IMessageProcessorInternal
 	private readonly IConfiguration _configuration;
 	private readonly IRestClient _restClient;
 	private readonly IRestInputDecoratorInternal _decorator;
+	private readonly IConfigurationMappingKeyExtractor _keyExtractor;
 	private readonly ILogger<DefaultMessageProcessor> _logger;
 
-	public DefaultMessageProcessor(ILogger<DefaultMessageProcessor> logger, IConfiguration configuration, IRestClient restClient, IRestInputDecoratorInternal decorator)
+	public DefaultMessageProcessor(ILogger<DefaultMessageProcessor> logger,
+		IConfiguration configuration,
+		IRestClient restClient,
+		IRestInputDecoratorInternal decorator,
+		IConfigurationMappingKeyExtractor keyExtractor)
 	{
 		_logger = logger;
 		_configuration = configuration;
 		_restClient = restClient;
 		_decorator = decorator;
+		_keyExtractor = keyExtractor;
 	}
 
 	public async Task<ProcessResult> ProcessAsync(IMimeMessage message, CancellationToken cancellationToken)
@@ -32,7 +38,8 @@ internal class DefaultMessageProcessor : IMessageProcessorInternal
 			return ProcessResult.Failure("No address found in message");
 		}
 
-		if (_configuration.TryGetMapping(message.FirstFromAddress, out ConfigurationMapping? mapping) && mapping is not null)
+		string mappingKey = _keyExtractor.ExtractKey(message);
+		if (_configuration.TryGetMapping(mappingKey, out ConfigurationMapping? mapping) && mapping is not null)
 		{
 			try
 			{
@@ -47,6 +54,6 @@ internal class DefaultMessageProcessor : IMessageProcessorInternal
 				return ProcessResult.Failure($"Error invoking REST service for mapping. Key='{mapping.Key}'");
 			}
 		}
-		return ProcessResult.Failure($"No mapping found for address: '{message.FirstFromAddress}'");
+		return ProcessResult.Failure($"No mapping found for key: '{mappingKey}'");
 	}
 }

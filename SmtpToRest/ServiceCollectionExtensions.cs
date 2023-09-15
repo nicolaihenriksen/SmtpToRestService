@@ -55,6 +55,7 @@ public static class ServiceCollectionExtensions
 		}
 
 		services
+			.AddSingleton<IConfigurationMappingKeyExtractor, DefaultConfigurationMappingKeyExtractor>()
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
 			.AddSingleton<IRestClient, RestClient>()
 			.AddHostedService<SmtpServerBackgroundService>()
