@@ -25,7 +25,7 @@ internal class SimpleMessageStore : MessageStore
 
     public override async Task<SmtpResponse> SaveAsync(ISessionContext context, IMessageTransaction transaction, ReadOnlySequence<byte> buffer, CancellationToken cancellationToken)
     {
-        _logger.LogDebug(FormattableString.Invariant($"Reading incoming message..."));
+        _logger.LogDebug("Reading incoming message...");
         await using var stream = new MemoryStream();
         var position = buffer.GetPosition(0);
         while (buffer.TryGet(ref position, out var memory))
@@ -40,7 +40,7 @@ internal class SimpleMessageStore : MessageStore
         }
         catch
         {
-            _logger.LogError(FormattableString.Invariant($"Unable to parse incoming message"));
+            _logger.LogError("Unable to parse incoming message");
         }
         return SmtpResponse.Ok;
     }
