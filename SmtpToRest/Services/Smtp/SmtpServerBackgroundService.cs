@@ -42,7 +42,7 @@ internal class SmtpServerBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation(FormattableString.Invariant($"Starting..."));
+        _logger.LogInformation("Starting...");
         try
         {
             var options = new SmtpServerOptionsBuilder()
@@ -61,7 +61,7 @@ internal class SmtpServerBackgroundService : BackgroundService
         }
         finally
         {
-            _logger.LogInformation(FormattableString.Invariant($"Stopped"));
+            _logger.LogInformation("Stopped");
         }
     }
 
@@ -75,7 +75,7 @@ internal class SmtpServerBackgroundService : BackgroundService
     {
         foreach (IMimeMessage message in _messageQueue.GetConsumingEnumerable(cancellationToken))
         {
-			_logger.LogDebug(FormattableString.Invariant($"Processing message..."));
+			_logger.LogDebug("Processing message...");
 			foreach (IMessageProcessor processor in _additionalMessageProcessors)
 			{
 				try

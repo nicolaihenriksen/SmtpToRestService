@@ -77,11 +77,11 @@ internal class Configuration : IConfiguration
             {
                 if (continueOnError)
                 {
-                    _logger.LogError(FormattableString.Invariant($"Unable to read configuration file ({Filename}), continuing with previous configuration"), ex);
+                    _logger.LogError(ex, "Unable to read configuration file ({Filename}), continuing with previous configuration", Filename);
                 }
                 else
                 {
-                    _logger.LogError(FormattableString.Invariant($"Unable to read configuration file ({Filename}), stopping service."), ex);
+                    _logger.LogError(ex, "Unable to read configuration file ({Filename}), stopping service.", Filename);
                     throw;
                 }
             }
