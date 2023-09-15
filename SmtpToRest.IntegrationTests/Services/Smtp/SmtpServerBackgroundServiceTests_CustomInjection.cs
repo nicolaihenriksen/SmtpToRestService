@@ -320,4 +320,37 @@ public partial class SmtpServerBackgroundServiceTests
 		result.IsSuccess.Should().BeTrue();
 		AssertLog(LogLevel.Debug, "CustomMessageProcessor pre-processing message");
 	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryCustomInjection)]
+	public void ProcessMessages_ShouldUseCustomMappingKeyExtractor_WhenInjected()
+	{
+		StartHost(services =>
+		{
+			services.AddSingleton<IConfigurationMappingKeyExtractor, CustomConfigurationMappingKeyExtractor>();
+		});
+		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+		const string recipient = "recipient@somewhere.com";
+		ConfigurationMapping mapping = new() { Key = recipient };
+		Mock<IMimeMessage> message = new();
+		message
+			.SetupGet(m => m.FirstFromAddress)
+			.Returns("sender@somewhere.com");
+		message
+			.SetupGet(m => m.FirstToAddress)
+			.Returns(recipient);
+		Configuration.AddMapping(recipient, mapping);
+
+		HttpMessageHandler
+			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Respond(HttpStatusCode.OK);
+
+		// Act
+		ProcessResult? result = SendMessage(message.Object);
+
+		// Assert
+		HttpMessageHandler.VerifyNoOutstandingExpectation();
+		Assert.NotNull(result);
+		result.IsSuccess.Should().BeTrue();
+	}
 }

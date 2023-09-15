@@ -27,12 +27,12 @@ internal class DefaultMessageProcessor : IMessageProcessorInternal
 
 	public async Task<ProcessResult> ProcessAsync(IMimeMessage message, CancellationToken cancellationToken)
 	{
-		if (message.Address is null)
+		if (message.FirstFromAddress is null)
 		{
 			return ProcessResult.Failure("No address found in message");
 		}
 
-		if (_configuration.TryGetMapping(message.Address, out ConfigurationMapping? mapping) && mapping is not null)
+		if (_configuration.TryGetMapping(message.FirstFromAddress, out ConfigurationMapping? mapping) && mapping is not null)
 		{
 			try
 			{
@@ -47,6 +47,6 @@ internal class DefaultMessageProcessor : IMessageProcessorInternal
 				return ProcessResult.Failure($"Error invoking REST service for mapping. Key='{mapping.Key}'");
 			}
 		}
-		return ProcessResult.Failure($"No mapping found for address: '{message.Address}'");
+		return ProcessResult.Failure($"No mapping found for address: '{message.FirstFromAddress}'");
 	}
 }
