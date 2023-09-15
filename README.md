@@ -22,10 +22,21 @@ The sample configuration below illustrates the current possibilites.
   "apiToken": "<place your API token here if needed>",
   "endpoint": "https://jsonplaceholder.typicode.com/",
   "httpMethod": "GET",
+  "smtpRelay": {
+    "enabled": true,
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "useSsl": true,
+    "username": "myprimaryuser@gmail.com",
+    "password": "mypassword"
+  },
   "mappings": [
     {
       "key": "list.posts@somedomain.com",
-      "service": "posts"
+      "service": "posts",
+      "smtpRelay": {
+        "enabled": false
+      }
     },
     {
       "key": "add.post@somedomain.com",
@@ -44,11 +55,11 @@ The sample configuration below illustrates the current possibilites.
       "service": "posts",
       "queryString": "title=Test+post&body=Test+post+body&userId=1",
       "smtpRelay": {
-        "host": "smtp.gmail.com",
-        "port": 587,
-        "useSsl": true,
-        "username": "myuser@gmail.com",
-        "password": "mypassword",
+        "enabled": true,
+        "host": "192.168.1.100",
+        "port": 25,
+        "useSsl": false
+      }
     }
   ]
 }
@@ -63,6 +74,7 @@ The sample configuration below illustrates the current possibilites.
 |endpoint|<b>Required - if "customEndpoint" not set on mapping</b><br />Defines the common endpoint used for mappings (unless overridden in the mapping).|
 |httpMethod|<b>Optional - defaults to "GET"</b><br />Defines the common HTTP method to use for mappings (unless overridden in the mapping).|
 |mappings|<b>Optional (but boring service if omitted)</b><br />Defines a list of mappings (see below).|
+|smtpRelay|<b>Optional</b><br />Defines the shared configuration for SMTP relay used to send/relay the e-mail (see below).|
 
 <br />
 
@@ -77,7 +89,7 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 |service|<b>Required</b><br />Defines the path appended to the enpoint to complete the URL.
 |queryString|<b>Optional</b><br />Defines a query string to be appended to the URL (used in GET requests).|
 |content|<b>Optional</b><br />Defines the content (often times a JSON object) to be set as the content of the request (often used in POST requests).|
-|smtpRelay|<b>Optional</b><br />Defines the configuration for mapping-specific SMTP relay used to send the e-mail (see below).|
+|smtpRelay|<b>Optional</b><br />Defines the configuration for mapping-specific SMTP relay used to send/relay the e-mail (see below).|
 
 <br />
 
@@ -112,4 +124,4 @@ In order to minimize my workload, I used the following [Nuget](https://www.nuget
 | Package | Author | Usage |
 | --- | --- | --- |
 |[SmtpServer](https://www.nuget.org/packages/SmtpServer/) | [Cain O'Sullivan](https://github.com/cosullivan) | I use this package to self-host an SMTP server. |
-|[MailKit](https://www.nuget.org/packages/MailKit/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object and as an SMTP relay to forward messages.|
+|[MailKit](https://www.nuget.org/packages/MailKit/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object and as an SMTP relay to forward e-mail messages.|

@@ -11,6 +11,7 @@ internal class TestConfiguration : IConfiguration
 	public string? ApiToken { get; set; } = "TestApiToken";
 	public string? Endpoint { get; set; } = "http://testendpoint";
 	public string? HttpMethod { get; set; } = WebRequestMethods.Http.Get;
+	public SmtpRelayConfiguration SmtpRelay { get; } = new ();
 
 	private readonly Dictionary<string, ConfigurationMapping> _mappings = new();
 

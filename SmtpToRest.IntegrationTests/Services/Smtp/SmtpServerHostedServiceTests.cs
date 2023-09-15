@@ -94,7 +94,7 @@ public partial class SmtpServerHostedServiceTests : IDisposable
 				options.UseBuiltInMessageStore = Options.UseBuiltInMessageStore;
 				options.UseBuiltInSmtpServerFactory = Options.UseBuiltInSmtpServerFactory;
 				options.HttpClientName = Options.HttpClientName;
-				options.UseSmtpRelay = Options.UseSmtpRelay;
+				options.SmtpRelayOptions.Enabled = Options.SmtpRelayOptions.Enabled;
 				options.SmtpRelayOptions.Host = Options.SmtpRelayOptions.Host;
 				options.SmtpRelayOptions.Port = Options.SmtpRelayOptions.Port;
 				options.SmtpRelayOptions.UseSsl = Options.SmtpRelayOptions.UseSsl;

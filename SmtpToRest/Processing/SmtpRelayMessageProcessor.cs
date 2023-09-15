@@ -30,35 +30,31 @@ internal class SmtpRelayMessageProcessor : IMessageProcessor
 
 	public async Task ProcessAsync(IMimeMessage message, CancellationToken cancellationToken)
 	{
-		using ISmtpClient smtpClient = _smtpClientFactory.Create();
-		string? host = _options.Host;
-		int port = _options.Port;
-		string? username = _options.Username;
-		string? password = _options.Password;
-		bool useSsl = _options.UseSsl;
+		SmtpRelayOptions options = new(_options);
 
+		// Optionally override with settings from the configuration
+		options.Override(_configuration.SmtpRelay);
+
+		// Optionally override with settings from the configuration mapping
 		string key = _mappingKeyExtractor.ExtractKey(message);
-		if (_configuration.TryGetMapping(key, out ConfigurationMapping? mapping) &&
-			mapping?.SmtpRelay is { } smtpRelayConfiguration)
-		{
-			host = smtpRelayConfiguration.Host ?? host;
-			port = smtpRelayConfiguration.Port ?? port;
-			username = smtpRelayConfiguration.Username ?? username;
-			password = smtpRelayConfiguration.Password ?? password;
-			useSsl = smtpRelayConfiguration.UseSsl ?? useSsl;
-		}
+		if (_configuration.TryGetMapping(key, out ConfigurationMapping? mapping))
+			options.Override(mapping!.SmtpRelay);
 
+		if (!options.Enabled)
+			return;
+
+		using ISmtpClient smtpClient = _smtpClientFactory.Create();
 		try
 		{
-			await smtpClient.ConnectAsync(host, port, cancellationToken);
-			if (useSsl)
+			await smtpClient.ConnectAsync(options.Host, options.Port, cancellationToken);
+			if (options.UseSsl)
 			{
-				await smtpClient.AuthenticateAsync(username, password, cancellationToken);
+				await smtpClient.AuthenticateAsync(options.Username, options.Password, cancellationToken);
 			}
 		}
 		catch (Exception ex)
 		{
-			_logger.LogCritical(ex, "Unable to configure SMTP relay to {SmtpRelayHost} on port {Port} with the provided credentials", host, port);
+			_logger.LogCritical(ex, "Unable to configure SMTP relay to {SmtpRelayHost} on port {Port} with the provided credentials", options.Host, options.Port);
 			return;
 		}
 		await smtpClient.SendAsync(message, cancellationToken);

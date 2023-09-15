@@ -8,4 +8,5 @@ public interface IConfiguration
     string? Endpoint { get; }
     string? HttpMethod { get; }
     bool TryGetMapping(string key, out ConfigurationMapping? mapping);
+    SmtpRelayConfiguration? SmtpRelay { get; }
 }

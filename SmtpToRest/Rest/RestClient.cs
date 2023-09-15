@@ -30,7 +30,7 @@ internal class RestClient : IRestClient
         if (!string.IsNullOrEmpty(input.ApiToken))
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", input.ApiToken);
 
-		UriBuilder uriBuilder = new UriBuilder(new Uri(client.BaseAddress!, input.Service))
+		UriBuilder uriBuilder = new(new Uri(client.BaseAddress!, input.Service))
         {
 	        Query = EscapeQueryString(input.QueryString ?? string.Empty)
         };
@@ -44,7 +44,7 @@ internal class RestClient : IRestClient
 		}
     }
 
-    // Simplistic/naive escape of query string; should probably be refactored at some point.
+    // Simplistic escape of query string; should probably be refactored at some point.
     private static string EscapeQueryString(string queryString)
     {
         string[] keyValuePairs = queryString.Split('&');

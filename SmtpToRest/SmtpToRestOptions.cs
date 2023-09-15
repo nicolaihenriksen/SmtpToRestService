@@ -10,7 +10,6 @@ public class SmtpToRestOptions
 	public bool UseBuiltInMessageStore { get; set; } = true;
 	public bool UseBuiltInSmtpServerFactory { get; set; } = true;
 	public bool UseBuiltInMessageProcessor { get; set; } = true;
-	public bool UseSmtpRelay { get; set; } = false;
 
 	public ConfigurationMode ConfigurationMode { get; set; } = ConfigurationMode.ConfigurationProvider;
 	/// <summary>
