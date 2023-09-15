@@ -10,7 +10,7 @@ My workaround for this problem was to configure the cameras to "send an e-mail" 
 The project has since then become a hobby project where I am experimenting with adding Docker support, CI/CD pipelines and other fun stuff.
 
 ### Disclaimer
-Currently, the code attempts to convert all e-mail requests to REST API calls, but it would be a relatively simple task to simply forward certain e-mails to an "actual" SMTP server if needed. Furthermore, the current code cannot use any of the information from the e-mail in the actual REST API call, but this could also be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
+Currently, the code attempts to convert all e-mail requests to REST API calls and optionally forwards them using an SMTP relay. The current code cannot use any of the information from the e-mail in the actual REST API call, but this could be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
 
 ## Configuration
 The sample configuration below illustrates the current possibilites.
@@ -91,4 +91,4 @@ In order to minimize my workload, I used the following [Nuget](https://www.nuget
 | Package | Author | Usage |
 | --- | --- | --- |
 |[SmtpServer](https://www.nuget.org/packages/SmtpServer/) | [Cain O'Sullivan](https://github.com/cosullivan) | I use this package to self-host an SMTP server. |
-|[MimeKitLite](https://www.nuget.org/packages/MimeKitLite/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object.|
+|[MailKit](https://www.nuget.org/packages/MailKit/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object and as an SMTP relay to forward messages.|

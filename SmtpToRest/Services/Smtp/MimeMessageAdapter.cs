@@ -16,4 +16,9 @@ internal class MimeMessageAdapter : IMimeMessage
     {
         _adaptee = adaptee;
     }
+
+    public static implicit operator MimeMessage(MimeMessageAdapter adapter)
+    {
+		return adapter._adaptee;
+	}
 }

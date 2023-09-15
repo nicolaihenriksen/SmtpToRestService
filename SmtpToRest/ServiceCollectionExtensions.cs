@@ -34,6 +34,15 @@ public static class ServiceCollectionExtensions
 		if (options.UseBuiltInMessageProcessor)
 			services.AddSingleton<IMessageProcessorInternal, DefaultMessageProcessor>();
 
+		if (options.UseSmtpRelay)
+		{
+			services
+				.AddSingleton(options.SmtpRelayOptions)
+				.AddTransient<ISmtpClient, DefaultSmtpClient>()
+				.AddSingleton<ISmtpClientFactory, DefaultSmtpClientFactory>()
+				.AddSingleton<IMessageProcessor, SmtpRelayMessageProcessor>();
+		}
+
 		switch (options.ConfigurationMode)
 		{
 			case ConfigurationMode.ConfigurationProvider:
