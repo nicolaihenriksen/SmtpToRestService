@@ -6,6 +6,7 @@ using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -165,5 +166,17 @@ public partial class SmtpServerHostedServiceTests
 
 		// Assert
 		AssertLog(LogLevel.Information, "Starting");
+	}
+
+	[Fact]
+	[Trait(CategoryKey, CategoryBasic)]
+	public async Task StartHost_ShouldStartSmtpServer()
+	{
+		// Act
+		await StartHost();
+
+		// Assert
+		SmtpServer.Verify(s => s.StartAsync(It.IsAny<CancellationToken>()), Times.Once());
+		AssertLog(LogLevel.Information, "SMTP server started");
 	}
 }
