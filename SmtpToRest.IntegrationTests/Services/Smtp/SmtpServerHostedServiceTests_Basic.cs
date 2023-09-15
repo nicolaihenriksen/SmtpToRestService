@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using RichardSzalay.MockHttp;
 using SmtpToRest.Config;
@@ -7,18 +6,19 @@ using SmtpToRest.Processing;
 using SmtpToRest.Services.Smtp;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
-public partial class SmtpServerBackgroundServiceTests
+public partial class SmtpServerHostedServiceTests
 {
 	private const string CategoryBasic = "Basic";
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void ProcessMessages_ShouldReturnFailedResult_WhenMessageDoesNotHaveSenderAddress()
+	public async Task ProcessMessages_ShouldReturnFailedResult_WhenMessageDoesNotHaveSenderAddress()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
@@ -30,7 +30,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		Assert.NotNull(result);
@@ -41,7 +41,7 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void ProcessMessages_ShouldReturnFailedResult_WhenNoMappingIsFound()
+	public async Task ProcessMessages_ShouldReturnFailedResult_WhenNoMappingIsFound()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
@@ -53,7 +53,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		Assert.NotNull(result);
@@ -64,7 +64,7 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void ProcessMessages_ShouldSucceed_WhenMatchingMappingIsFound()
+	public async Task ProcessMessages_ShouldSucceed_WhenMatchingMappingIsFound()
 	{
 		// Arrange
 		ConfigurationMapping mapping = new();
@@ -73,7 +73,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -83,7 +83,7 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void ProcessMessages_ShouldIncludeApiToken_WhenSuppliedInConfiguration()
+	public async Task ProcessMessages_ShouldIncludeApiToken_WhenSuppliedInConfiguration()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
@@ -96,7 +96,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -106,7 +106,7 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void ProcessMessages_ShouldRespectOverriddenValues_WhenOverriddenInMapping()
+	public async Task ProcessMessages_ShouldRespectOverriddenValues_WhenOverriddenInMapping()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
@@ -124,7 +124,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -134,7 +134,7 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void ProcessMessages_ShouldAppendService_WhenSuppliedInMapping()
+	public async Task ProcessMessages_ShouldAppendService_WhenSuppliedInMapping()
 	{
 		// Arrange
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
@@ -148,7 +148,7 @@ public partial class SmtpServerBackgroundServiceTests
 			.Respond(HttpStatusCode.OK);
 
 		// Act
-		ProcessResult? result = SendMessage(message.Object);
+		ProcessResult? result = await SendMessageAsync(message.Object);
 
 		// Assert
 		HttpMessageHandler.VerifyNoOutstandingExpectation();
@@ -158,10 +158,10 @@ public partial class SmtpServerBackgroundServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategoryBasic)]
-	public void StartHost_ShouldLog()
+	public async Task StartHost_ShouldLog()
 	{
 		// Act
-		StartHost();
+		await StartHost();
 
 		// Assert
 		AssertLog(LogLevel.Information, "Starting");

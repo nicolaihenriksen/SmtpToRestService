@@ -25,8 +25,8 @@ public static class ServiceCollectionExtensions
 			httpConfiguration?.Invoke(httpClientBuilder);
 		}
 
-		if (options.UseBuiltInMessageStoreFactory)
-			services.AddSingleton<IMessageStoreFactory, DefaultMessageStoreFactory>();
+		if (options.UseBuiltInMessageStore)
+			services.AddSingleton<IMessageStore, DefaultMessageStore>();
 
 		if (options.UseBuiltInSmtpServerFactory)
 			services.AddSingleton<ISmtpServerFactory, DefaultSmtpServerFactory>();
@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<IConfigurationMappingKeyExtractor, DefaultConfigurationMappingKeyExtractor>()
 			.AddSingleton<IRestInputDecoratorInternal, AggregateDecorator>()
 			.AddSingleton<IRestClient, RestClient>()
-			.AddHostedService<SmtpServerBackgroundService>()
+			.AddHostedService<SmtpServerHostedService>()
 			.AddSingleton<IHttpClientConfiguration>(_ => new HttpClientConfiguration(httpClientName));
 
 		return services;
