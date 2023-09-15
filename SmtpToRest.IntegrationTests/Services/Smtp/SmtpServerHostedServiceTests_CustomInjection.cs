@@ -301,6 +301,7 @@ public partial class SmtpServerHostedServiceTests
 	[Trait(CategoryKey, CategoryCustomInjection)]
 	public async Task ProcessMessages_ShouldUseAdditionalMessageProcessor_WhenInjected()
 	{
+		// Arrange
 		await StartHost(services =>
 		{
 			services.AddSingleton<IMessageProcessor, CustomMessageProcessor>();
@@ -326,6 +327,7 @@ public partial class SmtpServerHostedServiceTests
 	[Trait(CategoryKey, CategoryCustomInjection)]
 	public async Task ProcessMessages_ShouldUseCustomMappingKeyExtractor_WhenInjected()
 	{
+		// Arrange
 		await StartHost(services =>
 		{
 			services.AddSingleton<IConfigurationMappingKeyExtractor, CustomConfigurationMappingKeyExtractor>();
