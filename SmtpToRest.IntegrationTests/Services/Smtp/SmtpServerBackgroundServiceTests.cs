@@ -121,18 +121,18 @@ public partial class SmtpServerBackgroundServiceTests : IDisposable
 		_sync.Wait();
 	}
 
-	private Mock<IMimeMessage> Arrange(string address, ConfigurationMapping mapping)
+	private Mock<IMimeMessage> Arrange(string fromAddress, ConfigurationMapping mapping)
 	{
 		if (string.IsNullOrWhiteSpace(mapping.Key))
 		{
-			mapping.Key = address;
+			mapping.Key = fromAddress;
 		}
 		Mock<IMimeMessage> message = new();
 		message
-			.SetupGet(m => m.Address)
-			.Returns(address);
+			.SetupGet(m => m.FirstFromAddress)
+			.Returns(fromAddress);
 
-		Configuration.AddMapping(address, mapping);
+		Configuration.AddMapping(fromAddress, mapping);
 		return message;
 	}
 

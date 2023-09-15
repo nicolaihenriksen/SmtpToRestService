@@ -2,5 +2,11 @@
 
 public interface IMimeMessage
 {
-    string? Address { get; }
+    string? FirstFromAddress { get; }
+
+    string[]? FromAddresses { get; }
+
+    string? FirstToAddress { get; }
+
+    string[]? FirstAddresses { get; }
 }

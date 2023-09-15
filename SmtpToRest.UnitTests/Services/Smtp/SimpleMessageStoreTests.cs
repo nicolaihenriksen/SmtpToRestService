@@ -37,7 +37,7 @@ public class SimpleMessageStoreTests
 
         // Assert
         messageQueue.Should().HaveCount(1);
-        messageQueue.First().Address.Should().Be("some@sender.com");
+        messageQueue.First().FirstFromAddress.Should().Be("some@sender.com");
     }
 
     [Fact]

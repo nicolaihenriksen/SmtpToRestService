@@ -23,4 +23,9 @@ internal class TestConfiguration : IConfiguration
 	{
 		return _mappings.TryGetValue(key, out mapping);
 	}
+
+	public void ClearMappings()
+	{
+		_mappings.Clear();
+	}
 }

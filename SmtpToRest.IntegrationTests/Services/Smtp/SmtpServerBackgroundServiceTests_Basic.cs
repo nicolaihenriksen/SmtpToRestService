@@ -24,7 +24,7 @@ public partial class SmtpServerBackgroundServiceTests
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		Mock<IMimeMessage> message = new();
 		message
-			.SetupGet(m => m.Address)
+			.SetupGet(m => m.FirstFromAddress)
 			.Returns((string)null!);
 		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
 			.Respond(HttpStatusCode.OK);
@@ -47,7 +47,7 @@ public partial class SmtpServerBackgroundServiceTests
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		Mock<IMimeMessage> message = new();
 		message
-			.SetupGet(m => m.Address)
+			.SetupGet(m => m.FirstFromAddress)
 			.Returns("sender@somewhere.com");
 		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
 			.Respond(HttpStatusCode.OK);
