@@ -17,4 +17,5 @@ public class SmtpToRestOptions
 	/// </summary>
 	public IConfiguration? Configuration { get; set; }
 	public string? HttpClientName { get; set; } = DefaultHttpClientName;
+	public SmtpRelayOptions SmtpRelayOptions { get; } = new SmtpRelayOptions();
 }

@@ -15,6 +15,7 @@ internal class Configuration : IConfiguration
 	public string? ApiToken { get; private set; }
     public string? Endpoint { get; private set; }
     public string? HttpMethod { get; private set; }
+    public SmtpRelayConfiguration? SmtpRelay { get; private set; }
 
     public const string Filename = "configuration.json";
     private readonly Dictionary<string, ConfigurationMapping> _mappings = new();
@@ -23,7 +24,10 @@ internal class Configuration : IConfiguration
     private readonly string _configurationPath;
     private readonly PhysicalFileProvider? _fileProvider;
 
-    public Configuration(ILogger<Configuration> logger, IConfigurationProvider configurationProvider, IConfigurationFileReader configurationFileReader, bool watch = true)
+    public Configuration(ILogger<Configuration> logger,
+	    IConfigurationProvider configurationProvider,
+	    IConfigurationFileReader configurationFileReader,
+	    bool watch = true)
     {
         _logger = logger;
         _configurationFileReader = configurationFileReader;
@@ -64,6 +68,7 @@ internal class Configuration : IConfiguration
                 ApiToken = configRoot?.ApiToken;
                 Endpoint = configRoot?.Endpoint;
                 HttpMethod = configRoot?.HttpMethod;
+                SmtpRelay = configRoot?.SmtpRelay;
                 var mappings = configRoot?.Mappings ?? new List<ConfigurationMapping>();
                 foreach (var mapping in mappings)
                 {

@@ -29,6 +29,7 @@ public partial class SmtpServerHostedServiceTests : IDisposable
 	private IHost? Host { get; set; }
 	private IHttpClientFactory HttpClientFactory { get; }
 	private Mock<ILogger> Logger { get; } = new();
+	private Mock<ISmtpServer> SmtpServer { get; } = new();
 	private SmtpToRestOptions Options { get; } = new();
 	private TestConfiguration Configuration { get; } = new();
 	private MockHttpMessageHandler HttpMessageHandler { get; } = new();
@@ -49,14 +50,13 @@ public partial class SmtpServerHostedServiceTests : IDisposable
 			.Returns(new HttpClient(HttpMessageHandler));
 		HttpClientFactory = httpClientFactory.Object;
 
-		Mock<ISmtpServer> smtpServer = new();
-		smtpServer
+		SmtpServer
 			.Setup(s => s.StartAsync(It.IsAny<CancellationToken>()))
 			.Returns(Task.CompletedTask);
 		Mock<ISmtpServerFactory> smtpServerFactory = new();
 		smtpServerFactory
 			.Setup(f => f.Create(It.IsAny<ISmtpServerOptions>(), It.IsAny<IServiceProvider>()))
-			.Returns(smtpServer.Object);
+			.Returns(SmtpServer.Object);
 
 		HostBuilder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
 			.ConfigureLogging((context, loggingBuilder) =>
@@ -94,6 +94,12 @@ public partial class SmtpServerHostedServiceTests : IDisposable
 				options.UseBuiltInMessageStore = Options.UseBuiltInMessageStore;
 				options.UseBuiltInSmtpServerFactory = Options.UseBuiltInSmtpServerFactory;
 				options.HttpClientName = Options.HttpClientName;
+				options.SmtpRelayOptions.Enabled = Options.SmtpRelayOptions.Enabled;
+				options.SmtpRelayOptions.Host = Options.SmtpRelayOptions.Host;
+				options.SmtpRelayOptions.Port = Options.SmtpRelayOptions.Port;
+				options.SmtpRelayOptions.UseSsl = Options.SmtpRelayOptions.UseSsl;
+				options.SmtpRelayOptions.Username = Options.SmtpRelayOptions.Username;
+				options.SmtpRelayOptions.Password = Options.SmtpRelayOptions.Password;
 			}, httpConfig ?? (_ => { }));
 			if (!Options.UseBuiltInHttpClientFactory)
 			{

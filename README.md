@@ -10,7 +10,7 @@ My workaround for this problem was to configure the cameras to "send an e-mail" 
 The project has since then become a hobby project where I am experimenting with adding Docker support, CI/CD pipelines and other fun stuff.
 
 ### Disclaimer
-Currently, the code attempts to convert all e-mail requests to REST API calls, but it would be a relatively simple task to simply forward certain e-mails to an "actual" SMTP server if needed. Furthermore, the current code cannot use any of the information from the e-mail in the actual REST API call, but this could also be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
+Currently, the code attempts to convert all e-mail requests to REST API calls and optionally forwards them using an SMTP relay. The current code cannot use any of the information from the e-mail in the actual REST API call, but this could be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
 
 ## Configuration
 The sample configuration below illustrates the current possibilites.
@@ -22,10 +22,21 @@ The sample configuration below illustrates the current possibilites.
   "apiToken": "<place your API token here if needed>",
   "endpoint": "https://jsonplaceholder.typicode.com/",
   "httpMethod": "GET",
+  "smtpRelay": {
+    "enabled": true,
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "useSsl": true,
+    "username": "myprimaryuser@gmail.com",
+    "password": "mypassword"
+  },
   "mappings": [
     {
       "key": "list.posts@somedomain.com",
-      "service": "posts"
+      "service": "posts",
+      "smtpRelay": {
+        "enabled": false
+      }
     },
     {
       "key": "add.post@somedomain.com",
@@ -42,7 +53,13 @@ The sample configuration below illustrates the current possibilites.
       "customApiToken": "eyJ0eXAiOiJKV1QLKiFhbGciOiJIUzI1NiJ9.eyJpc3MieJoLYjY0ZTZkMThh...<cutoff>",
       "customEndpoint": "https://somerestapi.com/",
       "service": "posts",
-      "queryString": "title=Test+post&body=Test+post+body&userId=1"
+      "queryString": "title=Test+post&body=Test+post+body&userId=1",
+      "smtpRelay": {
+        "enabled": true,
+        "host": "192.168.1.100",
+        "port": 25,
+        "useSsl": false
+      }
     }
   ]
 }
@@ -57,6 +74,7 @@ The sample configuration below illustrates the current possibilites.
 |endpoint|<b>Required - if "customEndpoint" not set on mapping</b><br />Defines the common endpoint used for mappings (unless overridden in the mapping).|
 |httpMethod|<b>Optional - defaults to "GET"</b><br />Defines the common HTTP method to use for mappings (unless overridden in the mapping).|
 |mappings|<b>Optional (but boring service if omitted)</b><br />Defines a list of mappings (see below).|
+|smtpRelay|<b>Optional</b><br />Defines the shared configuration for SMTP relay used to send/relay the e-mail (see below).|
 
 <br />
 
@@ -71,6 +89,21 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 |service|<b>Required</b><br />Defines the path appended to the enpoint to complete the URL.
 |queryString|<b>Optional</b><br />Defines a query string to be appended to the URL (used in GET requests).|
 |content|<b>Optional</b><br />Defines the content (often times a JSON object) to be set as the content of the request (often used in POST requests).|
+|smtpRelay|<b>Optional</b><br />Defines the configuration for mapping-specific SMTP relay used to send/relay the e-mail (see below).|
+
+<br />
+
+### SmtpRelay
+The SMTP relay is used to forward the e-mail to another SMTP server. This is useful if you want to forward the e-mail to another service/recipient.
+All values are optional and will fall-back to the default from the configuration if omitted in the mapping.
+
+| Property | Description |
+| --- | --- |
+|host|<b>Optional</b><br />Defines the hostname or IP address of the SMTP server.|
+|port|<b>Optional</b><br />Defines the port used to connect to the SMTP server.|
+|useSsl|<b>Optional</b><br />Defines whether or not SSL should be used.|
+|username|<b>Optional</b><br />Defines the username to use for authentication.|
+|password|<b>Optional</b><br />Defines the password to use for authentication.|
 
 <br />
 
@@ -91,4 +124,4 @@ In order to minimize my workload, I used the following [Nuget](https://www.nuget
 | Package | Author | Usage |
 | --- | --- | --- |
 |[SmtpServer](https://www.nuget.org/packages/SmtpServer/) | [Cain O'Sullivan](https://github.com/cosullivan) | I use this package to self-host an SMTP server. |
-|[MimeKitLite](https://www.nuget.org/packages/MimeKitLite/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object.|
+|[MailKit](https://www.nuget.org/packages/MailKit/) | [Jeffrey Stedfast](https://github.com/jstedfast) | I use this package to convert a byte-stream into a strongly typed MIME object and as an SMTP relay to forward e-mail messages.|

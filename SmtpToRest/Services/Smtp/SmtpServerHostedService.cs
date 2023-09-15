@@ -39,7 +39,7 @@ internal class SmtpServerHostedService : IHostedService
         _smtpServerFactory = smtpServerFactory;
     }
 
-    public Task StartAsync(CancellationToken stoppingToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
 	    ISmtpServerOptions options = new SmtpServerOptionsBuilder()
 		    .ServerName(_configuration.SmtpHost ?? "localhost")
@@ -53,6 +53,7 @@ internal class SmtpServerHostedService : IHostedService
 
 	    serviceProvider.Add(_messageStore);
 	    _smtpServer = _smtpServerFactory.Create(options, serviceProvider);
+	    _smtpServer.StartAsync(cancellationToken);
 	    _logger.LogInformation("SMTP server started");
 		return Task.CompletedTask;
     }

@@ -9,4 +9,5 @@ public class ConfigurationMapping
 	public string? Service { get; set; }
 	public string? QueryString { get; set; }
 	public dynamic? Content { get; set; }
+	public SmtpRelayConfiguration? SmtpRelay { get; set; }
 }
