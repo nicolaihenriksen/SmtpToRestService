@@ -42,7 +42,13 @@ The sample configuration below illustrates the current possibilites.
       "customApiToken": "eyJ0eXAiOiJKV1QLKiFhbGciOiJIUzI1NiJ9.eyJpc3MieJoLYjY0ZTZkMThh...<cutoff>",
       "customEndpoint": "https://somerestapi.com/",
       "service": "posts",
-      "queryString": "title=Test+post&body=Test+post+body&userId=1"
+      "queryString": "title=Test+post&body=Test+post+body&userId=1",
+      "smtpRelay": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "useSsl": true,
+        "username": "myuser@gmail.com",
+        "password": "mypassword",
     }
   ]
 }
@@ -71,6 +77,21 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 |service|<b>Required</b><br />Defines the path appended to the enpoint to complete the URL.
 |queryString|<b>Optional</b><br />Defines a query string to be appended to the URL (used in GET requests).|
 |content|<b>Optional</b><br />Defines the content (often times a JSON object) to be set as the content of the request (often used in POST requests).|
+|smtpRelay|<b>Optional</b><br />Defines the configuration for mapping-specific SMTP relay used to send the e-mail (see below).|
+
+<br />
+
+### SmtpRelay
+The SMTP relay is used to forward the e-mail to another SMTP server. This is useful if you want to forward the e-mail to another service/recipient.
+All values are optional and will fall-back to the default from the configuration if omitted in the mapping.
+
+| Property | Description |
+| --- | --- |
+|host|<b>Optional</b><br />Defines the hostname or IP address of the SMTP server.|
+|port|<b>Optional</b><br />Defines the port used to connect to the SMTP server.|
+|useSsl|<b>Optional</b><br />Defines whether or not SSL should be used.|
+|username|<b>Optional</b><br />Defines the username to use for authentication.|
+|password|<b>Optional</b><br />Defines the password to use for authentication.|
 
 <br />
 
