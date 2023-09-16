@@ -17,7 +17,7 @@ serviceCollection.AddSmtpToRest();
 In order for the application to do anything useful, you need to configure the application. This can be done in one of 3 ways:
 * Placing a `configuration.json` file somewhere reachable from the host, and point the host at the file, or
 * Injecting your own implementation of the `SmtpToRest.Config.IConfiguration` interface into the service collection, or
-* Injecting your own implementation of the `SmtpToRest.Config.IConfiguration` interface into the configuration in during registration.
+* Injecting your own implementation of the `SmtpToRest.Config.IConfiguration` interface into the configuration options during registration.
 
 <br/>
 
