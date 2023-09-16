@@ -1,5 +1,6 @@
 # SmtpToRest
 [![Build](https://github.com/nicolaihenriksen/SmtpToRestService/actions/workflows/build_workflow.yml/badge.svg?branch=master)](https://github.com/nicolaihenriksen/SmtpToRestService/actions/workflows/build_workflow.yml)
+[![NuGet-Themes](https://img.shields.io/badge/SmtpToRest-Nuget-blue)](https://www.nuget.org/packages/SmtpToRest/)
 
 Simple .NET application converting "e-mails" to REST API calls. Can be executed as a Docker container or as a Windows Service.
 
