@@ -97,7 +97,8 @@ internal class RetryHttpMessageHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        PolicyResult<HttpResponseMessage> result = await _retryPolicy.ExecuteAndCaptureAsync(() => base.SendAsync(request, cancellationToken));
+        PolicyResult<HttpResponseMessage> result = await _retryPolicy.ExecuteAndCaptureAsync(
+            () => base.SendAsync(request, cancellationToken));
         if (result.Outcome == OutcomeType.Failure)
         {
             throw new HttpRequestException("Error sending request", result.FinalException);
