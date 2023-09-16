@@ -34,7 +34,7 @@ internal class DefaultMessageStore : IMessageStore
 		try
 		{
 			MimeMessage message = await MimeMessage.LoadAsync(stream, cancellationToken);
-			MessageReceived?.Invoke(this, new MessageReceivedEventArgs(new MimeMessageAdapter(message)));
+			MessageReceived?.Invoke(this, new(new MimeMessageAdapter(message)));
 		}
 		catch
 		{

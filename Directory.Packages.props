@@ -3,6 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="GenFu" Version="1.6.0" />
     <PackageVersion Include="MailKit" Version="4.2.0" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />

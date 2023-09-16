@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -33,7 +33,7 @@ public class RestClientTests
     {
         // Arrange
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
-        RestInput input = new RestInput { Endpoint = null };
+        RestInput input = new() { Endpoint = null };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -51,7 +51,7 @@ public class RestClientTests
         HttpMessageHandler.Expect(HttpMethod.Get, BaseAddress)
             .With(r => r.Headers?.Authorization is { Scheme: "Bearer", Parameter: apiKey })
             .Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, ApiToken = apiKey };
+        RestInput input = new() { Endpoint = BaseAddress, ApiToken = apiKey };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -68,7 +68,7 @@ public class RestClientTests
         const string requestedService = "someService";
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(HttpMethod.Get, $"{BaseAddress}/{requestedService}").Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, Service = requestedService };
+        RestInput input = new() { Endpoint = BaseAddress, Service = requestedService };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -104,7 +104,7 @@ public class RestClientTests
         HttpMethod expectedMethod = expectations[inputMethod];
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(expectedMethod, BaseAddress).Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = inputMethod };
+        RestInput input = new() { Endpoint = BaseAddress, HttpMethod = inputMethod };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -125,7 +125,7 @@ public class RestClientTests
             .WithQueryString("value2", "2")
             .WithQueryString("value3", "3")
 			.Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, QueryString = queryString };
+        RestInput input = new() { Endpoint = BaseAddress, QueryString = queryString };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -145,7 +145,7 @@ public class RestClientTests
         HttpMessageHandler.Expect(HttpMethod.Get, BaseAddress)
             .WithQueryString("stringValue", "This is a text that needs escaping because 1 < 2")
             .Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, QueryString = queryString };
+        RestInput input = new() { Endpoint = BaseAddress, QueryString = queryString };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -165,7 +165,7 @@ public class RestClientTests
         HttpMessageHandler.Expect(HttpMethod.Post, BaseAddress)
             .WithContent(postData)
             .Respond(HttpStatusCode.OK);
-        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Post, Content = postData };
+        RestInput input = new() { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Post, Content = postData };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);
@@ -183,7 +183,7 @@ public class RestClientTests
         IRestClient client = AutoMocker.CreateInstance<RestClient>();
         HttpMessageHandler.Expect(HttpMethod.Get, BaseAddress)
             .Respond(r => new HttpResponseMessage(r.Content is null ? HttpStatusCode.OK : HttpStatusCode.InternalServerError));
-        RestInput input = new RestInput { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Get, Content = postData };
+        RestInput input = new() { Endpoint = BaseAddress, HttpMethod = InputHttpMethod.Get, Content = postData };
 
         // Act
         HttpResponseMessage response = await client.InvokeService(input, CancellationToken.None);

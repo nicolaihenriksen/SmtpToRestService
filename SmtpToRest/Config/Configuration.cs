@@ -37,7 +37,7 @@ internal class Configuration : IConfiguration
 
         if (watch)
         {
-	        _fileProvider = new PhysicalFileProvider(configDir);
+	        _fileProvider = new(configDir);
 	        WatchForConfigurationFileChanges();
 
 	        void WatchForConfigurationFileChanges()

@@ -33,7 +33,7 @@ public class SimpleMessageStoreTests
         await message.WriteToAsync(FormatOptions.Default, stream, CancellationToken.None);
 
         // Act
-        await messageStore.SaveAsync(new Mock<ISessionContext>().Object, new Mock<IMessageTransaction>().Object, new ReadOnlySequence<byte>(stream.GetBuffer()), CancellationToken.None);
+        await messageStore.SaveAsync(new Mock<ISessionContext>().Object, new Mock<IMessageTransaction>().Object, new(stream.GetBuffer()), CancellationToken.None);
 
         // Assert
         messageQueue.Should().HaveCount(1);
@@ -50,7 +50,7 @@ public class SimpleMessageStoreTests
         var messageBytes = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
 
         // Act
-        await messageStore.SaveAsync(new Mock<ISessionContext>().Object, new Mock<IMessageTransaction>().Object, new ReadOnlySequence<byte>(messageBytes), CancellationToken.None);
+        await messageStore.SaveAsync(new Mock<ISessionContext>().Object, new Mock<IMessageTransaction>().Object, new(messageBytes), CancellationToken.None);
 
         // Assert
         messageQueue.Should().BeEmpty();

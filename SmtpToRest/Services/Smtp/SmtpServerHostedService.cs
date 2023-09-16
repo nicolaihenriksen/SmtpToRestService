@@ -85,6 +85,6 @@ internal class SmtpServerHostedService : IHostedService
 		{
 			_logger.LogError("Error processing message. Error='{Error}'", result.Error);
 		}
-		MessageProcessed?.Invoke(this, new MessageProcessedEventArgs(result));
+		MessageProcessed?.Invoke(this, new(result));
 	}
 }

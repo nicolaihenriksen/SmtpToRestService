@@ -180,7 +180,7 @@ public partial class SmtpServerHostedServiceTests
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		ConfigurationMapping mapping = new()
 		{
-			SmtpRelay = new SmtpRelayConfiguration
+			SmtpRelay = new()
 			{
 				Host = "some.other.host.com",
 				Port = 69,
@@ -221,7 +221,7 @@ public partial class SmtpServerHostedServiceTests
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		ConfigurationMapping mapping = new()
 		{
-			SmtpRelay = new SmtpRelayConfiguration
+			SmtpRelay = new()
 			{
 				Host = "some.other.host.com",
 				Port = 69,
