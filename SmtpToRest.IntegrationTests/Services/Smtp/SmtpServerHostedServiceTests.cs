@@ -97,7 +97,7 @@ public partial class SmtpServerHostedServiceTests : IDisposable
 				options.SmtpRelayOptions.Enabled = Options.SmtpRelayOptions.Enabled;
 				options.SmtpRelayOptions.Host = Options.SmtpRelayOptions.Host;
 				options.SmtpRelayOptions.Port = Options.SmtpRelayOptions.Port;
-				options.SmtpRelayOptions.UseSsl = Options.SmtpRelayOptions.UseSsl;
+				options.SmtpRelayOptions.Authenticate = Options.SmtpRelayOptions.Authenticate;
 				options.SmtpRelayOptions.Username = Options.SmtpRelayOptions.Username;
 				options.SmtpRelayOptions.Password = Options.SmtpRelayOptions.Password;
 			}, httpConfig ?? (_ => { }));

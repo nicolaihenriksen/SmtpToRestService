@@ -47,7 +47,7 @@ internal class SmtpRelayMessageProcessor : IMessageProcessor
 		try
 		{
 			await smtpClient.ConnectAsync(options.Host, options.Port, cancellationToken);
-			if (options.UseSsl)
+			if (options.Authenticate)
 			{
 				await smtpClient.AuthenticateAsync(options.Username, options.Password, cancellationToken);
 			}
