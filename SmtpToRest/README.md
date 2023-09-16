@@ -82,7 +82,7 @@ internal class CustomHeaderHttpMessageHandler : DelegatingHandler
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         request.Headers.Add("CustomHeader", "<some API key or credentials-hash>");
-	    return base.SendAsync(request, cancellationToken);
+        return base.SendAsync(request, cancellationToken);
     }
 }
 ```
