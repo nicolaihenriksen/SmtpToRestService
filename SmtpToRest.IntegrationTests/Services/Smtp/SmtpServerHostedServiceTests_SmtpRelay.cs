@@ -19,13 +19,13 @@ public partial class SmtpServerHostedServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategorySmtpRelay)]
-	public async Task ProcessMessages_ShouldForwardEmailWithoutAuthorization_WhenSmtpRelayEnabledWithoutUsingSsl()
+	public async Task ProcessMessages_ShouldForwardEmailWithoutAuthentication_WhenSmtpRelayEnabledWithoutAuthentication()
 	{
 		// Arrange
 		Options.SmtpRelayOptions.Enabled = true;
 		Options.SmtpRelayOptions.Host = "smtp.host.com";
 		Options.SmtpRelayOptions.Port = 42;
-		Options.SmtpRelayOptions.UseSsl = false;
+		Options.SmtpRelayOptions.Authenticate = false;
 		Mock<ISmtpClient> smtpClient = new();
 		await StartHost(services =>
 		{
@@ -52,13 +52,13 @@ public partial class SmtpServerHostedServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategorySmtpRelay)]
-	public async Task ProcessMessages_ShouldForwardEmailWithAuthorization_WhenSmtpRelayEnabledUsingSsl()
+	public async Task ProcessMessages_ShouldForwardEmailWithAuthentication_WhenSmtpRelayEnabledWithAuthentication()
 	{
 		// Arrange
 		Options.SmtpRelayOptions.Enabled = true;
 		Options.SmtpRelayOptions.Host = "smtp.host.com";
 		Options.SmtpRelayOptions.Port = 42;
-		Options.SmtpRelayOptions.UseSsl = true;
+		Options.SmtpRelayOptions.Authenticate = true;
 		Options.SmtpRelayOptions.Username = "some.username";
 		Options.SmtpRelayOptions.Password = "some.password";
 		Mock<ISmtpClient> smtpClient = new();
@@ -87,13 +87,13 @@ public partial class SmtpServerHostedServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategorySmtpRelay)]
-	public async Task ProcessMessages_ShouldRespectConfigurationOverridesWithoutSsl_WhenSpecified()
+	public async Task ProcessMessages_ShouldRespectConfigurationOverridesWithoutAuthentication_WhenSpecified()
 	{
 		// Arrange
 		Options.SmtpRelayOptions.Enabled = true;
 		Options.SmtpRelayOptions.Host = "smtp.host.com";
 		Options.SmtpRelayOptions.Port = 42;
-		Options.SmtpRelayOptions.UseSsl = true;
+		Options.SmtpRelayOptions.Authenticate = true;
 		Options.SmtpRelayOptions.Username = "some.username";
 		Options.SmtpRelayOptions.Password = "some.password";
 		Mock<ISmtpClient> smtpClient = new();
@@ -104,7 +104,7 @@ public partial class SmtpServerHostedServiceTests
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		Configuration.SmtpRelay.Host = "some.other.host.com";
 		Configuration.SmtpRelay.Port = 69;
-		Configuration.SmtpRelay.UseSsl = false;
+		Configuration.SmtpRelay.Authenticate = false;
 		ConfigurationMapping mapping = new();
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
@@ -125,13 +125,13 @@ public partial class SmtpServerHostedServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategorySmtpRelay)]
-	public async Task ProcessMessages_ShouldRespectConfigurationOverridesWithSsl_WhenSpecified()
+	public async Task ProcessMessages_ShouldRespectConfigurationOverridesWithAuthentication_WhenSpecified()
 	{
 		// Arrange
 		Options.SmtpRelayOptions.Enabled = true;
 		Options.SmtpRelayOptions.Host = "smtp.host.com";
 		Options.SmtpRelayOptions.Port = 42;
-		Options.SmtpRelayOptions.UseSsl = false;
+		Options.SmtpRelayOptions.Authenticate = false;
 		Mock<ISmtpClient> smtpClient = new();
 		await StartHost(services =>
 		{
@@ -140,7 +140,7 @@ public partial class SmtpServerHostedServiceTests
 		Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
 		Configuration.SmtpRelay.Host = "some.other.host.com";
 		Configuration.SmtpRelay.Port = 69;
-		Configuration.SmtpRelay.UseSsl = true;
+		Configuration.SmtpRelay.Authenticate = true;
 		Configuration.SmtpRelay.Username = "some.other.username";
 		Configuration.SmtpRelay.Password = "some.other.password";
 		ConfigurationMapping mapping = new();
@@ -163,13 +163,13 @@ public partial class SmtpServerHostedServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategorySmtpRelay)]
-	public async Task ProcessMessages_ShouldRespectConfigurationMappingOverridesWithoutSsl_WhenSpecified()
+	public async Task ProcessMessages_ShouldRespectConfigurationMappingOverridesWithoutAuthentication_WhenSpecified()
 	{
 		// Arrange
 		Options.SmtpRelayOptions.Enabled = true;
 		Options.SmtpRelayOptions.Host = "smtp.host.com";
 		Options.SmtpRelayOptions.Port = 42;
-		Options.SmtpRelayOptions.UseSsl = true;
+		Options.SmtpRelayOptions.Authenticate = true;
 		Options.SmtpRelayOptions.Username = "some.username";
 		Options.SmtpRelayOptions.Password = "some.password";
 		Mock<ISmtpClient> smtpClient = new();
@@ -184,7 +184,7 @@ public partial class SmtpServerHostedServiceTests
 			{
 				Host = "some.other.host.com",
 				Port = 69,
-				UseSsl = false,
+				Authenticate = false,
 			}
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
@@ -206,13 +206,13 @@ public partial class SmtpServerHostedServiceTests
 
 	[Fact]
 	[Trait(CategoryKey, CategorySmtpRelay)]
-	public async Task ProcessMessages_ShouldRespectConfigurationMappingOverridesWithSsl_WhenSpecified()
+	public async Task ProcessMessages_ShouldRespectConfigurationMappingOverridesWithAuthentication_WhenSpecified()
 	{
 		// Arrange
 		Options.SmtpRelayOptions.Enabled = true;
 		Options.SmtpRelayOptions.Host = "smtp.host.com";
 		Options.SmtpRelayOptions.Port = 42;
-		Options.SmtpRelayOptions.UseSsl = false;
+		Options.SmtpRelayOptions.Authenticate = false;
 		Mock<ISmtpClient> smtpClient = new();
 		await StartHost(services =>
 		{
@@ -225,7 +225,7 @@ public partial class SmtpServerHostedServiceTests
 			{
 				Host = "some.other.host.com",
 				Port = 69,
-				UseSsl = true,
+				Authenticate = true,
 				Username = "some.other.username",
 				Password = "some.other.password"
 			}

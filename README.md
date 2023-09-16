@@ -26,7 +26,7 @@ The sample configuration below illustrates the current possibilites.
     "enabled": true,
     "host": "smtp.gmail.com",
     "port": 587,
-    "useSsl": true,
+    "authenticate": true,
     "username": "myprimaryuser@gmail.com",
     "password": "mypassword"
   },
@@ -58,7 +58,7 @@ The sample configuration below illustrates the current possibilites.
         "enabled": true,
         "host": "192.168.1.100",
         "port": 25,
-        "useSsl": false
+        "authenticate": false
       }
     }
   ]
@@ -101,7 +101,7 @@ All values are optional and will fall-back to the default from the configuration
 | --- | --- |
 |host|<b>Optional</b><br />Defines the hostname or IP address of the SMTP server.|
 |port|<b>Optional</b><br />Defines the port used to connect to the SMTP server.|
-|useSsl|<b>Optional</b><br />Defines whether or not SSL should be used.|
+|authenticate|<b>Optional</b><br />Defines whether or not authentication should be used when connecting to the SMTP server.|
 |username|<b>Optional</b><br />Defines the username to use for authentication.|
 |password|<b>Optional</b><br />Defines the password to use for authentication.|
 

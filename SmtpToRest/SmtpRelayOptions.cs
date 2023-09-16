@@ -7,7 +7,7 @@ public class SmtpRelayOptions
 	public bool Enabled { get; set; } = false;
 	public int Port { get; set; } = 465;
 	public string? Host { get; set; }
-	public bool UseSsl { get; set; } = true;
+	public bool Authenticate { get; set; } = true;
 	public string? Username { get; set; }
 	public string? Password { get; set; }
 
@@ -18,7 +18,7 @@ public class SmtpRelayOptions
 		Enabled = original.Enabled;
 		Port = original.Port;
 		Host = original.Host;
-		UseSsl = original.UseSsl;
+		Authenticate = original.Authenticate;
 		Username = original.Username;
 		Password = original.Password;
 	}
@@ -31,7 +31,7 @@ public class SmtpRelayOptions
 		Enabled = config.Enabled ?? Enabled;
 		Host = config.Host ?? Host;
 		Port = config.Port ?? Port;
-		UseSsl = config.UseSsl ?? UseSsl;
+		Authenticate = config.Authenticate ?? Authenticate;
 		Username = config.Username ?? Username;
 		Password = config.Password ?? Password;
 	}
