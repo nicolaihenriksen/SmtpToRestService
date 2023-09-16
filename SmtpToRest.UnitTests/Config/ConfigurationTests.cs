@@ -23,7 +23,7 @@ public class ConfigurationTests
         configReader.Setup(c => c.Read(It.IsAny<string>())).Returns("{ invalid JSON document }");
 
         // Act
-        Action act = () => new Configuration(log.Object, configProvider.Object, configReader.Object, false);
+        Action act = () => { Configuration _ = new(log.Object, configProvider.Object, configReader.Object, false); };
 
         // Assert
         act.Should().Throw<JsonException>();
