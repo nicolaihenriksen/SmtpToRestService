@@ -3,7 +3,12 @@
 SmtpToRest can be self-hosted using the standard .NET `HostBuilder` scheme. Self-hosting is useful is you want to integrate
 the application into an exisiting solution/application, as it requires very little configuration to get started.
 
+<br/>
+
+[![NuGet-Themes](https://img.shields.io/badge/SmtpToRest-Nuget-blue)](https://www.nuget.org/packages/SmtpToRest/)
+<br/>
 First thing you need is to add the nuget package:
+
 ```pwsh
 PM> Install-Package SmtpToRest
 ```
