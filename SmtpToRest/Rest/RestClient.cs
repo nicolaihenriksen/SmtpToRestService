@@ -22,13 +22,13 @@ internal class RestClient : IRestClient
     {
         string? endpoint = input.Endpoint;
         if (endpoint is null)
-            return new HttpResponseMessage(HttpStatusCode.NotFound);
+            return new(HttpStatusCode.NotFound);
 
         var client = _httpClientFactory.CreateClient(_httpClientConfiguration.HttpClientName);
-        client.BaseAddress = new Uri(endpoint);
+        client.BaseAddress = new(endpoint);
 
         if (!string.IsNullOrEmpty(input.ApiToken))
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", input.ApiToken);
+            client.DefaultRequestHeaders.Authorization = new("Bearer", input.ApiToken);
 
 		UriBuilder uriBuilder = new(new Uri(client.BaseAddress!, input.Service))
         {
@@ -40,7 +40,7 @@ internal class RestClient : IRestClient
 		        string content = input.Content ?? string.Empty;
 		        return await client.PostAsync(uriBuilder.Uri, new StringContent(content), cancellationToken);
 			default:
-                return await client.SendAsync(new HttpRequestMessage(input.HttpMethod.ToSystemNetHttpMethod(), uriBuilder.Uri), cancellationToken);
+                return await client.SendAsync(new(input.HttpMethod.ToSystemNetHttpMethod(), uriBuilder.Uri), cancellationToken);
 		}
     }
 

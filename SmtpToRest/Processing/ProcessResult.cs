@@ -10,9 +10,7 @@ internal class ProcessResult
         Error = error;
     }
 
-    public static ProcessResult Success()
-        => new ProcessResult();
+    public static ProcessResult Success() => new();
 
-    public static ProcessResult Failure(string error)
-        => new ProcessResult(error);
+    public static ProcessResult Failure(string error) => new(error);
 }
