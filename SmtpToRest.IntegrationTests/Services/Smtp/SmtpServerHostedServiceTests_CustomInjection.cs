@@ -102,7 +102,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.With(r => r.Headers?.Authorization is { Scheme: "Bearer", Parameter: "customApiToken" })
 			.Respond(HttpStatusCode.OK);
 
@@ -135,7 +135,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Put, Configuration.Endpoint)
+			.Expect(HttpMethod.Put, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -167,7 +167,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.WithQueryString("someCustomKey", "someCustomValue")
 			.WithQueryString("someOtherCustomKey", "someOtherCustomValue")
 			.Respond(HttpStatusCode.OK);
@@ -201,7 +201,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Post, Configuration.Endpoint)
+			.Expect(HttpMethod.Post, Configuration.Endpoint!)
 			.WithContent("customContent")
 			.Respond(HttpStatusCode.OK);
 
@@ -310,7 +310,7 @@ public partial class SmtpServerHostedServiceTests
 		ConfigurationMapping mapping = new();
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -345,7 +345,7 @@ public partial class SmtpServerHostedServiceTests
 		Configuration.AddMapping(recipient, mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
