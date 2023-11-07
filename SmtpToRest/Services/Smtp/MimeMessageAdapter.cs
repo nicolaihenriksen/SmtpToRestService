@@ -9,6 +9,7 @@ internal class MimeMessageAdapter : IMimeMessage
     public string[]? FromAddresses => _adaptee.From.Mailboxes.Select(m => m.Address).ToArray();
     public string? FirstToAddress => _adaptee.To.Mailboxes.First().Address;
     public string[]? FirstAddresses => _adaptee.To.Mailboxes.Select(m => m.Address).ToArray();
+    public string? BodyAsString => _adaptee.TextBody;
 
     private readonly MimeMessage _adaptee;
 

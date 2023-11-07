@@ -125,8 +125,11 @@ public partial class SmtpServerHostedServiceTests : IDisposable
 		message
 			.SetupGet(m => m.FirstFromAddress)
 			.Returns(fromAddress);
+        message
+            .SetupGet(m => m.FromAddresses)
+            .Returns(new[] { fromAddress });
 
-		Configuration.AddMapping(fromAddress, mapping);
+        Configuration.AddMapping(fromAddress, mapping);
 		return message;
 	}
 
