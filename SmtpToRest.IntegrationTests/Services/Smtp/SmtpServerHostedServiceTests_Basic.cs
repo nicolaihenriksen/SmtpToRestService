@@ -27,7 +27,7 @@ public partial class SmtpServerHostedServiceTests
 		message
 			.SetupGet(m => m.FirstFromAddress)
 			.Returns((string)null!);
-		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
+		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -50,7 +50,7 @@ public partial class SmtpServerHostedServiceTests
 		message
 			.SetupGet(m => m.FirstFromAddress)
 			.Returns("sender@somewhere.com");
-		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
+		MockedRequest request = HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -70,7 +70,7 @@ public partial class SmtpServerHostedServiceTests
 		// Arrange
 		ConfigurationMapping mapping = new();
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
-		HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint)
+		HttpMessageHandler.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -92,7 +92,7 @@ public partial class SmtpServerHostedServiceTests
 		ConfigurationMapping mapping = new();
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.With(r => r.Headers?.Authorization is { Scheme: "Bearer", Parameter: "someToken" })
 			.Respond(HttpStatusCode.OK);
 

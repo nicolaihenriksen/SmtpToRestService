@@ -27,7 +27,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.WithQueryString("someKey", "someValue")
 			.WithQueryString("someOtherKey", "someOtherValue")
 			.Respond(HttpStatusCode.OK);

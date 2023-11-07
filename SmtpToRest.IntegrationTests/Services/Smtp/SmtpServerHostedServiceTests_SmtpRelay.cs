@@ -36,7 +36,7 @@ public partial class SmtpServerHostedServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -71,7 +71,7 @@ public partial class SmtpServerHostedServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -109,7 +109,7 @@ public partial class SmtpServerHostedServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -147,7 +147,7 @@ public partial class SmtpServerHostedServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -190,7 +190,7 @@ public partial class SmtpServerHostedServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act
@@ -233,7 +233,7 @@ public partial class SmtpServerHostedServiceTests
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 
 		HttpMessageHandler
-			.Expect(HttpMethod.Get, Configuration.Endpoint)
+			.Expect(HttpMethod.Get, Configuration.Endpoint!)
 			.Respond(HttpStatusCode.OK);
 
 		// Act

@@ -31,7 +31,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Post, Configuration.Endpoint)
+			.Expect(HttpMethod.Post, Configuration.Endpoint!)
 			.WithContent("{\"Id\":1,\"Username\":\"test\"}")
 			.Respond(HttpStatusCode.OK);
 
@@ -56,7 +56,7 @@ public partial class SmtpServerHostedServiceTests
 		};
 		Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
 		HttpMessageHandler
-			.Expect(HttpMethod.Post, Configuration.Endpoint)
+			.Expect(HttpMethod.Post, Configuration.Endpoint!)
 			.WithContent("SomeStringValue")
 			.Respond(HttpStatusCode.OK);
 
