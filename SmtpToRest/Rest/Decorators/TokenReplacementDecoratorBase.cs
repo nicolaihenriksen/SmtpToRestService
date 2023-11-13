@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using SmtpToRest.Config;
 using SmtpToRest.Services.Smtp;
 
 namespace SmtpToRest.Rest.Decorators;
@@ -132,13 +131,5 @@ internal abstract class TokenReplacementDecoratorBase : DecoratorBase
     protected static string? ReplaceTokens(string? input, IMimeMessage message)
     {
         return ReplaceFromToken(ReplaceToToken(ReplaceBodyToken(input, message.BodyAsString), message.FirstToAddress), message.FirstFromAddress);
-    }
-}
-
-internal class EndpointTokenReplacementDecorator : TokenReplacementDecoratorBase, IRestInputDecorator
-{
-    public void Decorate(RestInput restInput, ConfigurationMapping mapping, IMimeMessage message)
-    {
-        restInput.Endpoint = ReplaceTokens(restInput.Endpoint, message);
     }
 }
