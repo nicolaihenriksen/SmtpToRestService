@@ -41,15 +41,101 @@ public partial class SmtpServerHostedServiceTests
     [Trait(CategoryKey, CategoryTokenReplacement)]
     [InlineData("$(body){25,16}")]
     [InlineData("$(BODY){25,16}")]
-    [InlineData("$(body){25}")]
-    [InlineData("$(BODY){25}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
     {
         // Arrange
         Configuration.Endpoint = $"http://{token}/path";
         ConfigurationMapping mapping = new();
         Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("Go see something cool at token-domain.com you'll like it");
+        HttpMessageHandler.Expect(HttpMethod.Get, "http://token-domain.com/path").Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [InlineData("$(body){25}")]
+    [InlineData("$(BODY){25}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
+    {
+        // Arrange
+        Configuration.Endpoint = $"http://{token}/path";
+        ConfigurationMapping mapping = new();
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
         message.SetupGet(m => m.BodyAsString).Returns("Go see something cool at token-domain.com");
+        HttpMessageHandler.Expect(HttpMethod.Get, "http://token-domain.com/path").Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [InlineData("$(BODY){[token-domain]}")]
+    [InlineData("$(BODY){[at]+3}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
+    {
+        // Arrange
+        Configuration.Endpoint = $"http://{token}/path";
+        ConfigurationMapping mapping = new();
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("Go see something cool at token-domain.com");
+        HttpMessageHandler.Expect(HttpMethod.Get, "http://token-domain.com/path").Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [InlineData("$(BODY){[token-domain],16}")]
+    [InlineData("$(BODY){[at]+3,16}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
+    {
+        // Arrange
+        Configuration.Endpoint = $"http://{token}/path";
+        ConfigurationMapping mapping = new();
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("Go see something cool at token-domain.com you'll like it");
+        HttpMessageHandler.Expect(HttpMethod.Get, "http://token-domain.com/path").Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [InlineData("$(BODY){[token-domain],[like]-8}")]
+    [InlineData("$(BODY){[at]+3,[like]-8}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfStartAndEndSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
+    {
+        // Arrange
+        Configuration.Endpoint = $"http://{token}/path";
+        ConfigurationMapping mapping = new();
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("Go see something cool at token-domain.com you'll like it");
         HttpMessageHandler.Expect(HttpMethod.Get, "http://token-domain.com/path").Respond(HttpStatusCode.OK);
 
         // Act
