@@ -13,10 +13,10 @@ namespace SmtpToRest.IntegrationTests.Services.Smtp;
 
 public partial class SmtpServerHostedServiceTests
 {
-	private const string CategoryTokenReplacement = "TokenReplacement";
+	private const string CategoryTokenBodyReplacement = "TokenBodyReplacement";
 
 	[Theory]
-	[Trait(CategoryKey, CategoryTokenReplacement)]
+	[Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(body)")]
     [InlineData("$(BODY)")]
     public async Task ProcessMessages_ShouldReplaceBodyToken_WhenTokenAppliedInEndpoint(string token)
@@ -38,7 +38,7 @@ public partial class SmtpServerHostedServiceTests
 	}
 
     [Theory]
-    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(body){25,16}")]
     [InlineData("$(BODY){25,16}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -60,7 +60,7 @@ public partial class SmtpServerHostedServiceTests
     }
 
     [Theory]
-    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(body){25}")]
     [InlineData("$(BODY){25}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -82,7 +82,7 @@ public partial class SmtpServerHostedServiceTests
     }
 
     [Theory]
-    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(BODY){[token-domain]}")]
     [InlineData("$(BODY){[at]+3}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -104,7 +104,7 @@ public partial class SmtpServerHostedServiceTests
     }
 
     [Theory]
-    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(BODY){[token-domain],16}")]
     [InlineData("$(BODY){[at]+3,16}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -126,7 +126,7 @@ public partial class SmtpServerHostedServiceTests
     }
 
     [Theory]
-    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(BODY){[token-domain],[like]-8}")]
     [InlineData("$(BODY){[at]+3,[like]-8}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfStartAndEndSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -148,10 +148,9 @@ public partial class SmtpServerHostedServiceTests
     }
 
     [Theory]
-    [Trait(CategoryKey, CategoryTokenReplacement)]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(body){100,2}")]
     [InlineData("$(body){3,100}")]
-    [InlineData("$(body){3}")]
     public async Task ProcessMessages_ShouldFailToReplaceBodyToken_WhenTokenIncorrectlyAppliedInEndpoint(string token)
     {
         // Arrange

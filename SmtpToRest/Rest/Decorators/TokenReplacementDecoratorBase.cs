@@ -8,7 +8,19 @@ namespace SmtpToRest.Rest.Decorators;
 
 internal abstract class TokenReplacementDecoratorBase : DecoratorBase
 {
+    private const string FromToken = "from";
+    private const string ToToken = "to";
     private const string BodyToken = "body";
+
+    private static readonly Regex FromRegex = new(GetTokenPattern(FromToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex FromStartIndexAndOptionalLengthRegex = new(GetStartIndexAndOptionalLengthPattern(FromToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex FromIndexOfStringAndOptionalLengthRegex = new(GetIndexOfStringAndOptionalLengthPattern(FromToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex FromIndexOfStringToIndexOfStringRegex = new(GetIndexOfStringToIndexOfStringPattern(FromToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private static readonly Regex ToRegex = new(GetTokenPattern(ToToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex ToStartIndexAndOptionalLengthRegex = new(GetStartIndexAndOptionalLengthPattern(ToToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex ToIndexOfStringAndOptionalLengthRegex = new(GetIndexOfStringAndOptionalLengthPattern(ToToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex ToIndexOfStringToIndexOfStringRegex = new(GetIndexOfStringToIndexOfStringPattern(ToToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static readonly Regex BodyRegex = new(GetTokenPattern(BodyToken), RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex BodyStartIndexAndOptionalLengthRegex = new(GetStartIndexAndOptionalLengthPattern(BodyToken), RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
@@ -84,6 +96,28 @@ internal abstract class TokenReplacementDecoratorBase : DecoratorBase
         return input;
     }
 
+    private static string? ReplaceFromToken(string? input, string? from)
+    {
+        return ReplaceToken(
+            FromStartIndexAndOptionalLengthRegex,
+            FromIndexOfStringToIndexOfStringRegex,
+            FromIndexOfStringAndOptionalLengthRegex,
+            FromRegex,
+            input,
+            from);
+    }
+
+    private static string? ReplaceToToken(string? input, string? to)
+    {
+        return ReplaceToken(
+            ToStartIndexAndOptionalLengthRegex,
+            ToIndexOfStringToIndexOfStringRegex,
+            ToIndexOfStringAndOptionalLengthRegex,
+            ToRegex,
+            input,
+            to);
+    }
+
     private static string? ReplaceBodyToken(string? input, string? body)
     {
         return ReplaceToken(
@@ -97,7 +131,7 @@ internal abstract class TokenReplacementDecoratorBase : DecoratorBase
 
     protected static string? ReplaceTokens(string? input, IMimeMessage message)
     {
-        return ReplaceBodyToken(input, message.BodyAsString);
+        return ReplaceFromToken(ReplaceToToken(ReplaceBodyToken(input, message.BodyAsString), message.FirstToAddress), message.FirstFromAddress);
     }
 }
 
