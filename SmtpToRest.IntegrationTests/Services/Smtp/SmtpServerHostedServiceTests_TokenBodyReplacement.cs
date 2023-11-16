@@ -63,6 +63,63 @@ public partial class SmtpServerHostedServiceTests
 
     [Theory]
     [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(body)")]
+    [InlineData("$(BODY)")]
+    public async Task ProcessMessages_ShouldReplaceBodyToken_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"prop":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("bodyValue");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(body)")]
+    [InlineData("$(BODY)")]
+    public async Task ProcessMessages_ShouldReplaceBodyToken_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                prop = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("bodyValue");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(body){25,16}")]
     [InlineData("$(BODY){25,16}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
