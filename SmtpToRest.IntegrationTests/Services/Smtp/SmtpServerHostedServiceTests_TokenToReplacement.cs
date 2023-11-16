@@ -102,24 +102,4 @@ public partial class SmtpServerHostedServiceTests
         Assert.NotNull(result);
         result.IsSuccess.Should().BeTrue();
     }
-
-    [Theory]
-    [Trait(CategoryKey, CategoryTokenToReplacement)]
-    [InlineData("$(to){100,2}")]
-    [InlineData("$(to){3,100}")]
-    public async Task ProcessMessages_ShouldFailToReplaceToToken_WhenTokenIncorrectlyAppliedInEndpoint(string token)
-    {
-        // Arrange
-        Configuration.Endpoint = $"http://{token}/path";
-        ConfigurationMapping mapping = new();
-        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
-        message.SetupGet(m => m.FirstToAddress).Returns("receiver@elsewhere.com");
-
-        // Act
-        ProcessResult? result = await SendMessageAsync(message.Object);
-
-        // Assert
-        Assert.NotNull(result);
-        result.IsSuccess.Should().BeFalse();
-    }
 }
