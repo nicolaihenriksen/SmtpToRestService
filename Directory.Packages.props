@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="GenFu" Version="1.6.0" />
     <PackageVersion Include="MailKit" Version="4.3.0" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="7.0.0" />
