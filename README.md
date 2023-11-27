@@ -45,7 +45,7 @@ The sample configuration below illustrates the current possibilites.
       "service": "posts",
       "content": {
         "title": "Test post",
-        "body": "Test post body",
+        "body": "Test post body sent from $(from)",
         "userId": 1
       }
     },
@@ -105,6 +105,28 @@ All values are optional and will fall-back to the default from the configuration
 |authenticate|<b>Optional</b><br />Defines whether or not authentication should be used when connecting to the SMTP server.|
 |username|<b>Optional</b><br />Defines the username to use for authentication.|
 |password|<b>Optional</b><br />Defines the password to use for authentication.|
+
+<br />
+
+### Token replacements
+The following tokens can be used in the configuration and will be replaced with the corresponding values from the e-mail:
+| Token | Description | 
+| --- | --- |
+|$(from)|The The (first) sender address|
+|$(to)|The (first) recipient address|
+|$(body)|The (string) body of the e-mail|
+
+Each token can be applied as shown above to simply extract the token value in its entirety, or alternatively the token syntax below can be used to narrow down the selection.
+| Name | Syntax | Example | Description | 
+| --- | --- | --- | --- |
+|Substring|$(&lt;token&gt;){&lt;startIndex&gt;}|$(body){15}|Will take the substring of the token starting at the provided &lt;startIndex&gt;.|
+|Substring and length|$(&lt;token&gt;){&lt;startIndex&gt;,&lt;length&gt;}|$(body){15,10}|Will take the substring of the token starting at the provided &lt;startIndex&gt; and &lt;length&gt; characters forward.|
+|Substring from index of string|$(&lt;token&gt;){[&lt;stringToFind&gt;]}|$(body){[hello]}|Will take the substring of the token starting at index of the provided &lt;stringToFind&gt;.|
+|Substring from index of string with offset|$(&lt;token&gt;){[&lt;stringToFind&gt;]+&lt;offset&gt;}|$(body){[hello]+10}|Will take the substring of the token starting at index of the provided &lt;stringToFind&gt; using the provided offset. Note the offset can also be negative.|
+|Substring from index of string and length|$(&lt;token&gt;){[&lt;stringToFind&gt;],&lt;length&gt;}|$(body){[hello],40}|Will take the substring of the token starting at index of the provided &lt;stringToFind&gt; and &lt;length&gt; characters forward.|
+|Substring from index of string to index of another string|$(&lt;token&gt;){[&lt;stringToFind1&gt;],[&lt;stringToFind2&gt;]}|$(body){[hello],[world]}|Will take the substring of the token starting at index of the provided &lt;stringToFind1&gt; up until the inded of the provided &lt;stringToFind2&gt;.|
+
+Note that the list above is not exhaustive. It demonstrates the different elements of the syntax that can be applied, and these can be mixed and matched for the desirable "from" and "length"/"to" combination.
 
 <br />
 
