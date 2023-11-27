@@ -9,4 +9,6 @@ public interface IMimeMessage
     string? FirstToAddress { get; }
 
     string[]? FirstAddresses { get; }
+
+    string? BodyAsString { get; }
 }

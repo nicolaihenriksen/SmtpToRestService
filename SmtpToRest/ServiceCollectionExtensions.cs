@@ -69,12 +69,15 @@ public static class ServiceCollectionExtensions
 	}
 
 	private static void AddDefaultDecorators(this IServiceCollection services)
-	{
-		services
-			.AddSingleton<IRestInputDecorator, ConfigurationDecorator>()
-			.AddSingleton<IRestInputDecorator, EndpointOverridesDecorator>()
-			.AddSingleton<IRestInputDecorator, ServiceDecorator>()
-			.AddSingleton<IRestInputDecorator, QueryStringDecorator>()
-			.AddSingleton<IRestInputDecorator, ContentDecorator>();
-	}
+    {
+        services
+            .AddSingleton<IRestInputDecorator, ConfigurationDecorator>()
+            .AddSingleton<IRestInputDecorator, EndpointOverridesDecorator>()
+            .AddSingleton<IRestInputDecorator, ServiceDecorator>()
+            .AddSingleton<IRestInputDecorator, QueryStringDecorator>()
+            .AddSingleton<IRestInputDecorator, ContentDecorator>()
+            .AddSingleton<IRestInputDecorator, EndpointTokenReplacementDecorator>()
+            .AddSingleton<IRestInputDecorator, QueryStringTokenReplacementDecorator>()
+            .AddSingleton<IRestInputDecorator, ContentTokenReplacementDecorator>();
+    }
 }
