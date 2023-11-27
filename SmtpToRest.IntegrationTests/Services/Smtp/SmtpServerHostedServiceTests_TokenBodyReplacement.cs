@@ -166,6 +166,63 @@ public partial class SmtpServerHostedServiceTests
 
     [Theory]
     [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(body){21,9}")]
+    [InlineData("$(BODY){21,9}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexAndLengthSubset_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"prop":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(body){21,9}")]
+    [InlineData("$(BODY){21,9}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexAndLengthSubset_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                prop = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(body){25}")]
     [InlineData("$(BODY){25}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -200,6 +257,63 @@ public partial class SmtpServerHostedServiceTests
         Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
         message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue");
         HttpMessageHandler.Expect(HttpMethod.Get, string.Concat(Configuration.Endpoint!, "?p=bodyValue")).Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(body){21}")]
+    [InlineData("$(BODY){21}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexSubset_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"prop":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(body){21}")]
+    [InlineData("$(BODY){21}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexSubset_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                prop = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
 
         // Act
         ProcessResult? result = await SendMessageAsync(message.Object);
@@ -258,6 +372,64 @@ public partial class SmtpServerHostedServiceTests
 
     [Theory]
     [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(BODY){[body]}")]
+    [InlineData("$(BODY){[containing]+11}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetSubset_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"prop":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(BODY){[body]}")]
+    [InlineData("$(BODY){[Value]-4}")]
+    [InlineData("$(BODY){[containing]+11}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetSubset_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                prop = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(BODY){[token-domain],16}")]
     [InlineData("$(BODY){[at]+3,16}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -304,6 +476,64 @@ public partial class SmtpServerHostedServiceTests
 
     [Theory]
     [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(BODY){[body],9}")]
+    [InlineData("$(BODY){[containing]+11,9}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"prop":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(BODY){[body],9}")]
+    [InlineData("$(BODY){[Value]-4,9}")]
+    [InlineData("$(BODY){[containing]+11,9}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                prop = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
     [InlineData("$(BODY){[token-domain],[like]-8}")]
     [InlineData("$(BODY){[at]+3,[like]-8}")]
     public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfStartAndEndSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
@@ -338,6 +568,64 @@ public partial class SmtpServerHostedServiceTests
         Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
         message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
         HttpMessageHandler.Expect(HttpMethod.Get, string.Concat(Configuration.Endpoint!, "?p=bodyValue")).Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(BODY){[body],[some]-4}")]
+    [InlineData("$(BODY){[containing]+11,[point]-9}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfStartAndEndSubset_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"prop":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenBodyReplacement)]
+    [InlineData("$(BODY){[body],[some]-4}")]
+    [InlineData("$(BODY){[Value]-4,[some]-4}")]
+    [InlineData("$(BODY){[containing]+11,[point]-9}")]
+    public async Task ProcessMessages_ShouldReplaceBodyTokenWithIndexOfStartAndEndSubset_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                prop = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("A message containing bodyValue at some point in the string");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"prop":"bodyValue"}""")
+            .Respond(HttpStatusCode.OK);
 
         // Act
         ProcessResult? result = await SendMessageAsync(message.Object);

@@ -59,6 +59,61 @@ public partial class SmtpServerHostedServiceTests
 
     [Theory]
     [Trait(CategoryKey, CategoryTokenFromReplacement)]
+    [InlineData("$(from)")]
+    [InlineData("$(FROM)")]
+    public async Task ProcessMessages_ShouldReplaceFromToken_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"sender":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"sender":"sender@somewhere.com"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenFromReplacement)]
+    [InlineData("$(from)")]
+    [InlineData("$(FROM)")]
+    public async Task ProcessMessages_ShouldReplaceFromToken_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                sender = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"sender":"sender@somewhere.com"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenFromReplacement)]
     [InlineData("$(FROM){[some],13}")]
     [InlineData("$(FROM){[der]+4,13}")]
     public async Task ProcessMessages_ShouldReplaceFromTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)

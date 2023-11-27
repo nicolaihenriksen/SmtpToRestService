@@ -61,6 +61,63 @@ public partial class SmtpServerHostedServiceTests
 
     [Theory]
     [Trait(CategoryKey, CategoryTokenToReplacement)]
+    [InlineData("$(to)")]
+    [InlineData("$(TO)")]
+    public async Task ProcessMessages_ShouldReplaceToToken_WhenTokenAppliedInStringContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = $$"""{"recipient":"{{token}}"}"""
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.FirstToAddress).Returns("receiver@elsewhere.com");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"recipient":"receiver@elsewhere.com"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenToReplacement)]
+    [InlineData("$(to)")]
+    [InlineData("$(TO)")]
+    public async Task ProcessMessages_ShouldReplaceToToken_WhenTokenAppliedInJsonContent(string token)
+    {
+        // Arrange
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpMethod = Rest.HttpMethod.Post.ToString(),
+            Content = new
+            {
+                recipient = $"{token}"
+            }
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.FirstToAddress).Returns("receiver@elsewhere.com");
+        HttpMessageHandler.Expect(HttpMethod.Post, Configuration.Endpoint!)
+            .WithContent("""{"recipient":"receiver@elsewhere.com"}""")
+            .Respond(HttpStatusCode.OK);
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        HttpMessageHandler.VerifyNoOutstandingExpectation();
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Theory]
+    [Trait(CategoryKey, CategoryTokenToReplacement)]
     [InlineData("$(TO){[else],13}")]
     [InlineData("$(TO){[ver]+4,13}")]
     public async Task ProcessMessages_ShouldReplaceToTokenWithIndexOfAndOptionalOffsetAndLengthSubset_WhenTokenCorrectlyAppliedInEndpoint(string token)
