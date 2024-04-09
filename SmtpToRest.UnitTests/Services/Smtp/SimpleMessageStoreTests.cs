@@ -1,5 +1,4 @@
-﻿using System.Buffers;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +12,7 @@ using Moq;
 using SmtpServer;
 using SmtpToRest.Services.Smtp;
 using Xunit;
+using IMimeMessage = SmtpToRest.Services.Smtp.IMimeMessage;
 
 namespace SmtpToRest.UnitTests.Services.Smtp;
 
