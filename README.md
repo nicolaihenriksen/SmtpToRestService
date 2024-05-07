@@ -10,9 +10,6 @@ My workaround for this problem was to configure the cameras to "send an e-mail" 
 
 The project has since then become a hobby project where I am experimenting with adding Docker support, CI/CD pipelines and other fun stuff.
 
-### Disclaimer
-Currently, the code attempts to convert all e-mail requests to REST API calls and optionally forwards them using an SMTP relay. The current code cannot use any of the information from the e-mail in the actual REST API call, but this could be added relatively simple by replacing some placeholders in the configuration with corresponding values from the e-mail (eg. "sender address", "recipient", "subject", etc.).
-
 ## Configuration
 The sample configuration below illustrates the current possibilites.
 
