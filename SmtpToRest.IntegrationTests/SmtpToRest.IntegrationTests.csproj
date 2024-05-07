@@ -24,6 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Services\Smtp\SmtpServerHostedServiceTests_*.cs">
+      <DependentUpon>SmtpServerHostedServiceTests.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SmtpToRest\SmtpToRest.csproj" />
   </ItemGroup>
 
