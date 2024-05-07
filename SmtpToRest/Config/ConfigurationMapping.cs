@@ -3,6 +3,7 @@
 public class ConfigurationMapping
 {
 	public string? Key { get; set; }
+	public string? CustomHttpClientName { get; set; }
 	public string? CustomApiToken { get; set; }
 	public string? CustomEndpoint { get; set; }
 	public string? CustomHttpMethod { get; set; }

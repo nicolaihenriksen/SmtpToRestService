@@ -2,6 +2,7 @@
 
 public class RestInput
 {
+	public string? HttpClientName { get; set; }
 	public string? ApiToken { get; set; }
 	public HttpMethod HttpMethod { get; set; } = HttpMethod.Get;
 	public string? Endpoint { get; set; }

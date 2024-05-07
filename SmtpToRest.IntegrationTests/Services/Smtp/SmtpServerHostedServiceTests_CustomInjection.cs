@@ -297,7 +297,64 @@ public partial class SmtpServerHostedServiceTests
 		AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
 	}
 
-	[Fact]
+    [Fact]
+    [Trait(CategoryKey, CategoryCustomInjection)]
+    public async Task ProcessMessages_ShouldUseHttpMessageHandlerWithCustomName_WhenOverriddenInMapping()
+    {
+        // Arrange
+        Options.UseBuiltInHttpClientFactory = true;
+        await StartHost(services =>
+        {
+            services.AddTransient<CustomHttpMessageHandler>();
+            services.AddHttpClient("CustomHttpClient").AddHttpMessageHandler<CustomHttpMessageHandler>();
+        });
+        Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+        ConfigurationMapping mapping = new()
+        {
+			CustomHttpClientName = "CustomHttpClient"
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+
+        // Act
+        ProcessResult ? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be("CustomHttpMessageHandler terminated the request");
+        AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
+    }
+
+    [Fact]
+    [Trait(CategoryKey, CategoryCustomInjection)]
+    public async Task ProcessMessages_ShouldUseHttpMessageHandlerWithCustomName_WhenOverriddenInEmailContent()
+    {
+        // Arrange
+        Options.UseBuiltInHttpClientFactory = true;
+        await StartHost(services =>
+        {
+            services.AddTransient<CustomHttpMessageHandler>();
+            services.AddHttpClient("CustomHttpClient").AddHttpMessageHandler<CustomHttpMessageHandler>();
+        });
+        Configuration.HttpMethod = Rest.HttpMethod.Get.ToString();
+        ConfigurationMapping mapping = new()
+        {
+            CustomHttpClientName = "$(body)"
+        };
+        Mock<IMimeMessage> message = Arrange("sender@somewhere.com", mapping);
+        message.SetupGet(m => m.BodyAsString).Returns("CustomHttpClient");
+
+        // Act
+        ProcessResult? result = await SendMessageAsync(message.Object);
+
+        // Assert
+        Assert.NotNull(result);
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be("CustomHttpMessageHandler terminated the request");
+        AssertLog(LogLevel.Debug, "CustomHttpMessageHandler short-circuiting the HTTP Client");
+    }
+
+    [Fact]
 	[Trait(CategoryKey, CategoryCustomInjection)]
 	public async Task ProcessMessages_ShouldUseAdditionalMessageProcessor_WhenInjected()
 	{

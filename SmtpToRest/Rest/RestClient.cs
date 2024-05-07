@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,7 +23,7 @@ internal class RestClient : IRestClient
         if (endpoint is null)
             return new(HttpStatusCode.NotFound);
 
-        var client = _httpClientFactory.CreateClient(_httpClientConfiguration.HttpClientName);
+        var client = _httpClientFactory.CreateClient(input.HttpClientName ?? _httpClientConfiguration.HttpClientName);
         client.BaseAddress = new(endpoint);
 
         if (!string.IsNullOrEmpty(input.ApiToken))
