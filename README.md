@@ -81,6 +81,7 @@ A mapping is what the services uses to convert an e-mail into a REST API call. I
 
 | Property | Description |
 | --- | --- |
+|customHttpClientName|<b>Optional</b><br />HTTP Client name used for this particular mapping. Should be set if you have injected your own named `IHttpClient` into the DI container.|
 |customApiToken|<b>Optional</b><br />API token used for this particular mapping. Should be set if the REST service requires you to provide an API key.|
 |customEndpoint|<b>Optional</b><br />Defines the endpoint for this particular mapping.|
 |customHttpMethod|<b>Optional</b><br />Defines the HTTP method for this particular mapping.|
