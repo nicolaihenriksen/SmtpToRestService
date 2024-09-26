@@ -64,7 +64,7 @@ jobs:
 
       - name: Build nuget package
         timeout-minutes: 5
-        run: dotnet pack ./SmtpToRest/SmtpToRest.csproj -p:Configuration=Release -p:Version=${{ inputs.nugetVersion }} -o:./SmtpToRest/pack
+        run: dotnet pack ./SmtpToRest/SmtpToRest.csproj -p:Configuration=Release -p:Version=${{ inputs.nugetVersion }} -p:ContinuousIntegrationBuild=True -o:./SmtpToRest/pack
 
       - name: Upload nupkg as artifact
         if: inputs.debug == false
