@@ -22,6 +22,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FBC4FD07
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmtpToRest.IntegrationTests", "SmtpToRest.IntegrationTests\SmtpToRest.IntegrationTests.csproj", "{D4A72ACC-1ABC-4CC0-BE64-DC678F966587}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build_artifacts.yml = .github\workflows\build_artifacts.yml
+		.github\workflows\build_workflow.yml = .github\workflows\build_workflow.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +66,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4BB25CA4-BCD1-4D64-882E-C09A6875B732} = {FBC4FD07-997C-4159-93F0-6AF90A3B67AF}
 		{D4A72ACC-1ABC-4CC0-BE64-DC678F966587} = {FBC4FD07-997C-4159-93F0-6AF90A3B67AF}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5D5F182-594B-49AC-AFED-593D2BEE0B7A}
