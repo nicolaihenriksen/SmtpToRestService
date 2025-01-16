@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02EA
 		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{36FCDB1F-E190-4F66-A0CB-560C0A2A6576}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build_artifacts.yml = .github\workflows\build_artifacts.yml
 		.github\workflows\build_workflow.yml = .github\workflows\build_workflow.yml
@@ -66,7 +66,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4BB25CA4-BCD1-4D64-882E-C09A6875B732} = {FBC4FD07-997C-4159-93F0-6AF90A3B67AF}
 		{D4A72ACC-1ABC-4CC0-BE64-DC678F966587} = {FBC4FD07-997C-4159-93F0-6AF90A3B67AF}
-		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {5155A12B-3B58-452C-B4A0-B814D4C0A3A4}
+		{36FCDB1F-E190-4F66-A0CB-560C0A2A6576} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5D5F182-594B-49AC-AFED-593D2BEE0B7A}
