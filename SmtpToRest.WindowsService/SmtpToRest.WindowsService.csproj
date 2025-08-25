@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" />
     <ProjectReference Include="..\SmtpToRest\SmtpToRest.csproj" />
   </ItemGroup>
 </Project>
