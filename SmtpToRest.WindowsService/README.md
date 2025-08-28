@@ -13,4 +13,4 @@ sc create smtptorestservice binPath="<full-path-to-deployment-dir>\SmtpToRest.Wi
 
 Remember to replace **&lt;full-path-to-deployment-dir&gt;** with the actual path where you have deployed the package.
 
-**NOTE:** The [sc create command](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sc-create) allows for a number of parameters if you want to tweak the display name, description, startup, dependencies, etc. of the service.
+**NOTE:** The [sc create command](https://learn.microsoft.com/windows-server/administration/windows-commands/sc-create) allows for a number of parameters if you want to tweak the display name, description, startup, dependencies, etc. of the service.
