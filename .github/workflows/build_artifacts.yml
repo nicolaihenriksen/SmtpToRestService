@@ -54,7 +54,7 @@ jobs:
       - name: Build self-contained EXE for Windows Service
         timeout-minutes: 5
         run: |
-          dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:BuildVersion=${{ inputs.buildVersion }} -p:DebugType=None -p:DebugSymbols=false -f net8.0 -o:./SmtpToRest.WindowsService/publish --disable-build-servers
+          dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj --disable-build-servers -p:Configuration=Release -p:BuildVersion=${{ inputs.buildVersion }} -p:DebugType=None -p:DebugSymbols=false -f net8.0 -o:./SmtpToRest.WindowsService/publish
           rm ./SmtpToRest.WindowsService/publish/appsettings.Development.json
     
       - name: Upload self-contained EXE as artifact
