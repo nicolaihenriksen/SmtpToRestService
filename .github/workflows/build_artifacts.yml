@@ -54,6 +54,7 @@ jobs:
       - name: Build self-contained EXE for Windows Service
         timeout-minutes: 5
         run: |
+          sleep 10s
           dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:BuildVersion=${{ inputs.buildVersion }} -p:DebugType=None -p:DebugSymbols=false -f net8.0 -o:./SmtpToRest.WindowsService/publish
           rm ./SmtpToRest.WindowsService/publish/appsettings.Development.json
     
