@@ -17,6 +17,7 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="Moq.AutoMock" />
     <PackageReference Include="RichardSzalay.MockHttp" />
+    <PackageReference Include="System.Net.Http" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
