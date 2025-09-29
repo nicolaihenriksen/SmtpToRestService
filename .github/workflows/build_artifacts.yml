@@ -52,10 +52,14 @@ jobs:
         run: dotnet test ${{ env.solution }} --configuration Release --no-build --blame-crash --logger GitHubActions
 
       - name: Build self-contained EXE for Windows Service
-        timeout-minutes: 5
-        run: |
-          dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj --disable-build-servers -p:Configuration=Release -p:BuildVersion=${{ inputs.buildVersion }} -p:DebugType=None -p:DebugSymbols=false -f net8.0 -o:./SmtpToRest.WindowsService/publish
-          rm ./SmtpToRest.WindowsService/publish/appsettings.Development.json
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          retry_on: error
+          command: |
+            dotnet publish ./SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj -p:Configuration=Release -p:BuildVersion=${{ inputs.buildVersion }} -p:DebugType=None -p:DebugSymbols=false -f net8.0 -o:./SmtpToRest.WindowsService/publish
+            rm ./SmtpToRest.WindowsService/publish/appsettings.Development.json
     
       - name: Upload self-contained EXE as artifact
         if: inputs.debug == false
