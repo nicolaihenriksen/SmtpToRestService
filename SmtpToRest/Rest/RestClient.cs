@@ -38,6 +38,12 @@ internal class RestClient : IRestClient
 	        case HttpMethod.Post:
 		        string content = input.Content ?? string.Empty;
 		        return await client.PostAsync(uriBuilder.Uri, new StringContent(content), cancellationToken);
+	        case HttpMethod.Put:
+		        content = input.Content ?? string.Empty;
+		        return await client.PutAsync(uriBuilder.Uri, new StringContent(content), cancellationToken);
+	        case HttpMethod.Patch:
+		        content = input.Content ?? string.Empty;
+		        return await client.PatchAsync(uriBuilder.Uri, new StringContent(content), cancellationToken);
 			default:
                 return await client.SendAsync(new(input.HttpMethod.ToSystemNetHttpMethod(), uriBuilder.Uri), cancellationToken);
 		}
