@@ -12,7 +12,7 @@
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.9" />
     <PackageVersion Include="Microsoft.NET.ILLink.Tasks" Version="9.0.9" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
-    <PackageVersion Include="SmtpServer" Version="11.0.0" />
+    <PackageVersion Include="SmtpServer" Version="11.1.0" />
     <PackageVersion Include="Moq.AutoMock" Version="3.5.0" />
     <PackageVersion Include="FluentAssertions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
