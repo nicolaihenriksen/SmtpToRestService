@@ -63,7 +63,7 @@ jobs:
     
       - name: Upload self-contained EXE as artifact
         if: inputs.debug == false
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: SmtpToRest.WindowsService
           path: "SmtpToRest.WindowsService/publish"
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload nupkg as artifact
         if: inputs.debug == false
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Nuget-nupkgs
           path: "SmtpToRest/pack"
