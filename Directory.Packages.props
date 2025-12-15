@@ -9,7 +9,7 @@
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.1" />
     <PackageVersion Include="Microsoft.NET.ILLink.Tasks" Version="9.0.9" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageVersion Include="SmtpServer" Version="11.1.0" />
