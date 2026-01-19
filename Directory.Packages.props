@@ -6,7 +6,7 @@
     <PackageVersion Include="GenFu" Version="1.6.0" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.1" />
     <PackageVersion Include="MailKit" Version="4.14.1" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.WindowsServices" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.1" />
