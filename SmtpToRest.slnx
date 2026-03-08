@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/">
+    <File Path=".github/dependabot.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/build_artifacts.yml" />
+    <File Path=".github/workflows/build_workflow.yml" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="SmtpToRest.IntegrationTests/SmtpToRest.IntegrationTests.csproj" />
+    <Project Path="SmtpToRest.UnitTests/SmtpToRest.UnitTests.csproj" />
+  </Folder>
+  <Project Path="SmtpToRest.Docker/SmtpToRest.Docker.csproj" />
+  <Project Path="SmtpToRest.WindowsService/SmtpToRest.WindowsService.csproj" />
+  <Project Path="SmtpToRest/SmtpToRest.csproj" />
+</Solution>
