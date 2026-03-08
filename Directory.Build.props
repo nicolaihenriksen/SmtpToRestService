@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <LangVersion>11</LangVersion>
+    <LangVersion>14</LangVersion>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
     <BuildVersion Condition="'$(BuildVersion)' == ''">1.0.0</BuildVersion>

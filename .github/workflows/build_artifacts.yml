@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      solution: SmtpToRest.sln
+      solution: SmtpToRest.slnx
 
     steps:
       - name: Checkout repository
