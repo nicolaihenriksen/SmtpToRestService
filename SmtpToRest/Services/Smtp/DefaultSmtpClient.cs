@@ -7,12 +7,12 @@ namespace SmtpToRest.Services.Smtp;
 
 internal class DefaultSmtpClient : MailKit.Net.Smtp.SmtpClient, ISmtpClient
 {
-	public Task ConnectAsync(string? host, int port, CancellationToken cancellationToken)
+	public Task ConnectAsync(string host, int port, CancellationToken cancellationToken)
 	{
 		return base.ConnectAsync(host, port, SecureSocketOptions.Auto, cancellationToken);
 	}
 
-	public new Task AuthenticateAsync(string? username, string? password, CancellationToken cancellationToken)
+	public new Task AuthenticateAsync(string username, string password, CancellationToken cancellationToken)
 	{
 		return base.AuthenticateAsync(username, password, cancellationToken);
 	}
