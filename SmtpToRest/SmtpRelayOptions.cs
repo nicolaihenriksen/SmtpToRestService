@@ -6,12 +6,12 @@ public class SmtpRelayOptions
 {
 	public bool Enabled { get; set; } = false;
 	public int Port { get; set; } = 465;
-	public string? Host { get; set; }
+    public string Host { get; set; } = string.Empty;
 	public bool Authenticate { get; set; } = true;
-	public string? Username { get; set; }
-	public string? Password { get; set; }
+	public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 
-	public SmtpRelayOptions() { }
+    public SmtpRelayOptions() { }
 
 	internal SmtpRelayOptions(SmtpRelayOptions original)
 	{
